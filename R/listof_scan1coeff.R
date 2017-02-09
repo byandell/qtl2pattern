@@ -89,8 +89,11 @@ summary_scan1coef <-
     names(object) <- dimnames(scan1_object$lod)[[2]][1]
     summary.listof_scan1coef(object, scan1_object, ...)
   }
+
 #' @method summary scan1coef
 #' @rdname listof_scan1coef
 #' @export
+#' @export summary.scan1coef
+#'
 summary.scan1coef <- function(object, ...)
   summary_scan1coef(object, ...)

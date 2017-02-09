@@ -18,10 +18,10 @@
 #'
 #' @export
 #' @importFrom dplyr arrange desc group_by mutate summarize tbl_df ungroup
-summary_scan1 <- function(object, 
-                          lodcolumn=seq_len(ncol(object$lod)), 
-                          chr = names(object$map), 
-                          type = c("common","best"), drop=1.5, 
+summary_scan1 <- function(object,
+                          lodcolumn=seq_len(ncol(object$lod)),
+                          chr = names(object$map),
+                          type = c("common","best"), drop=1.5,
                           show_all_snps = TRUE,
                           ...) {
   if(is.null(object$snpinfo)) {
@@ -52,17 +52,17 @@ summary_scan1 <- function(object,
     # snpinfo summary
     ## top_snps() Adapted to multiple phenotypes.
     object <- top_snps_all(object, drop, show_all_snps)
-    
+
     if(!nrow(object))
       return(NULL)
-    
+
     type <- match.arg(type)
     switch(type,
            best = { ## Top SNPs across all phenotypes.
              if(!nrow(object))
                return(NULL)
              dplyr::arrange(
-               dplyr::mutate(object, 
+               dplyr::mutate(object,
                              pattern = sdp_to_pattern(sdp)),
                dplyr::desc(lod))},
            common = { ## Find most common patterns by pheno.
@@ -70,21 +70,24 @@ summary_scan1 <- function(object,
                dplyr::mutate(
                  dplyr::ungroup(
                    dplyr::summarize(
-                     dplyr::group_by(object,pheno,sdp), 
+                     dplyr::group_by(object,pheno,sdp),
                      count=n(),
                     pct=round(100 * n() / nrow(object), 2),
                     min_lod=min(lod),
                     max_lod=max(lod),
                     max_snp=snp_id[which.max(lod)],
-                    max_pos=pos_Mbp[which.max(lod)])), 
+                    max_pos=pos_Mbp[which.max(lod)])),
                  pattern = sdp_to_pattern(sdp)),
                dplyr::desc(max_lod))
            })
   }
 }
+
 #' @method summary scan1
 #' @rdname summary_scan1
 #' @export
+#' @export summary.scan1
+#'
 summary.scan1 <- function(object, ...) {
   summary_scan1(object, ...)
 }
