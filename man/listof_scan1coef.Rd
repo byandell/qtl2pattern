@@ -2,16 +2,22 @@
 % Please edit documentation in R/listof__scan1coeff.R
 \name{listof_scan1coef}
 \alias{listof_scan1coef}
+\alias{summary_listof_scan1coef}
 \alias{summary.listof_scan1coef}
+\alias{summary_scan1coef}
 \alias{summary.scan1coef}
 \title{List of scan1coef objects}
 \usage{
 listof_scan1coef(probs, phe, K = NULL, covar = NULL)
 
-\method{summary}{listof_scan1coef}(object, scan1_object,
+summary_listof_scan1coef(object, scan1_object,
   coef_names = dimnames(object[[1]]$coef)[[2]], ...)
 
-\method{summary}{scan1coef}(object, scan1_object, ...)
+\method{summary}{listof_scan1coef}(object, ...)
+
+summary_scan1coef(object, scan1_object, ...)
+
+\method{summary}{scan1coef}(object, ...)
 }
 \arguments{
 \item{probs}{genotype probabilities object for one chromosome from \code{\link[qtl2geno]{calc_genoprob}}}

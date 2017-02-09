@@ -38,11 +38,10 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @method summary listof_scan1coef
 #' @rdname listof_scan1coef
 #' @export
 #' @importFrom dplyr bind_cols
-summary.listof_scan1coef <-
+summary_listof_scan1coef <-
   function(object, scan1_object,
            coef_names = dimnames(object[[1]]$coef)[[2]],
            ...) {
@@ -65,6 +64,12 @@ summary.listof_scan1coef <-
   }
   dplyr::bind_cols(sum_chr,sum_coef)
 }
+#' @method summary listof_scan1coef
+#' @rdname listof_scan1coef
+#' @export
+summary.listof_scan1coef <- function(object, ...)
+  summary_listof_scan1coef(object, ...)
+
 #' Summary of object of class listof_scan1coeff
 #'
 #' Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
@@ -76,12 +81,16 @@ summary.listof_scan1coef <-
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @method summary scan1coef
 #' @rdname listof_scan1coef
 #' @export
-summary.scan1coef <-
+summary_scan1coef <-
   function(object, scan1_object, ...) {
     object <- list(object)
     names(object) <- dimnames(scan1_object$lod)[[2]][1]
     summary.listof_scan1coef(object, scan1_object, ...)
   }
+#' @method summary scan1coef
+#' @rdname listof_scan1coef
+#' @export
+summary.scan1coef <- function(object, ...)
+  summary_scan1coef(object, ...)
