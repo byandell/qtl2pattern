@@ -56,10 +56,11 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
 
   ## Merge columns for LODs by phenotype.
   for(i in phename) {
-    tmp2 <- qtl2scan::top_snps(
-      dplyr::distinct(
-        dplyr::filter(
-          subset(out_lmm_snps, lodcolumn=match(i, phename)), drop=drop),
+    tmp2 <- dplyr::distinct(
+      dplyr::filter(
+        qtl2scan::top_snps(
+          subset(out_lmm_snps, lodcolumn=match(i, phename)),
+          drop=drop),
         snp_id %in% near_snp_id),
       index, .keep_all=TRUE)
     top_snps_tbl[shorten_phename(i, dropchar)] <-
