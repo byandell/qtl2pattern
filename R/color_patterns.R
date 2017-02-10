@@ -3,7 +3,7 @@
 #' @param scan1_output output of linear mixed model for \code{phename} (see \code{\link[qtl2scan]{scan1}})
 #' @param patterns Connect SDP patterns: one of \code{c("none","all","hilit")}.
 #' @param col Color of other points, or colors for patterns
-#' @param pattern allele pattern determined by \code{\link{sdp_to_pattern}}
+#' @param pattern allele pattern determined by \code{\link[CCSanger]{sdp_to_pattern}}
 #' @param col.hilit Color of highlighted points
 #' @param drop.hilit SNPs with LOD score within this amount of the maximum SNP association will be highlighted.
 #' @param show_all_snps show all SNPs if \code{TRUE}
@@ -74,7 +74,7 @@ color_patterns_set <- function(scan1output, patterns,
 #'
 #' @param scan1ggdata data frame to be used for plotting
 #' @param lod matrix of LOD scores by position and pheno
-#' @param pattern allele pattern determined by \code{\link{sdp_to_pattern}}
+#' @param pattern allele pattern determined by \code{\link[CCSanger]{sdp_to_pattern}}
 #' @param col Color for \code{color} column in \code{scan1ggdata}
 #' @param patterns Connect SDP patterns: one of \code{c("none","all","hilit")}
 #' @param facet use \code{\link[ggplot2]{facet_wrap}} if not \code{NULL}

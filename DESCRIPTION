@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern support for R/qtl2
-Version: 0.1.1
-Date: 2017-02-09
+Version: 0.1.2
+Date: 2017-02-10
 Author: Brian S Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
 Description: Routines used mostly by R/qtl2ggplot.
@@ -13,7 +13,8 @@ Imports:
     dplyr,
     tidyr,
     RColorBrewer,
-    qtl2scan
+    qtl2scan,
+    CCSanger
 License: GPL-3
 URL: http://kbroman.org/qtl2
 Encoding: UTF-8

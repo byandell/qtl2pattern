@@ -11,7 +11,7 @@ color_patterns_pheno(scan1ggdata, lod, pattern, col, patterns, facet = NULL)
 
 \item{lod}{matrix of LOD scores by position and pheno}
 
-\item{pattern}{allele pattern determined by \code{\link{sdp_to_pattern}}}
+\item{pattern}{allele pattern determined by \code{\link[CCSanger]{sdp_to_pattern}}}
 
 \item{col}{Color for \code{color} column in \code{scan1ggdata}}
 

@@ -2,9 +2,17 @@
 % Please edit documentation in R/top_snps_all.R
 \name{top_snps_all}
 \alias{top_snps_all}
+\alias{summary.top_snps_all}
+\alias{subset.top_snps_all}
 \title{Top SNPs for all phenotypes scanned}
 \usage{
 top_snps_all(scan1_output, drop = 1.5, show_all_snps = TRUE)
+
+\method{summary}{top_snps_all}(object, type = c("range", "peak", "best"),
+  shorten_char = 0, ...)
+
+\method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos_Mbp),
+  pheno = NULL, ...)
 }
 \arguments{
 \item{scan1_output}{output of linear mixed model for \code{phename} (see \code{\link[qtl2scan]{scan1}})}
@@ -12,10 +20,44 @@ top_snps_all(scan1_output, drop = 1.5, show_all_snps = TRUE)
 \item{drop}{include all SNPs within \code{drop} of max LOD (default 1.5)}
 
 \item{show_all_snps}{show all SNPs if \code{TRUE}}
+
+\item{object}{object of class \code{top_snps_tbl}}
+
+\item{type}{type of summary (one of "range","peak","best")}
+
+\item{shorten_char}{number of characters to shorten pheno name}
+
+\item{...}{other arguments not used}
+
+\item{x}{tbl of feature information from \code{\link{get_feature_tbl}}}
+
+\item{start_val, stop_val}{start and stop positions for subset}
+
+\item{pheno}{phenotype name(s) for subset}
+
+\item{...}{additional parameters ignored}
 }
 \value{
 table of top_snps at maximum lod for \code{pattern}
+
+table summary
+
+tbl of feature summaries by type
 }
 \description{
 Separate fine mapping scans by allele pattern.
+
+Summary of top SNP object across phenotypes
+
+Subset of features
 }
+\examples{
+\dontrun{summary(object)}
+
+}
+\author{
+Brian S Yandell, \email{brian.yandell@wisc.edu}
+
+Brian S Yandell, \email{brian.yandell@wisc.edu}
+}
+\keyword{utilities}

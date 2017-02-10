@@ -18,6 +18,8 @@
 #'
 #' @export
 #' @importFrom dplyr arrange desc group_by mutate summarize tbl_df ungroup
+#' @importFrom CCSanger sdp_to_pattern
+#'
 summary_scan1 <- function(object,
                           lodcolumn=seq_len(ncol(object$lod)),
                           chr = names(object$map),
@@ -63,7 +65,7 @@ summary_scan1 <- function(object,
                return(NULL)
              dplyr::arrange(
                dplyr::mutate(object,
-                             pattern = sdp_to_pattern(sdp)),
+                             pattern = CCSanger::sdp_to_pattern(sdp)),
                dplyr::desc(lod))},
            common = { ## Find most common patterns by pheno.
              dplyr::arrange(
@@ -77,7 +79,7 @@ summary_scan1 <- function(object,
                     max_lod=max(lod),
                     max_snp=snp_id[which.max(lod)],
                     max_pos=pos_Mbp[which.max(lod)])),
-                 pattern = sdp_to_pattern(sdp)),
+                 pattern = CCSanger::sdp_to_pattern(sdp)),
                dplyr::desc(max_lod))
            })
   }
