@@ -12,6 +12,7 @@ Depends:
 Imports:
     dplyr,
     tidyr,
+    stringr,
     RColorBrewer,
     qtl2scan,
     CCSanger

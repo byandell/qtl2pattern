@@ -1,0 +1,56 @@
+---
+title: "Package Dependencies"
+author: "Brian S. Yandell"
+date: "2/10/2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## packages
+
+- DOread: read derived data from RDS files
+- CCSanger: CCcolors, SQLite, genes, features, snpinfo
+- qtl2pattern: SDP patterns, summary methods
+- qtl2ggplot: ggplot2 version of R/qtl2 plot routines
+- qtl2shiny: shiny app
+
+## DOread
+
+- dplyr
+- broman:   `winsorize`
+- qlt2scan: `interp_map`
+
+## CCSanger
+
+- ggplot2, dplyr, readr
+- qtl2scan: `genoprob_to_snpprob`
+
+## qtl2pattern
+
+- dplyr, tidyr, stringr
+- RColorBrewer
+- qtl2scan: `scan1`, `scan1coef`
+- CCSanger: `sdp_to_logical`, `sdp_to_pattern`
+
+## qtl2ggplot
+
+- ggplot2, dplyr, tidyr
+- RColorBrewer
+- grid, graphics
+- Rcpp: sourceCpp
+- qtl2scan: `scan1`, `scan1coef`
+- qtl2pattern: `color_patterns_*`
+- CCSanger: `sdp_to_pattern`
+
+## qtl2shiny
+
+- ggplot2, dplyr, tidyr
+- shiny, shinydashboard
+- gdata, grid, gridBase, GGally
+- qtl2scan: `scan1`
+- qtl2ggplot
+- qtl2pattern: `scan_pattern`
+- CCSanger
