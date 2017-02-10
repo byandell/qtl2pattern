@@ -34,7 +34,7 @@ plot_snpscan(probs1, phe, K, covar, patterns, haplos, diplos)
 
 \item{title}{title of plot (default "")}
 
-\item{colors}{colors for plot (default \code{link[qtl2ggplot]{CCcolors}})}
+\item{colors}{colors for plot (default \code{link[CCSanger]{CCcolors}})}
 
 \item{col_names}{names of colors (default from patterns)}
 

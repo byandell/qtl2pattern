@@ -56,7 +56,7 @@ summary.snpscan_pattern <- function(object, ...) {
 #'
 #' @param x object of class \code{\link{snpscan_pattern}}
 #' @param title title for plots (default "")
-#' @param colors colors for plot (default \code{link[qtl2ggplot]{CCcolors}})
+#' @param colors colors for plot (default \code{link[CCSanger]{CCcolors}})
 #' @param col_names names of colors (default from patterns)
 #' @param color_lod color of LOD plot line
 #' @param center center coefficients if \code{TRUE} (default)
@@ -87,7 +87,7 @@ plot.snpscan_pattern <- function(x,
   upat <- sort(unique(pattern))
   ndim <- length(upat)
   if(is.null(colors))
-    colors <- CCcolors[1 + seq(0,ndim-1)%%8]
+    colors <- CCSanger::CCcolors[1 + seq(0,ndim-1)%%8]
   if(is.null(col_names))
     col_names <- pattern
   names(colors) <- col_names
