@@ -4,7 +4,7 @@
 \alias{color_patterns_get}
 \title{Set up col, pattern and group for plotting.}
 \usage{
-color_patterns_get(scan1ggdata, col, palette = NULL)
+color_patterns_get(scan1ggdata, col, palette = NULL, shape)
 }
 \arguments{
 \item{scan1ggdata}{data frame to be used for plotting}

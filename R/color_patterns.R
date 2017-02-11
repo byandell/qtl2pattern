@@ -67,10 +67,19 @@ color_patterns_set <- function(scan1output, patterns,
       pattern <- NULL
     }
   }
-  list(pattern = pattern, col = col)
+
+  # Shape parameter for point
+  if(is.null(scan1output$snpinfo$type)) {
+    shape <- "SNP"
+  } else {
+    shape <- stringr::str_sub(scan1output$snpinfo$type, 1, 3)
+    shape[shape %in% c("InD","Ind")] <- "indel"
+  }
+
+  list(pattern = pattern, col = col, shape = shape)
 }
 
-#' Set up col, pattern and group for plotting.
+#' Set up col, pattern, shape and group for plotting.
 #'
 #' @param scan1ggdata data frame to be used for plotting
 #' @param lod matrix of LOD scores by position and pheno
@@ -86,6 +95,7 @@ color_patterns_pheno <- function(scan1ggdata,
                                  lod,
                                  pattern,
                                  col,
+                                 shape,
                                  patterns,
                                  facet = NULL) {
   # Modify columns in scan1ggdata for plotting.
@@ -147,6 +157,14 @@ color_patterns_pheno <- function(scan1ggdata,
     scan1ggdata <- dplyr::rename(scan1ggdata,
                                  color = pheno)
   }
+
+  # shape for plotting
+  if(is.null(shape)) {
+    shape <- "SNP"
+  }
+
+  scan1ggdata <- dplyr::mutate(scan1ggdata,
+                               shape = shape)
 
   if(patterns == "hilit") {
     scan1ggdata <- dplyr::filter(scan1ggdata,
@@ -211,7 +229,7 @@ color_patterns_other <- function(pattern, lod, col,
 #' @importFrom tidyr gather
 #' @importFrom dplyr filter mutate rename
 #' @importFrom RColorBrewer brewer.pal brewer.pal.info
-color_patterns_get <- function(scan1ggdata, col, palette=NULL) {
+color_patterns_get <- function(scan1ggdata, col, palette=NULL, shape) {
   # Set up colors using palette.
   labels <- levels(scan1ggdata$color)
   if(is.null(col)) {
@@ -232,5 +250,18 @@ color_patterns_get <- function(scan1ggdata, col, palette=NULL) {
     ncolors <- length(colors)
     col <- colors[1 + ((col-1) %% ncolors)]
   }
-  col
+
+  shape <- factor(shape)
+  ## See http://sape.inf.usi.ch/quick-reference/ggplot2/shape
+  ## Add diamond shape to any overlooked above.
+  shapes <- c(SNP=96,indel=23,INS=25,DEL=24,INV=22)
+  tmp <- levels(shape) %in% names(shapes)
+  if(any(!tmp)) {
+    newshapes <- levels(shape)[!tmp]
+    shapes <- c(shapes, rep(21,length(newshapes)))
+    names(shapes)[-(1:5)] <- newshapes
+  }
+  shapes <- shapes[levels(shape)]
+
+  list(colors = col, shapes = shapes)
 }

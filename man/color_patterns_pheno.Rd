@@ -2,9 +2,10 @@
 % Please edit documentation in R/color_patterns.R
 \name{color_patterns_pheno}
 \alias{color_patterns_pheno}
-\title{Set up col, pattern and group for plotting.}
+\title{Set up col, pattern, shape and group for plotting.}
 \usage{
-color_patterns_pheno(scan1ggdata, lod, pattern, col, patterns, facet = NULL)
+color_patterns_pheno(scan1ggdata, lod, pattern, col, shape, patterns,
+  facet = NULL)
 }
 \arguments{
 \item{scan1ggdata}{data frame to be used for plotting}
@@ -20,5 +21,5 @@ color_patterns_pheno(scan1ggdata, lod, pattern, col, patterns, facet = NULL)
 \item{facet}{use \code{\link[ggplot2]{facet_wrap}} if not \code{NULL}}
 }
 \description{
-Set up col, pattern and group for plotting.
+Set up col, pattern, shape and group for plotting.
 }
