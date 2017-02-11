@@ -2,14 +2,16 @@
 title: "Package Dependencies"
 author: "Brian S. Yandell"
 date: "2/10/2017"
-output: ioslides_presentation
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## packages
+## DOQTL2 packages
+
+The following packages were split off from Yandell's R/doqtl2 package and are now repositories at <http://github.com/byandell>:
 
 - DOread: read derived data from RDS files
 - CCSanger: CCcolors, SQLite, genes, features, snpinfo
@@ -17,25 +19,29 @@ knitr::opts_chunk$set(echo = FALSE)
 - qtl2ggplot: ggplot2 version of R/qtl2 plot routines
 - qtl2shiny: shiny app
 
-## DOread
+## Imports
+
+All packages are now set up to formally import functions or data from other packages. Thus, no packages are actually loaded, which should speed up processes. All packages import from some <http://tidyverse.org> package.
+
+### DOread imports
 
 - dplyr
 - broman:   `winsorize`
 - qlt2scan: `interp_map`
 
-## CCSanger
+### CCSanger imports
 
 - ggplot2, dplyr, readr
 - qtl2scan: `genoprob_to_snpprob`
 
-## qtl2pattern
+### qtl2pattern imports
 
 - dplyr, tidyr, stringr
 - RColorBrewer
 - qtl2scan: `scan1`, `scan1coef`
 - CCSanger: `sdp_to_logical`, `sdp_to_pattern`
 
-## qtl2ggplot
+### qtl2ggplot imports
 
 - ggplot2, dplyr, tidyr
 - RColorBrewer
@@ -45,7 +51,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - qtl2pattern: `color_patterns_*`
 - CCSanger: `sdp_to_pattern`
 
-## qtl2shiny
+### qtl2shiny imports
 
 - ggplot2, dplyr, tidyr
 - shiny, shinydashboard
@@ -54,3 +60,82 @@ knitr::opts_chunk$set(echo = FALSE)
 - qtl2ggplot
 - qtl2pattern: `scan_pattern`
 - CCSanger
+
+## Package functions and data
+
+### DOread functions
+
+These routines assume data are in RDS files in folder `datapath`.
+The read data routines use `analyses_tbl` created for data entry workflow.
+Typically one would first do steps indicated in 
+`system.file(file.path("doqtl2", "setup.R"), package='qtl2shiny')`.
+These include
+
+```
+covar <- readRDS(file.path(datapath, "covar.rds"))
+analyses_tbl <- readRDS(file.path(datapath, "analyses.rds")
+```
+
+- `read_pheno_tbl`: read phenotype table from RDS
+- `get_pheno`: get phenotypes from phenotype table
+- `get_covar`: get covariates from covariate matrix
+
+The read genotype probability routines assume `qtl2geno::calc_genoprob` has been run.
+For quicker access, the chromosomes are stored in separate RDS file.
+
+- `read_probs`: read 8-allele genotype probabilites
+- `read_probs36`: read 36-diplotype genotype probabilites
+
+### CCSanger functions and data
+
+Here are the main components, including CC colors and access to SQL databases with gene, SNP and SVS features.
+
+- `CCcolors`, `CCoricolors`: CC founder colors (from `qtl2plot`)
+- `get_mgi_features`: Pull MGI gene tbl from SQLite database
+- `get_snpinfo`: Get SNP and InDel information in window around peak
+- `get_snpprobs`:	Get SNP genotype probabilities in window around peak
+- `get_svs8`:	Get SVS information in window around peak
+
+The following pull features. Some have `subset`, `summary` or `plot` methods.
+
+- `get_feature_snp`:	Match features with SNPs
+- `get_gene_exon`:	Get exons for set of genes
+- `get_gene_exon_snp`:	Get exons for set of genes
+- `get_gene_snp`:	Match genes with SNPs
+
+The rest are mostly utilities used in various places. 
+
+- `sdp_to_logical`:	Convert sdp to pattern
+- `sdp_to_pattern`:	Convert sdp to pattern
+- `check_interval`:	Check chr, start_bp, end_bp for validity
+- `convert_bp`:	Convert to bp if in Mb
+
+### qtl2pattern functions
+
+- `listof_scan1coef`:	List of scan1coef objects
+- `merge_feature`:	Merge SNP lod peaks with SNP feature information
+- `scan_pattern`:	Genome scan by pattern set
+- `snpscan_pattern`:	Plot coefficients by pattern set
+- `top_snps_all`:	Top SNPs for all phenotypes scanned
+
+This routine will be folded into `plot_snpasso` use, but has a few aspects not yet captured.
+
+- `topsnp_pattern`:	Fine Mapping scans by allele pattern
+
+Following are utility routines
+
+- `color_patterns_get`:	Set up col, pattern and group for plotting.
+- `color_patterns_pheno`:	Set up col, pattern and group for plotting.
+- `color_patterns_set`:	Set up colors for patterns or points
+- `genoprob_to_patternprob`:	Collapse genoprob according to pattern
+- `pattern_diplos`:	Extract pattern of diplotypes
+- `pattern_haplos`:	Extract pattern of diplotypes
+- `snpprob_collapse`:	Collapse genoprob according to pattern
+
+### qtl2ggplot functions
+
+Plot methods for `scan`, `scan1coef`, `genes` and `listof_scan1coef` objects.
+
+### qtl2shiny functions
+
+- `doqtl2_app`: run shiny app
