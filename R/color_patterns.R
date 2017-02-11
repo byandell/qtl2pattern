@@ -17,14 +17,16 @@
 color_patterns_set <- function(scan1output, patterns,
                                col, pattern, show_all_snps,
                                col.hilit, drop.hilit, maxlod) {
+  if(!show_all_snps) { # reduce to sdp for distinct SNPs
+    distinct_snps <- match(scan1output$map[[1]],
+                 scan1output$snpinfo[[1]]$pos_Mbp)
+  }
   if(patterns != "none") {
     # col rank-ordered by decreasing lod for pheno and pattern
     if(is.na(drop.hilit) || is.null(drop.hilit))
       drop.hilit <- 1.5
     if(!show_all_snps) { # reduce to sdp for distinct SNPs
-      tmp <- match(scan1output$map[[1]],
-                   scan1output$snpinfo[[1]]$pos_Mbp)
-      pattern <- pattern[tmp]
+      pattern <- pattern[distinct_snps]
     }
     # Group by phenotype and pattern to find groups within drop.hilit of maxlod.
     # Get at most 7 distinct hi groups in order of decreasing lodGpPhe.
@@ -69,10 +71,13 @@ color_patterns_set <- function(scan1output, patterns,
   }
 
   # Shape parameter for point
-  if(is.null(scan1output$snpinfo$type)) {
+  if(is.null(type <- scan1output$snpinfo[[1]]$type)) {
     shape <- "SNP"
   } else {
-    shape <- stringr::str_sub(scan1output$snpinfo$type, 1, 3)
+    if(!show_all_snps) { # reduce to sdp for distinct SNPs
+      type <- type[distinct_snps]
+    }
+    shape <- stringr::str_sub(type, 1, 3)
     shape[shape %in% c("InD","Ind")] <- "indel"
   }
 
