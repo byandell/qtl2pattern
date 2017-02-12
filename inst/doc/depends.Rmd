@@ -48,7 +48,6 @@ All packages are now set up to formally import functions or data from other pack
 - grid, graphics
 - Rcpp: sourceCpp
 - qtl2scan: `scan1`, `scan1coef`
-- qtl2pattern: `color_patterns_*`
 - CCSanger: `sdp_to_pattern`
 
 ### qtl2shiny imports
@@ -124,9 +123,6 @@ This routine will be folded into `plot_snpasso` use, but has a few aspects not y
 
 Following are utility routines
 
-- `color_patterns_get`:	Set up col, pattern and group for plotting.
-- `color_patterns_pheno`:	Set up col, pattern and group for plotting.
-- `color_patterns_set`:	Set up colors for patterns or points
 - `genoprob_to_patternprob`:	Collapse genoprob according to pattern
 - `pattern_diplos`:	Extract pattern of diplotypes
 - `pattern_haplos`:	Extract pattern of diplotypes
@@ -134,7 +130,15 @@ Following are utility routines
 
 ### qtl2ggplot functions
 
-Plot methods for `scan`, `scan1coef`, `genes` and `listof_scan1coef` objects.
+Plot methods for `scan1`, `scan1coef`, `genes` and `listof_scan1coef` objects.
+
+The following are utility routines:
+
+- `ggplot_scan1`: create ggplot2 object for `scan1` and `scan1coef`
+- `ggplot_genes`: create ggplot2 object for `genes`
+- `color_patterns_get`:	Set up col, pattern and group for plotting
+- `color_patterns_pheno`:	Set up col, pattern and group for plotting
+- `color_patterns_set`:	Set up colors for patterns or points
 
 ### qtl2shiny functions
 
