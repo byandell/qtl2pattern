@@ -6,7 +6,7 @@
 \alias{plot.scan_pattern}
 \title{Genome scan by pattern set}
 \usage{
-scan_pattern(probs1, phe, K, covar, patterns, haplos, diplos)
+scan_pattern(probs1, phe, K, covar, patterns, haplos = NULL, diplos = NULL)
 
 \method{summary}{scan_pattern}(object, ...)
 

@@ -22,12 +22,20 @@
 #' @importFrom CCSanger sdp_to_pattern
 #'
 scan_pattern <- function(probs1, phe, K, covar,
-                         patterns, haplos, diplos) {
+                         patterns, haplos = NULL, diplos = NULL) {
   if(!nrow(patterns))
     return(NULL)
 
   if(!("contrast" %in% names(patterns)))
     patterns$contrast <- ""
+
+  if(is.null(diplos)) {
+    diplos <- dimnames(probs1$probs[[1]])[[2]]
+  }
+  if(is.null(haplos)) {
+    haplos <- unique(unlist(stringr::str_split(diplos, "")))
+  }
+
   patterns <- dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(patterns,
