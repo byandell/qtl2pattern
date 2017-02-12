@@ -10,7 +10,7 @@ scan_pattern(probs1, phe, K, covar, patterns, haplos, diplos)
 
 \method{summary}{scan_pattern}(object, ...)
 
-\method{plot}{scan_pattern}(x, type = c("lod", "coef"),
+\method{plot}{scan_pattern}(x, plot_type = c("lod", "coef"),
   patterns = x$patterns$contrast, title = NULL, ...)
 }
 \arguments{
@@ -34,7 +34,7 @@ scan_pattern(probs1, phe, K, covar, patterns, haplos, diplos)
 
 \item{x}{object of class \code{\link{scan_pattern}}}
 
-\item{type}{type of plot from \code{c("lod","coef")}}
+\item{plot_type}{type of plot from \code{c("lod","coef")}}
 
 \item{title}{title for plot}
 

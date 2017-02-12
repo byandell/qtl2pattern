@@ -53,7 +53,7 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
 #' Summary of top SNP object across phenotypes
 #'
 #' @param object object of class \code{top_snps_tbl}
-#' @param type type of summary (one of "range","peak","best")
+#' @param sum_type type of summary (one of "range","peak","best")
 #' @param shorten_char number of characters to shorten pheno name
 #' @param ... other arguments not used
 #'
@@ -71,11 +71,11 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
 #' @importFrom dplyr arrange desc filter group_by mutate select summarize ungroup
 #' @importFrom CCSanger sdp_to_pattern
 #'
-summary.top_snps_all <- function(object, type=c("range","peak","best"),
+summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                                  shorten_char=0,
                                  ...) {
-  type <- match.arg(type)
-  switch(type,
+  sum_type <- match.arg(sum_type)
+  switch(sum_type,
          best = { ## Top SNPs across all phenotypes.
            dplyr::mutate(
              dplyr::arrange(
@@ -127,7 +127,7 @@ summary.top_snps_all <- function(object, type=c("range","peak","best"),
 #' @param pheno phenotype name(s) for subset
 #' @param ... additional parameters ignored
 #'
-#' @return tbl of feature summaries by type
+#' @return subset of \code{x}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities

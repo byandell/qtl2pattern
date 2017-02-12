@@ -6,7 +6,7 @@
 \title{Summary of scan1 object}
 \usage{
 summary_scan1(object, lodcolumn = seq_len(ncol(object$lod)),
-  chr = names(object$map), type = c("common", "best"), drop = 1.5,
+  chr = names(object$map), sum_type = c("common", "best"), drop = 1.5,
   show_all_snps = TRUE, ...)
 
 \method{summary}{scan1}(object, ...)
@@ -18,7 +18,7 @@ summary_scan1(object, lodcolumn = seq_len(ncol(object$lod)),
 
 \item{chr}{one or more chromosome IDs}
 
-\item{type}{type of summary}
+\item{sum_type}{type of summary}
 
 \item{drop}{LOD drop from maximum}
 

@@ -3,7 +3,7 @@
 #' @param object object from \code{\link[qtl2scan]{scan1}}
 #' @param lodcolumn one or more lod columns
 #' @param chr one or more chromosome IDs
-#' @param type type of summary
+#' @param sum_type type of summary
 #' @param drop LOD drop from maximum
 #' @param show_all_snps show all SNPs if \code{TRUE}
 #' @param ... other arguments not used
@@ -23,7 +23,7 @@
 summary_scan1 <- function(object,
                           lodcolumn=seq_len(ncol(object$lod)),
                           chr = names(object$map),
-                          type = c("common","best"), drop=1.5,
+                          sum_type = c("common","best"), drop=1.5,
                           show_all_snps = TRUE,
                           ...) {
   if(is.null(object$snpinfo)) {
@@ -58,8 +58,8 @@ summary_scan1 <- function(object,
     if(!nrow(object))
       return(NULL)
 
-    type <- match.arg(type)
-    switch(type,
+    sum_type <- match.arg(sum_type)
+    switch(sum_type,
            best = { ## Top SNPs across all phenotypes.
              if(!nrow(object))
                return(NULL)

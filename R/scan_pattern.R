@@ -72,7 +72,7 @@ summary.scan_pattern <- function(object, ...) {
   object$patterns
 }
 #' @param x object of class \code{\link{scan_pattern}}
-#' @param type type of plot from \code{c("lod","coef")}
+#' @param plot_type type of plot from \code{c("lod","coef")}
 #' @param patterns allele patterns to plot (default all)
 #' @param title title for plot
 #' @param ... additional parameters
@@ -83,12 +83,12 @@ summary.scan_pattern <- function(object, ...) {
 #' @importFrom dplyr bind_cols filter
 #' @importFrom tidyr gather
 #' @importFrom ggplot2 aes geom_path geom_vline ggplot ggtitle
-plot.scan_pattern <- function(x, type=c("lod","coef"),
+plot.scan_pattern <- function(x, plot_type=c("lod","coef"),
                               patterns=x$patterns$contrast,
                               title = NULL,
                               ...) {
-  type <- match.arg(type)
-  switch(type,
+  plot_type <- match.arg(plot_type)
+  switch(plot_type,
          lod = {
            ## LOD scans
 

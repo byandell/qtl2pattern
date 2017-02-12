@@ -76,7 +76,7 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
 #' Summary of merge_feature object
 #'
 #' @param object of class \code{merge_feature}
-#' @param type one of \code{c("SNP type","pattern")}
+#' @param sum_type one of \code{c("SNP type","pattern")}
 #' @param ... other arguments not used
 #'
 #' @return table summary
@@ -88,9 +88,9 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
 #' @rdname merge_feature
 #' @export
 summary.merge_feature <- function(object,
-                                  type = c("SNP type","pattern"), ...) {
-  type <- match.arg(type)
-  switch(type,
+                                  sum_type = c("SNP type","pattern"), ...) {
+  sum_type <- match.arg(sum_type)
+  switch(sum_type,
          "SNP type" = {
            t(table(object$snp_type))
          },

@@ -10,7 +10,8 @@ merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
   gene_exon = CCSanger::get_gene_exon_snp(top_snps_tbl, sql_filename),
   sql_filename = file.path(datapath, "mgi_db.sqlite"), datapath)
 
-\method{summary}{merge_feature}(object, type = c("SNP type", "pattern"), ...)
+\method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"),
+  ...)
 
 \method{plot}{merge_feature}(x, pheno, plot_by = c("pattern", "consequence"),
   ...)
@@ -32,7 +33,7 @@ merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
 
 \item{object}{of class \code{merge_feature}}
 
-\item{type}{one of \code{c("SNP type","pattern")}}
+\item{sum_type}{one of \code{c("SNP type","pattern")}}
 
 \item{...}{other arguments not used}
 
