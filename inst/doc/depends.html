@@ -134,6 +134,46 @@ $(document).ready(function () {
 <li>qtl2shiny: shiny app</li>
 </ul>
 </div>
+<div id="multiple-trait-strategy" class="section level2">
+<h2>Multiple Trait Strategy</h2>
+<p>Here is a strategy to look at multiple traits in a small interval:</p>
+<ul>
+<li>use analyses table (or other approach) to identify region of interest
+<ul>
+<li>say 1-5Mb window</li>
+</ul></li>
+<li>identify set of traits in region</li>
+<li>estimate allele effects at peak for each trait
+<ul>
+<li>useful plots?</li>
+</ul></li>
+<li>find best SNP(s) and pattern(s)
+<ul>
+<li>identify SDP and pattern for each</li>
+<li>useful plots?</li>
+</ul></li>
+<li>do same for full effects
+<ul>
+<li>36 diplotypes</li>
+<li>3-level SNPs</li>
+</ul></li>
+</ul>
+<p>Some challenges</p>
+<ul>
+<li>don’t have useful thresholds yet</li>
+<li>would like to think about inference across related patterns</li>
+<li>multiple peaks in small region</li>
+<li>pleiotropy vs close linkage</li>
+</ul>
+<p>How to incorporate this into shiny tool?</p>
+<ul>
+<li>quick computation: limit size of region</li>
+<li>do we have to run genome scan?
+<ul>
+<li>or just consider flanking markers for each peak?</li>
+</ul></li>
+</ul>
+</div>
 <div id="imports" class="section level2">
 <h2>Imports</h2>
 <p>All packages are now set up to formally import functions or data from other packages. Thus, no packages are actually loaded, which should speed up processes. All packages import from some <a href="http://tidyverse.org" class="uri">http://tidyverse.org</a> package.</p>
@@ -169,7 +209,6 @@ $(document).ready(function () {
 <li>grid, graphics</li>
 <li>Rcpp: sourceCpp</li>
 <li>qtl2scan: <code>scan1</code>, <code>scan1coef</code></li>
-<li>qtl2pattern: <code>color_patterns_*</code></li>
 <li>CCSanger: <code>sdp_to_pattern</code></li>
 </ul>
 </div>
@@ -244,9 +283,6 @@ analyses_tbl &lt;- readRDS(file.path(datapath, &quot;analyses.rds&quot;)</code><
 </ul>
 <p>Following are utility routines</p>
 <ul>
-<li><code>color_patterns_get</code>: Set up col, pattern and group for plotting.</li>
-<li><code>color_patterns_pheno</code>: Set up col, pattern and group for plotting.</li>
-<li><code>color_patterns_set</code>: Set up colors for patterns or points</li>
 <li><code>genoprob_to_patternprob</code>: Collapse genoprob according to pattern</li>
 <li><code>pattern_diplos</code>: Extract pattern of diplotypes</li>
 <li><code>pattern_haplos</code>: Extract pattern of diplotypes</li>
@@ -255,7 +291,15 @@ analyses_tbl &lt;- readRDS(file.path(datapath, &quot;analyses.rds&quot;)</code><
 </div>
 <div id="qtl2ggplot-functions" class="section level3">
 <h3>qtl2ggplot functions</h3>
-<p>Plot methods for <code>scan</code>, <code>scan1coef</code>, <code>genes</code> and <code>listof_scan1coef</code> objects.</p>
+<p>Plot methods for <code>scan1</code>, <code>scan1coef</code>, <code>genes</code> and <code>listof_scan1coef</code> objects.</p>
+<p>The following are utility routines:</p>
+<ul>
+<li><code>ggplot_scan1</code>: create ggplot2 object for <code>scan1</code> and <code>scan1coef</code></li>
+<li><code>ggplot_genes</code>: create ggplot2 object for <code>genes</code></li>
+<li><code>color_patterns_get</code>: Set up col, pattern and group for plotting</li>
+<li><code>color_patterns_pheno</code>: Set up col, pattern and group for plotting</li>
+<li><code>color_patterns_set</code>: Set up colors for patterns or points</li>
+</ul>
 </div>
 <div id="qtl2shiny-functions" class="section level3">
 <h3>qtl2shiny functions</h3>
@@ -263,6 +307,125 @@ analyses_tbl &lt;- readRDS(file.path(datapath, &quot;analyses.rds&quot;)</code><
 <li><code>doqtl2_app</code>: run shiny app</li>
 </ul>
 </div>
+</div>
+<div id="function-migration" class="section level2">
+<h2>Function migration</h2>
+<p>The following tables show functions from R/doqtl2 used by shiny app. Some of them will stay, but some of them will be simplified, for instance to fit with R/qtl2ggplot, etc.</p>
+<table>
+<thead>
+<tr class="header">
+<th>file</th>
+<th>function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>shinyGeneExon.R</td>
+<td>plot_gene_exon</td>
+</tr>
+<tr class="even">
+<td>shinyGeneRegion.R</td>
+<td>get_mgi_features</td>
+</tr>
+<tr class="odd">
+<td>shinyPattern.R</td>
+<td>scan_pattern</td>
+</tr>
+<tr class="even">
+<td>shinyProbs.R</td>
+<td>get_snpprobs read_probs read_probs36</td>
+</tr>
+<tr class="odd">
+<td>shinySNPAllele.R</td>
+<td>get_gene_exon_snp get_top_snps_tbl snpprob_collapse</td>
+</tr>
+<tr class="even">
+<td>shinyScan1Plot.R</td>
+<td>listof_scan1coefCC</td>
+</tr>
+<tr class="odd">
+<td>shinySetup.R</td>
+<td>get_pheno</td>
+</tr>
+<tr class="even">
+<td>shinyTopFeature.R</td>
+<td>merge_feature</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>function</th>
+<th>file</th>
+<th>use</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>get_gene_exon_snp</td>
+<td>gene_exon.R</td>
+<td>call get_mgi_features</td>
+</tr>
+<tr class="even">
+<td>get_mgi_features</td>
+<td>get_mgi_features.R</td>
+<td>extract from SQLite</td>
+</tr>
+<tr class="odd">
+<td>get_pheno</td>
+<td>get_traits.R</td>
+<td>get selected phenotypes</td>
+</tr>
+<tr class="even">
+<td>get_snpprobs</td>
+<td>snpinfo.R</td>
+<td>snpprobs for SNPs, InDels, SVs</td>
+</tr>
+<tr class="odd">
+<td>get_top_snps_tbl</td>
+<td>top_snps_tbl.R</td>
+<td>get top SNP info based on LMMs</td>
+</tr>
+<tr class="even">
+<td>listof_scan1coefCC</td>
+<td>listof_scan1coefCC.R</td>
+<td>create list of scan1coefCC objects</td>
+</tr>
+<tr class="odd">
+<td>merge_feature</td>
+<td>merge_feature.R</td>
+<td>merge SNP LOD and other information</td>
+</tr>
+<tr class="even">
+<td>plot_gene_exon</td>
+<td>gene_exon.R</td>
+<td>plot genes and exons</td>
+</tr>
+<tr class="odd">
+<td>read_probs</td>
+<td>read_probs.R</td>
+<td>read genoprob object for RDS</td>
+</tr>
+<tr class="even">
+<td>read_probs36</td>
+<td>read_probs.R</td>
+<td>read genoprob object for RDS</td>
+</tr>
+<tr class="odd">
+<td>scan_pattern</td>
+<td>scan_pattern.R</td>
+<td>genome scan by pattern set</td>
+</tr>
+<tr class="even">
+<td>snpprob_collapse</td>
+<td>genoprob_to_patternprob.R</td>
+<td>collapse from alleles to SNPs</td>
+</tr>
+</tbody>
+</table>
+<p>Want <code>scan_pattern</code> to look like <code>plot_snpasso</code> with <code>pattern=&quot;all&quot;</code>.</p>
+<p>Need to work on geno and exon stuff to meld with <code>plot_genes</code>.</p>
 </div>
 
 

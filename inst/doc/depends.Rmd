@@ -19,6 +19,35 @@ The following packages were split off from Yandell's R/doqtl2 package and are no
 - qtl2ggplot: ggplot2 version of R/qtl2 plot routines
 - qtl2shiny: shiny app
 
+## Multiple Trait Strategy
+
+Here is a strategy to look at multiple traits in a small interval:
+
+- use analyses table (or other approach) to identify region of interest
+    + say 1-5Mb window
+- identify set of traits in region
+- estimate allele effects at peak for each trait
+    + useful plots?
+- find best SNP(s) and pattern(s)
+    + identify SDP and pattern for each
+    + useful plots?
+- do same for full effects
+    + 36 diplotypes
+    + 3-level SNPs
+    
+Some challenges
+
+- don't have useful thresholds yet
+- would like to think about inference across related patterns
+- multiple peaks in small region
+- pleiotropy vs close linkage
+
+How to incorporate this into shiny tool?
+
+- quick computation: limit size of region
+- do we have to run genome scan?
+    + or just consider flanking markers for each peak?
+    
 ## Imports
 
 All packages are now set up to formally import functions or data from other packages. Thus, no packages are actually loaded, which should speed up processes. All packages import from some <http://tidyverse.org> package.
@@ -143,3 +172,37 @@ The following are utility routines:
 ### qtl2shiny functions
 
 - `doqtl2_app`: run shiny app
+
+## Function migration
+
+The following tables show functions from R/doqtl2 used by shiny app. Some of them will stay, but some of them will be simplified, for instance to fit with R/qtl2ggplot, etc.
+
+file              | function
+----------------- | --------
+shinyGeneExon.R   | plot_gene_exon
+shinyGeneRegion.R | get_mgi_features
+shinyPattern.R    | scan_pattern
+shinyProbs.R      | get_snpprobs read_probs read_probs36
+shinySNPAllele.R  | get_gene_exon_snp get_top_snps_tbl snpprob_collapse
+shinyScan1Plot.R  | listof_scan1coefCC
+shinySetup.R      | get_pheno
+shinyTopFeature.R | merge_feature
+
+function          | file | use
+----------------- | -------- | --------
+get_gene_exon_snp | gene_exon.R | call get_mgi_features
+get_mgi_features  | get_mgi_features.R | extract from SQLite
+get_pheno         | get_traits.R | get selected phenotypes
+get_snpprobs      | snpinfo.R   | snpprobs for SNPs, InDels, SVs
+get_top_snps_tbl  | top_snps_tbl.R | get top SNP info based on LMMs
+listof_scan1coefCC | listof_scan1coefCC.R | create list of scan1coefCC objects
+merge_feature     | merge_feature.R | merge SNP LOD and other information
+plot_gene_exon    | gene_exon.R | plot genes and exons
+read_probs        | read_probs.R | read genoprob object for RDS
+read_probs36      | read_probs.R | read genoprob object for RDS
+scan_pattern      | scan_pattern.R | genome scan by pattern set
+snpprob_collapse  | genoprob_to_patternprob.R | collapse from alleles to SNPs
+
+Want `scan_pattern` to look like `plot_snpasso` with `pattern="all"`.
+
+Need to work on geno and exon stuff to meld with `plot_genes`.

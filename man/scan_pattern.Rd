@@ -6,12 +6,14 @@
 \alias{plot.scan_pattern}
 \title{Genome scan by pattern set}
 \usage{
-scan_pattern(probs1, phe, K, covar, patterns, haplos = NULL, diplos = NULL)
+scan_pattern(probs1, phe, K, covar, patterns, haplos = NULL, diplos = NULL,
+  condense_patterns = TRUE)
 
 \method{summary}{scan_pattern}(object, ...)
 
-\method{plot}{scan_pattern}(x, plot_type = c("lod", "coef"),
-  patterns = x$patterns$contrast, title = NULL, ...)
+\method{plot}{scan_pattern}(x, plot_type = c("lod", "coef", "coef_and_lod"),
+  patterns = x$patterns$contrast, columns = 1:3, min_lod = 3,
+  ylim_coef = c(-2, 2), ...)
 }
 \arguments{
 \item{probs1}{object of class \code{\link[qtl2scan]{calc_genoprob}}}
@@ -28,6 +30,8 @@ scan_pattern(probs1, phe, K, covar, patterns, haplos = NULL, diplos = NULL)
 
 \item{diplos}{vector of diplotype names}
 
+\item{condense_patterns}{remove snp_action from contrasts if TRUE}
+
 \item{object}{object of class \code{\link{scan_pattern}}}
 
 \item{...}{additional parameters}
@@ -36,7 +40,11 @@ scan_pattern(probs1, phe, K, covar, patterns, haplos = NULL, diplos = NULL)
 
 \item{plot_type}{type of plot from \code{c("lod","coef")}}
 
-\item{title}{title for plot}
+\item{columns}{columns used for coef plot}
+
+\item{min_lod}{minimum LOD peak for contrast to be retained}
+
+\item{ylim_coef}{vertical limits for coef plot}
 
 \item{patterns}{allele patterns to plot (default all)}
 }
