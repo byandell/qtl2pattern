@@ -78,6 +78,7 @@ scan_pattern <- function(probs1, phe, K, covar,
   if(npat > 1) for(i in seq(2, npat)) {
     probs2 <- genoprob_to_patternprob(probs1, pattern_three[i,])
     coefs[[i]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
+    dimnames(coefs[[i]]$coef)[[2]][1:3] <- c("ref","het","alt")
     lod[,i] <- qtl2scan::scan1(probs2, phe, K, covar)$lod
   }
 
