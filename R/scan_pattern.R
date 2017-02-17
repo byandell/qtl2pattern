@@ -96,7 +96,7 @@ scan_pattern <- function(probs1, phe, K, covar,
   # return object.
   out <- list(patterns=patterns,
               dip_set = dip_set[, patterns$founders],
-              group = as.numeric(pattern_three[pattern$founders,,
+              group = as.numeric(pattern_three[patterns$founders,,
                                                drop=FALSE]),
               scan = scans,
               coef = coefs)
