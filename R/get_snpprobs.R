@@ -18,8 +18,11 @@
 #' \dontrun{get_snpprobs(chr_id, peak_Mbp, window_Mbp, scan_obj, probs_obj, datapath)}
 #'
 #' @export
+#'
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom qtl2scan genoprob_to_snpprob
+#' @importFrom CCSanger get_snpinfo get_svs8
+#'
 get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
                          phename, probs_obj, datapath) {
   if(is.null(chr_id) | is.null(peak_Mbp) | is.null(window_Mbp))
@@ -36,14 +39,14 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
     peak_Mbp <- mean(range(probs_obj$map[[1]]))
   }
   snpinfo <- dplyr::mutate(
-    get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath),
+    CCSanger::get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath),
     svs_type = "SNP")
   indelinfo <- dplyr::select(
     dplyr::mutate(
-      get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath, info_type = "indels"),
+      CCSanger::get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath, info_type = "indels"),
       svs_type = "Indel"),
     -allele)
-  svsinfo <- get_svs8(chr_id, peak_Mbp, window_Mbp, datapath)
+  svsinfo <- CCSanger::get_svs8(chr_id, peak_Mbp, window_Mbp, datapath)
   snpinfo <- dplyr::bind_rows(snpinfo, indelinfo, svsinfo)
   ## Need names pos and snp for genoprob_to_snpprob.
   snpinfo <- dplyr::mutate(snpinfo,

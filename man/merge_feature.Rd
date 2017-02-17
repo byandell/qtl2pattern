@@ -3,7 +3,6 @@
 \name{merge_feature}
 \alias{merge_feature}
 \alias{summary.merge_feature}
-\alias{plot.merge_feature}
 \title{Merge SNP lod peaks with SNP feature information}
 \usage{
 merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
@@ -11,9 +10,6 @@ merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
   sql_filename = file.path(datapath, "mgi_db.sqlite"), datapath)
 
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"),
-  ...)
-
-\method{plot}{merge_feature}(x, pheno, plot_by = c("pattern", "consequence"),
   ...)
 }
 \arguments{
@@ -36,36 +32,22 @@ merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
 \item{sum_type}{one of \code{c("SNP type","pattern")}}
 
 \item{...}{other arguments not used}
-
-\item{x}{of class \code{merge_feature}}
-
-\item{pheno}{name of phenotype to be plotted}
-
-\item{plot_by}{element to plot by (one of \code{c("pattern","consequence")})}
-
-\item{...}{other arguments not used}
 }
 \value{
 tbl with added information on genes and exons
 
 table summary
-
-ggplot2 object
 }
 \description{
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
 
 Summary of merge_feature object
-
-Plot of merge_feature object
 }
 \examples{
 \dontrun{merge_feature(...)}
 
 }
 \author{
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 
 Brian S Yandell, \email{brian.yandell@wisc.edu}
