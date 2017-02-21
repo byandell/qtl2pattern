@@ -1,0 +1,111 @@
+---
+title: "Kinship Decomposition"
+author: "Brian S. Yandell"
+date: "2/21/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+The purpose of this is to develop math to modify R/qtl2scan so that the kinship object can be decomposed once and used multiple times. The challenge is that the current setup decomposes kinship on each reduced set of data, chosen to eliminate for instance individuals with missing data for a phenotype, or a subset of individuals to improve computation.
+
+The basic math for complete data is as follows.
+
+$$y = X\beta + g + e$$
+
+with
+$\mu_q=X\beta$ = QTL effects (and any other fixed effects), 
+$g$ = polygenic effects (random), 
+e = unexplained variation (random) and distributions
+
+$$g\sim N(0,\sigma_g^2 K), \quad e\sim N(0,\sigma^2 I)$$
+
+Here,
+$K$ = kinship matrix and
+$I$ = identity matrix (1s on diagonal, 0s off diagonal).
+Put another way, the distribution of phenotype is
+
+$$y \sim N(X\beta,V), \quad V =\sigma_g^2K + \sigma^2I$$
+
+The MLEs are found by iterating to solve (similar to EM idea),
+getting MLE of $\beta$ given $V$,
+$\hat{\beta}_q=(X^{\text{T}}V^{-1}X)^{-1}X^{\text{T}}V^{-1/2}y$, and
+estimating $\sigma_g$ and $\sigma^2$ given $\hat{\beta}$
+
+Rather than working with $V$ directly, the $K$ matrix is decomposed using SVD as
+
+$$K = UDU^{\text{T}}$$
+
+with $U$ orthonormal (eigenvector columns are uncorrelated with variance 1; $U^{\text{T}}U=I$). The $D$ matrix 0 off-diagonal with diagonal entries being the eigenvalues $d_i$. With $\gamma = \sigma_g^2 / \sigma^2$, we can write $V$ as
+
+$$V = \sigma^2 (\gamma UDU^{\text{T}} +I)$$
+
+Now we transform the problem by left-multiplying by $CU^{\text{T}}$ and right-multiplying by $UC$, with $C$ being diagonal with entries $c_i=(1+\gamma d_i)^{-1/2}$.
+
+$$CU^{\text{T}}VUC = I$$
+
+That is, the transformed model is
+
+$$y^*=CU^{\text{T}}y \sim N(X^*\beta,I), \quad X^*=CU^{\text{T}}X$$
+
+and the solution is from standard linear models,
+
+$$\hat{\beta}=(X^{*\text{T}}X^*)^{-1}X^{*\text{T}}y^* = (X^{\text{T}}UC^2U^{\text{T}}X)^{-1}X^{\text{T}}UC^2U^{\text{T}}y~.$$
+
+This looks complicated, but it is actually quite fast.
+
+## Missing phenotypes and subsetting
+
+If some phenotypes are missing, or we compute with a subset of individuals, the problem needs to be refactored. Suppose $y=(y_1,y_2)$ with $y_2$ having $n_2$ `NA` values. Rather than reduce the size of problem and do another SVD, consider a diagonal matrix $B$ with $n_1$ 1s and $n_2$ 0s down the diagonal. In other words,
+
+$$B = \begin{bmatrix} I & 0 \\ 0 & 0 \end{bmatrix}$$
+
+and $By = (y_1,0)$. 
+Note that $B^{\text{T}} = B^2 =B$, but $B$ does not have an inverse. 
+Formally, we write
+
+$$B y \sim N(B X\beta,BVB), \quad BVB =\sigma^2(\gamma BKB + B)$$
+
+If we divide $K$ (and similarly $V$) into four parts, we have
+
+$$K = \begin{bmatrix} K_{11} & K_{21} \\ K_{12} & K_{22} \end{bmatrix}~,
+\quad BKB = \begin{bmatrix} K_{11} & 0 \\ 0 & 0 \end{bmatrix}~.$$
+
+The part we are interested in is
+
+$$y_1 \sim N(X_1\beta,V_{11}), \quad V_{11} =\sigma^2(\gamma K_{11} + I)$$
+
+
+Now consider the eigen decomposition. We first partition $U$ vertically as $U = \begin{bmatrix} U_1\\U_2\end{bmatrix}~.$ Note that $BU = \begin{bmatrix} U_1\\0\end{bmatrix}$ and
+
+$$BKB = BUDU^{\text{T}}B = \begin{bmatrix} U_1DU_1^{\text{T}} & 0 \\ 0 & 0 \end{bmatrix}~.$$
+
+$$B y \sim N(B X\beta,BVB), \quad BVB =\sigma^2(\gamma BUDU^{\text{T}}B + B)$$
+
+Equivalently, $K_{11} = U_1DU_1^{\text{T}}$, giving us a decomposition of the submatrix of $K$ for the $n_1$ individuals with full data.
+
+Thus the model is now
+
+$$y_1 \sim N(X_1\beta,V_{11}), \quad V_{11} =\sigma^2(\gamma U_1DU_1^{\text{T}} + I)$$
+
+To solve, we transform the whole matrix $V$ to $B$, left-multiplying by $CU_1^{\text{T}}$ and right-multiplying by $^{-1/2}U_1C$, with $C$ again being diagonal with entries $c_i=(1+\gamma d_i)^-{1/2}$.
+
+$$BCU^{\text{T}}VUCB = B, \quad CU_1^{\text{T}}VU_1C=I$$
+
+Filling in the pieces, the solution is
+$$\hat{\beta} = (X_1^{\text{T}}X_1^*)^{-1}X_1^{*\text{T}}y_1^* = (X_1^{\text{T}}U_1C^2U_1^{\text{T}}X_1)^{-1}X_1^{\text{T}}U_1C^2U_1^{\text{T}}y_1$$
+
+with $X_1^* = CU_1^{\text{T}}X_1$ and $y_1^*=CU_1^{\text{T}}y_1~.$ Note that in the transformed space, $y_1^*$ has $n$ values and $X_1^*$ is $n\times p$.
+
+## Implementation
+
+Thus, to solve the sub-problem, we use the SVD for all the data, divide the eigen matrix $U$ horizontally, and proceed as we would with the whole data situation. It is important to remember that $U_1$ is rectangular, $n_1\times n$ rather than square, which may complicate implementation somewhat. That is, need to make sure eigen values and vectors are picked up properly. First glance, seems OK, but will need more careful study. 
+
+The `R/qtl2scan` code uses `K` for the kinship matrix and `hsq` for heritability ($\sigma_g^2/(\sigma_g^2+\sigma^2)$). The decomposed eigen object is `Ke`. Decomposition is done in 
+`qtl2scan::decomp_kinship()`. Three un-exported (and one exported) routines call this, `qtl2scan:::scan1_pg()`, `qtl2scan:::scan1coef_pg()`, `qtl2scan:::scan1blup_pg()` and `qtl2scan::est_herit()`. 
+
+They calculate heritability `hsq` with `qtl2scan:::calc_hsq_clean()` using internal `by_chr_func()`, which is unexported and found in file `scan1_pg.R`. This is called with the eigen decomposition stored in the `kinship` object, as `kinship$vectors` and `kinship$values`. For `scan1()`, calculations are done in `qtl2scan:::scan1_pg_clean()` and flavors of `scan_pg_onechr()`, which are written in Cpp.
+
+**The Cpp routine `scan_pg_onechr` assumes eigenvectors are square matrices of size `n_ind`.** Here, `n_ind` is the number of rows in `pheno`. We would want the number of columns of `eigenvec` be larger than `n_ind`. When things are pre-multiplied, they get larger, so need to ensure there is space, etc. Seems OK in R, but not sure in Cpp.
