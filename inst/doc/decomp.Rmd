@@ -25,7 +25,7 @@ $$g\sim N(0,\sigma_g^2 K), \quad e\sim N(0,\sigma^2 I)$$
 Here,
 $K$ = kinship matrix and
 $I$ = identity matrix (1s on diagonal, 0s off diagonal).
-Put another way, the distribution of phenotype is
+Put another way, the distribution of phenotypes is
 
 $$y \sim N(X\beta,V), \quad V =\sigma_g^2K + \sigma^2I$$
 
@@ -38,7 +38,7 @@ Rather than working with $V$ directly, the $K$ matrix is decomposed using SVD as
 
 $$K = UDU^{\text{T}}$$
 
-with $U$ orthonormal (eigenvector columns are uncorrelated with variance 1; $U^{\text{T}}U=I$). The $D$ matrix 0 off-diagonal with diagonal entries being the eigenvalues $d_i$. With $\gamma = \sigma_g^2 / \sigma^2$, we can write $V$ as
+with $U$ orthonormal (eigenvector columns are uncorrelated with variance 1; $U^{\text{T}}U=UU^{\text{T}}=I$). The $D$ matrix has 0 off-diagonal and diagonal entries being the eigenvalues $d_i$. With $\gamma = \sigma_g^2 / \sigma^2$, we can write $V$ as
 
 $$V = \sigma^2 (\gamma UDU^{\text{T}} +I)$$
 
@@ -54,13 +54,11 @@ and the solution is from standard linear models,
 
 $$\hat{\beta}=(X^{*\text{T}}X^*)^{-1}X^{*\text{T}}y^* = (X^{\text{T}}UC^2U^{\text{T}}X)^{-1}X^{\text{T}}UC^2U^{\text{T}}y~.$$
 
-This looks complicated, but it is actually quite fast.
-
 ## Missing phenotypes and subsetting
 
-If some phenotypes are missing, or we compute with a subset of individuals, the problem needs to be refactored. Suppose $y=(y_1,y_2)$ with $y_2$ having $n_2$ `NA` values. Rather than reduce the size of problem and do another SVD, consider a diagonal matrix $B$ with $n_1$ 1s and $n_2$ 0s down the diagonal. In other words,
+If some phenotypes are missing, or we compute with a subset of individuals, the problem needs to be refactored. Suppose the $n$ vector of phenotypes $y$ is subdivided as $y=(y_1,y_2)$, with $y_2$ being $n_2$ `NA` values. Rather than reduce the size of problem and do another SVD, consider a diagonal matrix $B$ with $n_1$ 1s and $n_2=n-n_1$ 0s down the diagonal. In other words, with $I_1$ an identity matrix of size $n_1$,
 
-$$B = \begin{bmatrix} I & 0 \\ 0 & 0 \end{bmatrix}$$
+$$B = \begin{bmatrix} I_1 & 0 \\ 0 & 0 \end{bmatrix}$$
 
 and $By = (y_1,0)$. 
 Note that $B^{\text{T}} = B^2 =B$, but $B$ does not have an inverse. 
@@ -68,44 +66,46 @@ Formally, we write
 
 $$B y \sim N(B X\beta,BVB), \quad BVB =\sigma^2(\gamma BKB + B)$$
 
-If we divide $K$ (and similarly $V$) into four parts, we have
+If we partition $K$ (and similarly $V$) into four parts, we have
 
 $$K = \begin{bmatrix} K_{11} & K_{21} \\ K_{12} & K_{22} \end{bmatrix}~,
 \quad BKB = \begin{bmatrix} K_{11} & 0 \\ 0 & 0 \end{bmatrix}~.$$
 
 The part we are interested in is
 
-$$y_1 \sim N(X_1\beta,V_{11}), \quad V_{11} =\sigma^2(\gamma K_{11} + I)$$
+$$y_1 \sim N(X_1\beta,V_{11}), \quad V_{11} =\sigma^2(\gamma K_{11} + I_1)$$
 
 
-Now consider the eigen decomposition. We first partition $U$ vertically as $U = \begin{bmatrix} U_1\\U_2\end{bmatrix}~.$ Note that $BU = \begin{bmatrix} U_1\\0\end{bmatrix}$ and
+Now consider the eigen decomposition. We first partition $U$ vertically as $U = \begin{bmatrix} U_1\\U_2\end{bmatrix}~.$ 
+Here, $U_1U_1^{\text{T}}=I_1$, $U_2U_2^{\text{T}}=I_2$, $U_1U_2^{\text{T}}=0$ and $U_2U_1^{\text{T}}=0$, with $I_j$ being an identity matrix of size $n_j$. Also, $I=U_1^{\text{T}}U_1+U_2^{\text{T}}U_2$. 
+Note that $BU = \begin{bmatrix} U_1\\0\end{bmatrix}$ and
 
 $$BKB = BUDU^{\text{T}}B = \begin{bmatrix} U_1DU_1^{\text{T}} & 0 \\ 0 & 0 \end{bmatrix}~.$$
 
-$$B y \sim N(B X\beta,BVB), \quad BVB =\sigma^2(\gamma BUDU^{\text{T}}B + B)$$
+$$BVB =\sigma^2(\gamma BUDU^{\text{T}}B + B)~, \quad V_{11} =\sigma^2(\gamma U_1DU_1^{\text{T}} + I_1)$$
 
-Equivalently, $K_{11} = U_1DU_1^{\text{T}}$, giving us a decomposition of the submatrix of $K$ for the $n_1$ individuals with full data.
-
+Equivalently, $K_{11} = U_1DU_1^{\text{T}}$, giving us a decomposition of the submatrix of $K$ for the $n_1$ individuals.
 Thus the model is now
+$y_1 \sim N(X_1\beta,V_{11})~.$
 
-$$y_1 \sim N(X_1\beta,V_{11}), \quad V_{11} =\sigma^2(\gamma U_1DU_1^{\text{T}} + I)$$
-
-To solve, we transform the whole matrix $V$ to $B$, left-multiplying by $CU_1^{\text{T}}$ and right-multiplying by $^{-1/2}U_1C$, with $C$ again being diagonal with entries $c_i=(1+\gamma d_i)^-{1/2}$.
-
-$$BCU^{\text{T}}VUCB = B, \quad CU_1^{\text{T}}VU_1C=I$$
-
+To solve, we transform the whole matrix $BVB$ to $B$.
+Note that $BCU^{\text{T}}VUCB = B$, but $CU_1^{\text{T}}VU_1C\neq I_1$. 
+However, working carefully, it turns out that we can solve for $\beta$ by left-multiplying by $CU_1^{\text{T}}$ and right-multiplying by $^{-1/2}U_1C$. 
 Filling in the pieces, the solution is
+
 $$\hat{\beta} = (X_1^{\text{T}}X_1^*)^{-1}X_1^{*\text{T}}y_1^* = (X_1^{\text{T}}U_1C^2U_1^{\text{T}}X_1)^{-1}X_1^{\text{T}}U_1C^2U_1^{\text{T}}y_1$$
 
 with $X_1^* = CU_1^{\text{T}}X_1$ and $y_1^*=CU_1^{\text{T}}y_1~.$ Note that in the transformed space, $y_1^*$ has $n$ values and $X_1^*$ is $n\times p$.
 
 ## Implementation
 
-Thus, to solve the sub-problem, we use the SVD for all the data, divide the eigen matrix $U$ horizontally, and proceed as we would with the whole data situation. It is important to remember that $U_1$ is rectangular, $n_1\times n$ rather than square, which may complicate implementation somewhat. That is, need to make sure eigen values and vectors are picked up properly. First glance, seems OK, but will need more careful study. 
+Thus, to solve the sub-problem, we use the SVD for all the data, divide the eigen matrix $U$ horizontally, and proceed as we would with the whole data situation. It is important to remember that $U_1$ is rectangular, $n_1\times n$, rather than square, which may complicate implementation somewhat. That is, need to make sure eigen values and vectors and objects multiplied by them, are stored properly. First glance, seems OK, but will need more careful study. 
 
 The `R/qtl2scan` code uses `K` for the kinship matrix and `hsq` for heritability ($\sigma_g^2/(\sigma_g^2+\sigma^2)$). The decomposed eigen object is `Ke`. Decomposition is done in 
 `qtl2scan::decomp_kinship()`. Three un-exported (and one exported) routines call this, `qtl2scan:::scan1_pg()`, `qtl2scan:::scan1coef_pg()`, `qtl2scan:::scan1blup_pg()` and `qtl2scan::est_herit()`. 
 
 They calculate heritability `hsq` with `qtl2scan:::calc_hsq_clean()` using internal `by_chr_func()`, which is unexported and found in file `scan1_pg.R`. This is called with the eigen decomposition stored in the `kinship` object, as `kinship$vectors` and `kinship$values`. For `scan1()`, calculations are done in `qtl2scan:::scan1_pg_clean()` and flavors of `scan_pg_onechr()`, which are written in Cpp.
 
-**The Cpp routine `scan_pg_onechr` assumes eigenvectors are square matrices of size `n_ind`.** Here, `n_ind` is the number of rows in `pheno`. We would want the number of columns of `eigenvec` be larger than `n_ind`. When things are pre-multiplied, they get larger, so need to ensure there is space, etc. Seems OK in R, but not sure in Cpp.
+**The Cpp routine `scan_pg_onechr` assumes eigenvectors are square matrices of size `n_ind`.** Here, $n_1$ = `n_ind` is the number of individuals in the full-data subset being analyzed (the number of rows in `pheno`). We the number of columns of `eigenvec` is $n\geq n_1$. When things are pre-multiplied, they get larger, so need to ensure there is space, etc. Seems OK in R, but not sure in Cpp.
+
+It should be possible to have one routine that calls `qtl2scan::decomp_kinship()` and `qtl2scan:::calc_hsq_clean()` if needed, used for the four instances identified above. We would also want to either use these or something similar as exported routine to precompute SVD once for later use.
