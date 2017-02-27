@@ -63,8 +63,7 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
           drop=drop),
         snp_id %in% near_snp_id),
       index, .keep_all=TRUE)
-    top_snps_tbl[shorten_phename(i, dropchar)] <-
-      tmp2$lod[match(top_snps_tbl$index, tmp2$index)]
+    top_snps_tbl[i] <- tmp2$lod[match(top_snps_tbl$index, tmp2$index)]
   }
   out <- dplyr::select(
     dplyr::mutate(top_snps_tbl,

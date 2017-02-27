@@ -54,7 +54,6 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
 #'
 #' @param object object of class \code{top_snps_tbl}
 #' @param sum_type type of summary (one of "range","peak","best")
-#' @param shorten_char number of characters to shorten pheno name
 #' @param ... other arguments not used
 #'
 #' @return table summary
@@ -72,7 +71,6 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
 #' @importFrom CCSanger sdp_to_pattern
 #'
 summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
-                                 shorten_char=0,
                                  ...) {
   sum_type <- match.arg(sum_type)
   switch(sum_type,
@@ -81,7 +79,6 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
              dplyr::arrange(
                dplyr::select(object, -index,-sdp),
                dplyr::desc(lod)),
-             pheno = shorten_phename(pheno, shorten_char),
              csq = abbreviate(csq, 15))
          },
          range = {
@@ -112,9 +109,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                        chr, sdp, index, lod),
                      min_Mbp = min(pos_Mbp),
                      max_Mbp = max(pos_Mbp),
-                     phenos = paste(shorten_phename(unique(pheno),
-                                                    shorten_char),
-                                    collapse=","))),
+                     phenos = paste(unique(pheno), collapse=","))),
                  pattern = CCSanger::sdp_to_pattern(sdp)),
                dplyr::desc(lod)),
              -chr)

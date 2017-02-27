@@ -9,7 +9,7 @@
 top_snps_all(scan1_output, drop = 1.5, show_all_snps = TRUE)
 
 \method{summary}{top_snps_all}(object, sum_type = c("range", "peak", "best"),
-  shorten_char = 0, ...)
+  ...)
 
 \method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos_Mbp),
   pheno = NULL, ...)
@@ -24,8 +24,6 @@ top_snps_all(scan1_output, drop = 1.5, show_all_snps = TRUE)
 \item{object}{object of class \code{top_snps_tbl}}
 
 \item{sum_type}{type of summary (one of "range","peak","best")}
-
-\item{shorten_char}{number of characters to shorten pheno name}
 
 \item{...}{other arguments not used}
 
