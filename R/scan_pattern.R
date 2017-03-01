@@ -90,7 +90,7 @@ scan_pattern <- function(probs1, phe, K, covar,
   patterns <- dplyr::arrange(patterns,
                              dplyr::desc(max_lod))
 
-  scans$lod <- lod[, patterns$founders]
+  scans$lod <- lod[, patterns$founders, drop=FALSE]
 
   names(coefs) <- patterns$founders
   coefs <- coefs[patterns$founders]
