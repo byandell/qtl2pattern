@@ -42,11 +42,17 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
     phe <- phe[, 1, drop=FALSE]
   }
 
+  ## For now, limit to one phenotype.
+  ## But see how to have a list across phenotypes
+  pheno_name <- dimnames(phe)[[2]]
+
   ## SDP patterns
   patterns <- dplyr::ungroup(
     dplyr::summarize(
-      dplyr::group_by(patterns,
-                      pheno, sdp, max_snp, max_pos),
+      dplyr::group_by(
+        dplyr::filter(patterns,
+                      pheno == pheno_name),
+        sdp, max_snp, max_pos),
       founders = CCSanger::sdp_to_pattern(sdp, haplos),
       contrast = paste(contrast, collapse=","),
       max_lod = max(max_lod)))
