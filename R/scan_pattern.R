@@ -22,7 +22,7 @@
 #' @importFrom stringr str_split
 #' @importFrom CCSanger sdp_to_pattern
 #'
-scan_pattern <- function(probs1, phe, K, covar,
+scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          patterns, haplos = NULL, diplos = NULL,
                          condense_patterns = TRUE) {
   if(!nrow(patterns))
