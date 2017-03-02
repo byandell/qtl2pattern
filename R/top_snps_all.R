@@ -32,7 +32,14 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
     lod_df$index <- seq(nrow(lod_df))
     lod_df$snp_id <- rownames(lod_df)
     lod_df <- tidyr::gather(lod_df, pheno, lod, -snp_id, -index)
-    lod_df <- dplyr::filter(lod_df, lod > max(lod, na.rm = TRUE) - drop)
+    maxlod <- max(lod_df$lod, na.rm = TRUE) - drop
+    lod_df <- dplyr::ungroup(
+      dplyr::filter(
+        dplyr::group_by(lod_df, pheno),
+        lod >= min(max(lod, na.rm = TRUE), maxlod)
+      )
+    )
+#    lod_df <- dplyr::filter(lod_df, lod > max(lod, na.rm = TRUE) - drop)
 
     snpinfo <- snpinfo[[chr]]
 
