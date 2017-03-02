@@ -9,7 +9,7 @@
 #' @return table of top_snps at maximum lod for \code{pattern}
 #'
 #' @export
-#' @importFrom dplyr filter inner_join select
+#' @importFrom dplyr filter group_by inner_join select ungroup
 #' @importFrom tidyr gather
 #' @importFrom CCSanger convert_bp
 #'
