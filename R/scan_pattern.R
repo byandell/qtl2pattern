@@ -121,5 +121,5 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 #' @method summary scan_pattern
 #' @rdname scan_pattern
 summary.scan_pattern <- function(object, ...) {
-  object$patterns
+  summary(object$coef, scan1_object = object$scan)
 }
