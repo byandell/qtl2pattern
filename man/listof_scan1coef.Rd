@@ -11,7 +11,7 @@
 listof_scan1coef(probs, phe, K = NULL, covar = NULL)
 
 summary_listof_scan1coef(object, scan1_object,
-  coef_names = dimnames(object[[1]]$coef)[[2]], ...)
+  coef_names = dimnames(object[[1]]$coef)[[2]], center = TRUE, ...)
 
 \method{summary}{listof_scan1coef}(object, ...)
 
@@ -33,6 +33,8 @@ summary_scan1coef(object, scan1_object, ...)
 \item{scan1_object}{object from \code{scan1}}
 
 \item{coef_names}{names of effect coefficients (default is all coefficient names)}
+
+\item{center}{center coefficients if \code{TRUE}}
 
 \item{...}{arguments for \code{\link[qtl2scan]{plot_coef}}}
 

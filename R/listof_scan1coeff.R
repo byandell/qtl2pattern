@@ -33,6 +33,7 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 #' @param object object of class \code{listof_scan1coeff}
 #' @param scan1_object object from \code{scan1}
 #' @param coef_names names of effect coefficients (default is all coefficient names)
+#' @param center center coefficients if \code{TRUE}
 #' @param ... arguments for \code{\link[qtl2scan]{plot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
@@ -44,6 +45,7 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 summary_listof_scan1coef <-
   function(object, scan1_object,
            coef_names = dimnames(object[[1]]$coef)[[2]],
+           center = TRUE,
            ...) {
   phename <- names(object)
   chr_id <- names(scan1_object$map)
@@ -58,8 +60,10 @@ summary_listof_scan1coef <-
   for(pheno_id in phename) {
     if(!is.null(object[[pheno_id]])) {
       ## Need to save these in data frame.
-      sum_coef[match(pheno_id, sum_chr$pheno),] <-
-        object[[pheno_id]]$coef[wh[pheno_id],seq_along(coef_names)]
+      tmp <- object[[pheno_id]]$coef[wh[pheno_id],seq_along(coef_names)]
+      if(center)
+        tmp <- tmp - mean(tmp)
+      sum_coef[match(pheno_id, sum_chr$pheno),] <- tmp
     }
   }
   dplyr::bind_cols(sum_chr,sum_coef)
@@ -87,7 +91,7 @@ summary_scan1coef <-
   function(object, scan1_object, ...) {
     object <- list(object)
     names(object) <- dimnames(scan1_object$lod)[[2]][1]
-    summary.listof_scan1coef(object, scan1_object, ...)
+    summary_listof_scan1coef(object, scan1_object, ...)
   }
 
 #' @method summary scan1coef

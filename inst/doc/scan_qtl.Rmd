@@ -1,0 +1,281 @@
+---
+title: "Scan_qtl"
+author: "Brian S. Yandell"
+date: "2/15/2017"
+params:
+  pheno_names: AA_G83_ins_secrete,G33_ins_secrete,G83_ins_secrete,G167_ins_secrete,KCl_G33_ins_secrete,GLP1_G83_ins_secrete,PA_G167_ins_secret
+  datapath: "~/Documents/Research/attie_alan/DO/data/DerivedData"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+
+```{r message=FALSE}
+suppressPackageStartupMessages({
+  library(qtl2geno)
+  library(qtl2scan)
+  library(qtl2ggplot)
+})
+```
+
+```{r}
+pheno_names <- stringr::str_split(params$pheno_names, ",")[[1]]
+datapath <- as.character(params$datapath)
+```
+
+### Phenotypes and Covariates
+
+Set up data files. This has dataset specific information.
+Note filtering to smaller subsets below.
+
+R object       | description
+---------------|------------
+`analyses_tbl` | table of analysis settings from Karl
+`peaks`        | table of previously computed LOD peaks from Karl
+`pheno_data`   | table of phenotype data
+`pheno_type`   | vector of phenotype data types
+`covar`        | matrix of covariates
+
+```{r}
+covar <- readRDS(file.path(datapath, "covar.rds"))
+```
+
+Filter peaks and analyses_tbl to "best" analysis (may be called `anal1` or `anal2`).
+
+```{r}
+peaks <- readRDS(file.path(datapath, "peaks.rds"))
+peak_info <- (
+  dplyr::ungroup(
+    dplyr::summarize(
+      dplyr::arrange(
+        dplyr::distinct(
+          dplyr::group_by(peaks, pheno), 
+          output), 
+        dplyr::desc(output)), 
+      output = output[1])
+    )
+  )$output
+peaks <- dplyr::filter(peaks, output %in% peak_info)
+```
+
+```{r}
+analyses_tbl <- dplyr::filter(readRDS(file.path(datapath, "analyses.rds")), 
+                              output %in% peak_info)
+```
+
+```{r}
+peak_info <- peaks$pheno
+pheno_data <- DOread::read_pheno_tbl(analyses_tbl, datapath)
+pheno_data <- dplyr::select(pheno_data, 
+                            which(names(pheno_data) %in% peak_info))
+rm(peak_info)
+```
+
+```{r}
+pheno_type <- c("all", sort(unique(analyses_tbl$pheno_type)))
+```
+
+### Genotype probabilities and genome features
+
+In addition, the following objects are read during workflow. They are in the `DerivedData` folder. See specific functions for how they are read.
+
+R object     | description
+-------------|------------
+`K_chr`      | list of kinship matrices
+`probs.rds`  | calc_genoprob object for whole genome
+
+Read kinship matrix. Can be single chromosome or list for whole genome.
+
+```{r}
+K_chr <- readRDS(file.path(datapath, "kinship.rds"))
+```
+
+Read genotype probability object across 8 CC founder alleles for chr `r chr_id`.
+Can be single chromosome or whole genome. `DOread::read_probs` reads probs for one or more chromosomes, or all chromosomes. See `qtl2geno::calc_genoprob`.
+
+```{r}
+probs_obj <- DOread::read_probs(, datapath)
+```
+
+#### Specific phenotypes for this workflow
+
+Filter analyses table and get phenotypes and covariate objects. Do appropriate transformations on phenotypes as needed.
+
+```{r}
+analyses_df <- dplyr::filter(analyses_tbl, pheno %in% pheno_names)
+```
+
+```{r}
+phe_df <- DOread::get_pheno(pheno_data,
+                            dplyr::distinct(analyses_df, 
+                                            pheno, .keep_all=TRUE))
+cov_mx <- DOread::get_covar(covar, analyses_df)
+```
+
+## Scan traits into SQLite
+
+Genome scan1 (`qtl2scan::scan1`).
+
+```{r}
+if(file.exists(tmp <- "scan_obj.rds")) {
+  scan_obj <- readRDS(tmp)
+} else {
+  scan_obj <- qtl2scan::scan1(probs_obj, phe_df, K_chr, cov_mx)
+  saveRDS(scan_obj, tmp)
+}
+```
+
+```{r}
+object.size(scan_obj)
+```
+
+```{r}
+sapply(scan_obj, object.size)
+```
+
+```{r}
+sapply(scan_obj, class)
+```
+
+## Save as long table
+
+```{r}
+save_scan_qtl <- function(scan_obj, sql_file = "scan.sqlite",
+                     create = !file.exists(sql_file)) {
+  if(create & file.exists(sql_file))
+    file.remove(sql_file)
+  my_db <- dplyr::src_sqlite(sql_file, create = create)
+  scans <- dplyr::bind_rows(
+    lapply(scan_obj$map, function(x) {
+      data.frame(mar = names(x),
+                 pos = x)
+    }),
+    .id = "chr")
+  scans <- tidyr::gather(
+    cbind(scans, scan_obj$lod),
+    pheno, lod, -chr, -mar, -pos)
+  dplyr::copy_to(my_db,
+                   scans,
+                   name = "scans",
+                   temporary = FALSE,
+                   indexes = list(c("chr","pos"), "pheno"))
+  dplyr::src_tbls(my_db)
+}
+```
+
+```{r}
+read_scan_qtl <- function(chr_id=NULL, start_Mbp=0, end_Mbp=1000, pheno_names=NULL,
+                          sql_file = "scan.sqlite") {
+  my_db <- dplyr::src_sqlite(sql_file)
+  scans <- dplyr::tbl(my_db, "scans")
+  if(!is.null(chr_id)) {
+    scans <- dplyr::filter(scans, chr == chr_id[1])
+  }
+  scans <- dplyr::filter(scans, 
+    pos >= start_Mbp,
+    pos <= end_Mbp)
+  if(!is.null(pheno_names))
+    scans <- dplyr::filter(pheno %in% pheno_names)
+  dplyr::collect(scans, n = Inf)
+}
+```
+
+```{r}
+save_scan_qtl(scan_obj, create=TRUE)
+```
+
+```{r}
+out <- read_scan_qtl("3", 50, 70)
+```
+
+```{r}
+out <- read_scan_qtl()
+```
+
+## Save as is more or less
+
+```{r}
+create_scan_qtl <- function(scan_obj, sql_file = "scan_is.sqlite",
+                     create = !file.exists(sql_file)) {
+  if(create & file.exists(sql_file))
+    file.remove(sql_file)
+  my_db <- dplyr::src_sqlite(sql_file, create = create)
+  lod <- as.data.frame(scan_obj$lod)
+  lod$mar <- rownames(lod)
+  lod <- tidyr::gather(lod, pheno, lod, -mar)
+  dplyr::copy_to(my_db, lod,
+                 name = "lod",
+                 temporary = FALSE)
+  not_lod <- match("lod", names(scan_obj))
+  # out points to SQL file and has other elements of scan_obj.
+  out <- list(sql_file = sql_file)
+  for(i in names(scan_obj)[-not_lod]) {
+    out[[i]] <- scan_obj[[i]]
+  }
+  class(out) <- c("scan_qtl", class(out))
+  out
+}
+```
+
+```{r}
+subset.scan_qtl <- function(x, chr_id=NULL, start_Mbp=0, end_Mbp=1000, pheno_name=NULL,
+                            ...) {
+  my_db <- dplyr::src_sqlite(x$sql_file)
+  # rearrange map into long table
+  map <- dplyr::bind_rows(
+    lapply(x$map, function(x) {
+      data.frame(mar = names(x),
+                 pos = x)
+      }),
+    .id = "chr")
+  map <- dplyr::filter(map,
+                       chr == chr_id,
+                       pos >= start_Mbp,
+                       pos <= end_Mbp)
+  x$map <- x$map[chr_id]
+  for(i in names(x$map)) {
+    tmp <- x$map[[i]]
+    tmp <- tmp[tmp >= start_Mbp & tmp <= end_Mbp]
+    x$map[[i]] <- tmp
+  }
+
+  # extract lod from SQL for pheno_name or all traits.
+  lod <- dplyr::tbl(my_db, "lod")
+  if(!is.null(pheno_name))
+    lod <- dplyr::filter(lod, 
+                         pheno == pheno_name[1])
+  # spread LODs back out over phenotypes
+  lod <- tidyr::spread(
+    dplyr::collect(lod,
+                   n = Inf),
+    pheno, lod)
+  # reorder and subset by markers from map
+  lod <- as.data.frame(lod[match(map$mar, lod$mar),, drop=FALSE])
+  # put markers ans row names, drop from table, and make as matrix
+  rownames(lod) <- lod$mar
+  lod$mar <- NULL
+  x$lod <- as.matrix(lod)
+  
+  # remake x as scan1 object
+  x$sql_file <- NULL
+  class(x)[[1]] <- "scan1"
+  x
+}
+```
+
+```{r}
+out_scan <- create_scan_qtl(scan_obj, create=TRUE)
+```
+
+```{r}
+out_is <- subset.scan_qtl(out_scan, "3", pheno_names)
+```
+
+```{r}
+out <- read_scan_qtl()
+```
+
