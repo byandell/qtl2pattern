@@ -12,7 +12,7 @@
 #' \dontrun{genoprob_to_patternprob(probs1, pattern_sets)}
 #' @export
 genoprob_to_patternprob <- function(probs1, pattern_sets) {
-  tmp <- probs1$probs[[1]][,!duplicated(pattern_sets),,drop=FALSE]
+  tmp <- probs1[[1]][,!duplicated(pattern_sets),,drop=FALSE]
   dimnames(tmp)[[2]] <- upat <- as.character(sort(unique(pattern_sets)))
   ## For duplicated, need to run through set
   for(i in upat) {
@@ -20,12 +20,13 @@ genoprob_to_patternprob <- function(probs1, pattern_sets) {
     j <- j[pattern_sets[j] == i]
     if(length(j)) {
       for(k in j)
-        tmp[,i,] <- tmp[,i,] + probs1$probs[[1]][,k,]
+        tmp[,i,] <- tmp[,i,] + probs1[[1]][,k,,drop=FALSE]
     }
   }
-  probs1$probs[[1]] <- tmp
-  probs1$alleles <- dimnames(probs1$probs[[1]])[[2]]
-  probs1$alleleprobs <- FALSE
+  probs1[[1]] <- tmp
+  attr(probs1, "alleles") <- dimnames(probs1[[1]])[[2]]
+  attr(probs1, "alleleprobs") <- TRUE # <- so that genoprob_to_alleleprob leaves unchanged
+
   probs1
 }
 #' Collapse genoprob according to pattern
@@ -44,16 +45,16 @@ genoprob_to_patternprob <- function(probs1, pattern_sets) {
 snpprob_collapse <- function(snpprobs,
                              action = c("additive","add+dom","non-add",
                                         "recessive","dominant")) {
-  if(dim(snpprobs$probs[[1]])[2] == 2)
+  if(dim(snpprobs[[1]])[2] == 2)
     return(snpprobs)
   if(is.null(action))
     return(snpprobs)
   if(action == "add+dom")
     return(snpprobs)
   if(action == "additive") {
-    tmp <- snpprobs$probs[[1]][,c(1,3),]
+    tmp <- snpprobs[[1]][,c(1,3),,drop=FALSE]
     dimnames(tmp)[[2]] <- as.character(0:1)
-    tmp <- tmp + 0.5 * snpprobs$probs[[1]][,c(2,2),]
+    tmp <- tmp + 0.5 * snpprobs[[1]][,c(2,2),,drop=FALSE]
   } else {
     snpsets <- switch(action,
                       "non-add" = c(0,1,0),
@@ -65,13 +66,13 @@ snpprob_collapse <- function(snpprobs,
       stop("need mix of 0s and 1s")
 
     snpsets <- as.character(snpsets)
-    tmp <- snpprobs$probs[[1]][,!duplicated(snpsets),]
+    tmp <- snpprobs[[1]][,!duplicated(snpsets),,drop=FALSE]
     dimnames(tmp)[[2]] <- unique(snpsets)
     tmpa <- snpsets[duplicated(snpsets)]
-    tmp[,tmpa,] <- tmp[,tmpa,] + snpprobs$probs[[1]][,duplicated(snpsets),]
+    tmp[,tmpa,] <- tmp[,tmpa,,drop=FALSE] + snpprobs[[1]][,duplicated(snpsets),,drop=FALSE]
   }
-  snpprobs$probs[[1]] <- tmp
-  snpprobs$alleles <- dimnames(snpprobs$probs[[1]])[[2]]
-  snpprobs$alleleprobs <- FALSE
+  snpprobs[[1]] <- tmp
+  attr(snpprobs, "alleles") <- dimnames(snpprobs[[1]])[[2]]
+  attr(snpprobs, "alleleprobs") <- TRUE # <- so that genoprob_to_alleleprob leaves unchanged
   snpprobs
 }
