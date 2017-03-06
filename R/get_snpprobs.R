@@ -7,6 +7,7 @@
 #' @param window_Mbp half-width of \code{window} around \code{peak_Mbp}
 #' @param phename names of phenotypes
 #' @param probs_obj object of class \code{\link[qtl2geno]{calc_genoprob}} for \code{chr_id}
+#' @param probs_map map of markers/pseudomarkers in \code{probs_obj}
 #' @param datapath path to Derived Data
 #'
 #' @return table of class \code{near_snps} of top_snps near maximum lod
@@ -20,11 +21,11 @@
 #' @export
 #'
 #' @importFrom dplyr bind_rows mutate
-#' @importFrom qtl2scan genoprob_to_snpprob
+#' @importFrom qtl2scan genoprob_to_snpprob index_snps
 #' @importFrom CCSanger get_snpinfo get_svs8
 #'
 get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
-                         phename, probs_obj, datapath) {
+                         phename, probs_obj, probs_map, datapath) {
   if(is.null(chr_id) | is.null(peak_Mbp) | is.null(window_Mbp))
     return(NULL)
 
@@ -36,7 +37,7 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
   if(peak_Mbp == 0) {
     cat(file=stderr(),
         "\nNo peak_Mbp provided -- set to midpoint\n")
-    peak_Mbp <- mean(range(probs_obj$map[[1]]))
+    peak_Mbp <- mean(range(probs_map[[1]]))
   }
   snpinfo <- dplyr::mutate(
     CCSanger::get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath),
@@ -53,5 +54,6 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
                            pos = pos_Mbp,
                            snp = snp_id,
                            svs_type = factor(svs_type))
-  qtl2scan::genoprob_to_snpprob(probs_obj, as.data.frame(snpinfo))
+  snpinfo <- qtl2scan::index_snps(probs_map, snpinfo)
+  qtl2scan::genoprob_to_snpprob(probs_obj, snpinfo)
 }
