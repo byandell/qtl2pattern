@@ -45,7 +45,7 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 summary_listof_scan1coef <-
   function(object, scan1_object,
            coef_names = dimnames(object[[1]]$coef)[[2]],
-           center = FALSE,
+           center = TRUE,
            ...) {
   phename <- names(object)
   chr_id <- names(scan1_object$map)
