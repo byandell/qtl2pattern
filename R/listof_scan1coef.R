@@ -32,6 +32,10 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 #'
 #' @param object object of class \code{listof_scan1coeff}
 #' @param scan1_object object from \code{scan1}
+#' 
+#' @param map A list of vectors of marker positions, as produced by
+#' \code{\link[qtl2geno]{insert_pseudomarkers}}.
+#'
 #' @param coef_names names of effect coefficients (default is all coefficient names)
 #' @param center center coefficients if \code{TRUE}
 #' @param ... arguments for \code{\link[qtl2scan]{plot_coef}}
@@ -43,16 +47,16 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 #' @export
 #' @importFrom dplyr bind_cols
 summary_listof_scan1coef <-
-  function(object, scan1_object,
-           coef_names = dimnames(object[[1]]$coef)[[2]],
+  function(object, scan1_object, map,
+           coef_names = dimnames(object[[1]])[[2]],
            center = TRUE,
            ...) {
   phename <- names(object)
-  chr_id <- names(scan1_object$map)
-  sum_chr <- summary(scan1_object, phename, chr_id)
+  chr_id <- names(map)
+  sum_chr <- summary(scan1_object, map, lodcolumn=phename, chr=chr_id)
   pos <- sum_chr$pos[match(phename, sum_chr$pheno)]
   names(pos) <- phename
-  wh <- apply(scan1_object$lod,2,function(x) which.max(x)[1])
+  wh <- apply(scan1_object,2,function(x) which.max(x)[1])
   sum_coef <- as.data.frame(matrix(NA,
                                    nrow(sum_chr),
                                    length(coef_names),
@@ -60,7 +64,7 @@ summary_listof_scan1coef <-
   for(pheno_id in phename) {
     if(!is.null(object[[pheno_id]])) {
       ## Need to save these in data frame.
-      tmp <- object[[pheno_id]]$coef[wh[pheno_id],seq_along(coef_names)]
+      tmp <- object[[pheno_id]][wh[pheno_id],seq_along(coef_names)]
       if(center)
         tmp <- tmp - mean(tmp)
       sum_coef[match(pheno_id, sum_chr$pheno),] <- tmp
@@ -89,8 +93,10 @@ summary.listof_scan1coef <- function(object, ...)
 #' @export
 summary_scan1coef <-
   function(object, scan1_object, ...) {
-    object <- list(object)
-    names(object) <- dimnames(scan1_object$lod)[[2]][1]
+    if(!inherits(object, "listof_scan1coef")) {
+      object <- list(object)
+      names(object) <- dimnames(scan1_object)[[2]][1]
+    }
     summary_listof_scan1coef(object, scan1_object, ...)
   }
 

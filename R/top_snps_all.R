@@ -3,6 +3,27 @@
 #' Separate fine mapping scans by allele pattern.
 #'
 #' @param scan1_output output of linear mixed model for \code{phename} (see \code{\link[qtl2scan]{scan1}})
+#' 
+#' @param snpinfo Data frame with SNP information with the following
+#'     columns (the last three are generally derived from with
+#'     \code{\link[qtl2scan]{index_snps}}):
+#' \itemize{
+#' \item \code{chr} - Character string or factor with chromosome
+#' \item \code{pos} - Position (in same units as in the \code{"map"}
+#'     attribute in \code{genoprobs}.
+#' \item \code{sdp} - Strain distribution pattern: an integer, between
+#'     1 and \eqn{2^n - 2} where \eqn{n} is the number of strains, whose
+#'     binary encoding indicates the founder genotypes
+#' \item \code{snp} - Character string with SNP identifier (if
+#'     missing, the rownames are used).
+#' \item \code{index} - Indices that indicate equivalent
+#'     groups of SNPs.
+#' \item \code{intervals} - Indexes that indicate which marker
+#'     intervals the SNPs reside.
+#' \item \code{on_map} - Indicate whether SNP coincides with a marker
+#'     in the \code{genoprobs}
+#' }
+#'
 #' @param drop include all SNPs within \code{drop} of max LOD (default 1.5)
 #' @param show_all_snps show all SNPs if \code{TRUE}
 #'
@@ -13,14 +34,12 @@
 #' @importFrom tidyr gather
 #' @importFrom CCSanger convert_bp
 #'
-top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
+top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE)
 {
-    map <- scan1_output$map
-    if (is.null(map))
-        stop("No map found")
-    snpinfo <- scan1_output$snpinfo
-    if (is.null(snpinfo))
+    if (missing(snpinfo) || is.null(snpinfo))
         stop("No snpinfo found")
+    map <- snpinfo_to_map(snpinfo)
+
     chr <- names(map)
     if (length(chr) > 1) {
         warning("Considering only chromosome ", chr)
@@ -28,8 +47,8 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
     }
 
     ## Following is generalized from qtl2scan::top_snps()
-    lod_df <- as.data.frame(subset(scan1_output, chr = chr)$lod)
-    lod_df$index <- seq(nrow(lod_df))
+    lod_df <- as.data.frame(subset(scan1_output, map, chr = chr))
+    lod_df$index <- unique(snpinfo$index)
     lod_df$snp_id <- rownames(lod_df)
     lod_df <- tidyr::gather(lod_df, pheno, lod, -snp_id, -index)
     maxlod <- max(lod_df$lod, na.rm = TRUE) - drop
@@ -40,8 +59,6 @@ top_snps_all <- function (scan1_output, drop = 1.5, show_all_snps = TRUE)
       )
     )
 #    lod_df <- dplyr::filter(lod_df, lod > max(lod, na.rm = TRUE) - drop)
-
-    snpinfo <- snpinfo[[chr]]
 
     if (show_all_snps) {
       snpinfo <- dplyr::inner_join(snpinfo,

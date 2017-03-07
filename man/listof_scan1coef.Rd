@@ -10,8 +10,8 @@
 \usage{
 listof_scan1coef(probs, phe, K = NULL, covar = NULL)
 
-summary_listof_scan1coef(object, scan1_object,
-  coef_names = dimnames(object[[1]]$coef)[[2]], center = TRUE, ...)
+summary_listof_scan1coef(object, scan1_object, map,
+  coef_names = dimnames(object[[1]])[[2]], center = TRUE, ...)
 
 \method{summary}{listof_scan1coef}(object, ...)
 
@@ -31,6 +31,9 @@ summary_scan1coef(object, scan1_object, ...)
 \item{object}{object of class \code{listof_scan1coeff}}
 
 \item{scan1_object}{object from \code{scan1}}
+
+\item{map}{A list of vectors of marker positions, as produced by
+\code{\link[qtl2geno]{insert_pseudomarkers}}.}
 
 \item{coef_names}{names of effect coefficients (default is all coefficient names)}
 
