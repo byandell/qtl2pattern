@@ -19,8 +19,8 @@ genoprob_to_patternprob <- function(probs1, pattern_sets) {
     j <- which(duplicated(pattern_sets))
     j <- j[pattern_sets[j] == i]
     if(length(j)) {
-      for(k in j)
-        tmp[,i,] <- tmp[,i,] + probs1[[1]][,k,,drop=FALSE]
+      tmp[,i,] <- tmp[,i,] + 
+        apply(probs1[[1]][,j,, drop=FALSE], c(1,3), sum)
     }
   }
   probs1[[1]] <- tmp

@@ -1,7 +1,7 @@
 #' Summary of scan1 object
 #'
 #' @param object object from \code{\link[qtl2scan]{scan1}}
-#' 
+#'
 #' @param map A list of vectors of marker positions, as produced by
 #' \code{\link[qtl2geno]{insert_pseudomarkers}}.
 #'
@@ -53,6 +53,8 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
   if(is.null(snpinfo)) {
     # scan1 LOD summary
     chr <- as.character(chr)
+    if(is.list(map))
+      map <- map[chr]
     peak_pos <-
       matrix(NA, length(chr), length(lodcolumn))
     if(is.numeric(lodcolumn))

@@ -92,12 +92,12 @@ summary.listof_scan1coef <- function(object, ...)
 #' @rdname listof_scan1coef
 #' @export
 summary_scan1coef <-
-  function(object, scan1_object, ...) {
+  function(object, scan1_object, map, ...) {
     if(!inherits(object, "listof_scan1coef")) {
       object <- list(object)
       names(object) <- dimnames(scan1_object)[[2]][1]
     }
-    summary_listof_scan1coef(object, scan1_object, ...)
+    summary_listof_scan1coef(object, scan1_object, map, ...)
   }
 
 #' @method summary scan1coef

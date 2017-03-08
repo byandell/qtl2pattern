@@ -5,19 +5,21 @@
 \alias{summary.scan_pattern}
 \title{Genome scan by pattern set}
 \usage{
-scan_pattern(probs1, phe, K = NULL, covar = NULL, patterns, haplos = NULL,
-  diplos = NULL, condense_patterns = TRUE)
+scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
+  haplos = NULL, diplos = NULL, condense_patterns = TRUE)
 
-\method{summary}{scan_pattern}(object, ...)
+\method{summary}{scan_pattern}(object, map, ...)
 }
 \arguments{
-\item{probs1}{object of class \code{\link[qtl2scan]{calc_genoprob}}}
+\item{probs1}{object of class \code{\link[qtl2geno]{calc_genoprob}}}
 
 \item{phe}{data frame with one phenotype}
 
 \item{K}{kinship matrix}
 
 \item{covar}{covariate matrix}
+
+\item{map}{genome map}
 
 \item{patterns}{data frame of pattern information}
 

@@ -15,7 +15,7 @@ summary_listof_scan1coef(object, scan1_object, map,
 
 \method{summary}{listof_scan1coef}(object, ...)
 
-summary_scan1coef(object, scan1_object, ...)
+summary_scan1coef(object, scan1_object, map, ...)
 
 \method{summary}{scan1coef}(object, ...)
 }
