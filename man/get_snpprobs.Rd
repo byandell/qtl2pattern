@@ -23,7 +23,7 @@ get_snpprobs(chr_id = NULL, peak_Mbp = NULL, window_Mbp = NULL, phename,
 \item{datapath}{path to Derived Data}
 }
 \value{
-table of class \code{near_snps} of top_snps near maximum lod
+list with \code{snpprobs} and \code{snpinfo}
 }
 \description{
 Get SNP information from SQLite database within \code{window_Mbp} of \code{peak_Mbp} on \code{chri_id}

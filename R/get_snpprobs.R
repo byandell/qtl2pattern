@@ -10,7 +10,7 @@
 #' @param probs_map map of markers/pseudomarkers in \code{probs_obj}
 #' @param datapath path to Derived Data
 #'
-#' @return table of class \code{near_snps} of top_snps near maximum lod
+#' @return list with \code{snpprobs} and \code{snpinfo}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
@@ -54,6 +54,10 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
                            pos = pos_Mbp,
                            snp = snp_id,
                            svs_type = factor(svs_type))
-  snpinfo <- qtl2scan::index_snps(probs_map, snpinfo)
-  qtl2scan::genoprob_to_snpprob(probs_obj, snpinfo)
+  
+  list(snpprobs = 
+         qtl2scan::genoprob_to_snpprob(probs_obj,
+                                       qtl2scan::index_snps(probs_map, 
+                                                            snpinfo)),
+       snpinfo = snpinfo)
 }

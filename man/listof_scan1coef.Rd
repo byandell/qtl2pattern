@@ -6,6 +6,9 @@
 \alias{summary.listof_scan1coef}
 \alias{summary_scan1coef}
 \alias{summary.scan1coef}
+\alias{subset_listof_scan1coef}
+\alias{subset.listof_scan1coef}
+\alias{[.listof_scan1coef}
 \title{List of scan1coef objects}
 \usage{
 listof_scan1coef(probs, phe, K = NULL, covar = NULL)
@@ -18,6 +21,12 @@ summary_listof_scan1coef(object, scan1_object, map,
 summary_scan1coef(object, scan1_object, map, ...)
 
 \method{summary}{scan1coef}(object, ...)
+
+subset_listof_scan1coef(x, elements, ...)
+
+\method{subset}{listof_scan1coef}(x, ...)
+
+\method{[}{listof_scan1coef}(x, ...)
 }
 \arguments{
 \item{probs}{genotype probabilities object for one chromosome from \code{\link[qtl2geno]{calc_genoprob}}}
@@ -41,11 +50,17 @@ summary_scan1coef(object, scan1_object, map, ...)
 
 \item{...}{arguments for \code{\link[qtl2scan]{plot_coef}}}
 
+\item{x}{object of class \code{listof_scan1coeff}}
+
+\item{elements}{indexes or names of list elements in x}
+
 \item{object}{object of class \code{listof_scan1coeff}}
 
 \item{scan1_object}{object from \code{scan1}}
 
 \item{...}{arguments for \code{\link[qtl2scan]{plot_coef}}}
+
+\item{...}{ignored}
 }
 \value{
 object of class \code{listof_scan1coeff}
@@ -56,12 +71,16 @@ Create a list of scan1coef objects using \code{\link[qtl2scan]{scan1coef}}.
 Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
 
 Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+
+Subset of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
 }
 \examples{
 \dontrun{listof_scan1coef(probs, phe)}
 
 }
 \author{
+Brian S Yandell, \email{brian.yandell@wisc.edu}
+
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 
 Brian S Yandell, \email{brian.yandell@wisc.edu}

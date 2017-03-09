@@ -32,7 +32,7 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
 #'
 #' @param object object of class \code{listof_scan1coeff}
 #' @param scan1_object object from \code{scan1}
-#' 
+#'
 #' @param map A list of vectors of marker positions, as produced by
 #' \code{\link[qtl2geno]{insert_pseudomarkers}}.
 #'
@@ -107,3 +107,40 @@ summary_scan1coef <-
 #'
 summary.scan1coef <- function(object, ...)
   summary_scan1coef(object, ...)
+
+#' Subset of object of class listof_scan1coeff
+#'
+#' Subset of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+#'
+#' @param x object of class \code{listof_scan1coeff}
+#' @param elements indexes or names of list elements in x
+#' @param ... ignored
+#'
+#' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
+#' @keywords utilities
+#'
+#' @rdname listof_scan1coef
+#' @export
+subset_listof_scan1coef <- function(x, elements, ...) {
+  x_class <- class(x)
+  class(x) <- "list"
+  x <- x[elements]
+  class(x) <- x_class
+  x
+}
+
+#' @method subset listof_scan1coef
+#' @rdname listof_scan1coef
+#' @export
+#' @export subset.listof_scan1coef
+#'
+subset.listof_scan1coef <- function(x, ...)
+  subset_listof_scan1coef(x, ...)
+
+#' @method [ listof_scan1coef
+#' @rdname listof_scan1coef
+#' @export
+#' @export [.listof_scan1coef
+#'
+`[.listof_scan1coef` <- function(x, ...)
+  subset_listof_scan1coef(x, ...)
