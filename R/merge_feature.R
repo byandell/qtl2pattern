@@ -3,6 +3,7 @@
 #' Merge all SNPs in small region with LOD peaks across multiple phenotype.
 #'
 #' @param top_snps_tbl tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2scan]{top_snps}}
+#' @param snpinfo SNP information table
 #' @param out_lmm_snps tbl from \code{\link[qtl2scan]{scan1}} on SNPs
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
 #' @param dropchar number of characters to drop on phenames
@@ -23,7 +24,7 @@
 #' @importFrom qtl2scan top_snps
 #' @importFrom CCSanger convert_bp get_gene_exon_snp
 #'
-merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
+merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
                           gene_exon =
                             CCSanger::get_gene_exon_snp(top_snps_tbl,
@@ -31,10 +32,7 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
                           sql_filename = file.path(datapath,
                                                    "mgi_db.sqlite"),
                           datapath) {
-  phename <- dimnames(out_lmm_snps$lod)[[2]]
-  chr_id <- names(out_lmm_snps$map)
-  if(length(chr_id) != 1)
-    stop("need exactly 1 chromosome in top_snps_tbl")
+  phename <- dimnames(out_lmm_snps)[[2]]
 
   ## Add lod by phename to top_snps_tbl
   top_snps_tbl <- dplyr::arrange(
@@ -60,10 +58,11 @@ merge_feature <- function(top_snps_tbl, out_lmm_snps, drop=1.5,
       dplyr::filter(
         qtl2scan::top_snps(
           subset(out_lmm_snps, lodcolumn=match(i, phename)),
+          snpinfo,
           drop=drop),
         snp_id %in% near_snp_id),
       index, .keep_all=TRUE)
-    top_snps_tbl[i] <- tmp2$lod[match(top_snps_tbl$index, tmp2$index)]
+    top_snps_tbl[i] <- tmp2[match(top_snps_tbl$index, tmp2$index)]
   }
   out <- dplyr::select(
     dplyr::mutate(top_snps_tbl,

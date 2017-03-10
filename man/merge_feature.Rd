@@ -5,7 +5,7 @@
 \alias{summary.merge_feature}
 \title{Merge SNP lod peaks with SNP feature information}
 \usage{
-merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
+merge_feature(top_snps_tbl, snpinfo, out_lmm_snps, drop = 1.5, dropchar = 0,
   gene_exon = CCSanger::get_gene_exon_snp(top_snps_tbl, sql_filename),
   sql_filename = file.path(datapath, "mgi_db.sqlite"), datapath)
 
@@ -14,6 +14,8 @@ merge_feature(top_snps_tbl, out_lmm_snps, drop = 1.5, dropchar = 0,
 }
 \arguments{
 \item{top_snps_tbl}{tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2scan]{top_snps}}}
+
+\item{snpinfo}{SNP information table}
 
 \item{out_lmm_snps}{tbl from \code{\link[qtl2scan]{scan1}} on SNPs}
 
