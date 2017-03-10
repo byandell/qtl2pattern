@@ -45,6 +45,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 
   ## For now, limit to one phenotype.
   ## But see how to have a list across phenotypes
+  ## Also need to take care of covariates properly; see qtl2shiny:::scan1_covar.
   pheno_name <- dimnames(phe)[[2]]
 
   ## SDP patterns
