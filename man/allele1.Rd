@@ -4,7 +4,7 @@
 \alias{allele1}
 \title{Allele plot for SNPs, alleles and allele pairs}
 \usage{
-allele1(scan_apr, coefs, coefs36, scan_pat, map, haplo)
+allele1(scan_apr, coefs, coefs36, scan_pat, map, haplo, trim = TRUE)
 }
 \arguments{
 \item{scan_apr}{Object of class \code{\link[qtl2scan]{scan1}} with allele scan.}
@@ -18,6 +18,8 @@ allele1(scan_apr, coefs, coefs36, scan_pat, map, haplo)
 \item{map}{Genome map.}
 
 \item{haplo}{Haplotype allele letter to compare for number of copies.}
+
+\item{trim}{If \code{TRUE}, trim extreme alleles.}
 }
 \value{
 Table with allele effects across sources.

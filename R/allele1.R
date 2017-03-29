@@ -8,6 +8,7 @@
 #' @param scan_pat Object of class \code{\link{scan_pattern}}.
 #' @param map Genome map.
 #' @param haplo Haplotype allele letter to compare for number of copies.
+#' @param trim If \code{TRUE}, trim extreme alleles.
 #' 
 #' @return Table with allele effects across sources.
 #' 
@@ -17,7 +18,8 @@
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom stringr str_count str_detect str_split
 #' 
-allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo) {
+allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo,
+                    trim = TRUE) {
   
   # Combine effects estimates.
   scan_pats <- dplyr::rename(
@@ -46,6 +48,8 @@ allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo) {
     .id = "source")
   
   alleles <- dplyr::bind_rows(alleles, scan_pats)
+  if(trim)
+    alleles <- trim_quant(alleles)
   
   tmpfn <- function(x) 
     sapply(stringr::str_split(x, ":"), 
@@ -62,13 +66,30 @@ allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo) {
 #' @export
 #' @importFrom dplyr group_by summarize ungroup
 #' 
-summary.allele1 <- function(object, ..., trim = TRUE) {
-  if(trim)
-    object <- trim_quant(object)
+summary.allele1 <- function(object, ...) {
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, source),
       pos = pos[1],
       min = min(effect),
       max = max(effect)))
+}
+trim_quant <- function(object, beyond = 3) {
+  quant <- quantile(object$effect, c(.25,.75))
+  range <- quant + c(-1,1) * beyond * diff(quant)
+  object$effect <- pmin(pmax(object$effect, range[1]), range[2])
+  object
+}
+trim_ends <- function(object, ends = 1, trim_val = NULL, effname = "effect") {
+  ends <- rep(ends, length = 2)
+  rk <- rank(object[[effname]])
+  mintrim <- (rk <= ends[1])
+  maxtrim <- (rk >= 1 + nrow(object) - ends[2])
+  if(is.null(trim_val)) {
+    trim_val <- c(object[[effname]][which(rk == min(rk[!mintrim]))[1]],
+                  object[[effname]][which(rk == max(rk[!maxtrim]))[1]])
+  }
+  object[[effname]][mintrim] <- trim_val[1]
+  object[[effname]][maxtrim] <- trim_val[2]
+  object
 }
