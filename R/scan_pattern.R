@@ -100,7 +100,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                              dplyr::desc(max_lod))
 
   ## Make sure we have attributes for scans and coefs
-  scans <- modify_scan1(scans, lod[, patterns$founders, drop=FALSE])
+  scans <- modify_object(scans, lod[, patterns$founders, drop=FALSE])
 
   names(coefs) <- patterns$founders
   coefs <- coefs[patterns$founders]

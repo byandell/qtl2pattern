@@ -1,20 +1,13 @@
-#' Modify scan1 lod matrix.
-#'
-#' @param scan1_object object of class \code{\link[qtl2scan]{scan1}}
-#' @param newlod matrix of new LOD values
-#' 
-#' @export
-#' 
-modify_scan1 <- function(scan1_object, newlod) {
-  x_attr <- attributes(scan1_object)
-  x_attrnam <- names(x_attr)
-  x_class <- class(scan1_object)
+# Various objects have attributes that are worth preserving. This does that.
+modify_object <- function(object, new_object) {
+  x_attr <- attributes(object)
+  x_class <- class(object)
+  attrs <- names(x_attr)
+  attrs <- attrs[!(attrs %in% c("class", "names"))]
   
-  for(obj in c("sample_size","SE", "hsq")) {
-    if(obj %in% x_attrnam) {
-      attr(newlod, obj) <- x_attr[[obj]]
-    }
+  for(obj in attrs) {
+    attr(new_object, obj) <- x_attr[[obj]]
   }
-  class(newlod) <- x_class
-  newlod
+  class(new_object) <- x_class
+  new_object
 }
