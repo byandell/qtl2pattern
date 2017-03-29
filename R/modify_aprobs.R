@@ -3,7 +3,7 @@ modify_aprobs <- function(probs, new_probs) {
   x_attr <- attributes(probs)
   x_class <- class(probs)
   attrs <- names(x_attr)
-  attrs <- attrs[!(attrs %in% c("class", "names", "alleles", "alleleprobs"))]
+  attrs <- attrs[!(attrs %in% c("class", "names", "dim", "dimnames", "alleles", "alleleprobs"))]
   
   new_probs <- list(new_probs)
   names(new_probs) <- names(probs)[1]
