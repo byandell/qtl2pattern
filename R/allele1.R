@@ -33,21 +33,17 @@ allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo,
         allele, effect, -pheno, -chr, -pos, -lod),
       pheno = as.character(pheno),
       chr = as.character(chr)),
-    diplo_EF = dplyr::mutate(
+    diplo = dplyr::mutate(
       tidyr::gather(
-        summary(coefs36, scan_pat$scan, map), 
-        allele, effect, -pheno, -chr, -pos, -lod),
-      pheno = as.character(pheno),
-      chr = as.character(chr)),
-    diplo_E = dplyr::mutate(
-      tidyr::gather(
-        summary(coefs36, subset(scan_pat$scan, lodcolumn=2), DOex$pmap), 
+        summary(coefs36, scan_apr, map), 
         allele, effect, -pheno, -chr, -pos, -lod),
       pheno = as.character(pheno),
       chr = as.character(chr)),
     .id = "source")
   
   alleles <- dplyr::bind_rows(alleles, scan_pats)
+  alleles$source <- factor(alleles$source, c("haplo","diplo",
+                                             colnames(scan_pat$scan)))
   if(trim)
     alleles <- trim_quant(alleles)
   
