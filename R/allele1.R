@@ -11,9 +11,12 @@
 #' 
 #' @return Table with allele effects across sources.
 #' 
+#' @export
+#' 
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom stringr str_count str_detect str_split
+#' 
 allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo) {
   
   # Combine effects estimates.
