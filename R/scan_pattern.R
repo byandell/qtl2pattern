@@ -95,8 +95,8 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 
   # loop through other diplotype sets
   # While scans could be combined with cbind method, this seems more efficient.
+  dimnames(coefs[[1]])[[2]][1:3] <- c("ref","het","alt")
   if(npat > 1) {
-    dimnames(coefs[[1]])[[2]][1:3] <- c("ref","het","alt")
     for(i in seq(2, npat)) {
       probs2 <- genoprob_to_patternprob(probs1, pattern_three[i,])
       coefs[[i]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
