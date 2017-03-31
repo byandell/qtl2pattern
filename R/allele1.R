@@ -9,7 +9,6 @@
 #' @param K_chr kinship matrix
 #' @param patterns data frame of pattern information
 #' @param alt Haplotype allele letter(s) for alternative to reference.
-#' @param trim If \code{TRUE}, trim extreme alleles.
 #' @param ... additional parameters
 #' 
 #' @param scanH Object of class \code{\link[qtl2scan]{scan1}} with allele scan.
@@ -26,12 +25,12 @@
 #' @importFrom stringr str_count str_detect str_split
 #' 
 allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
-                    alt=NULL, trim = TRUE, ...) {
+                    alt=NULL, ...) {
   allele1_internal(phe_df, cov_mx, probD, map, K_chr, patterns,
-                   alt, trim = TRUE, ...)
+                   alt, ...)
 }
 allele1_internal <- function(
-  phe_df, cov_mx, probD, map, K_chr, patterns, alt, trim = TRUE, 
+  phe_df, cov_mx, probD, map, K_chr, patterns, alt, 
   probH = qtl2geno::genoprob_to_alleleprob(probD),
   scanH = qtl2scan::scan1(probH, phe_df, K_chr, cov_mx),
   coefH = qtl2scan::scan1coef(probH, phe_df, K_chr, cov_mx),
@@ -97,9 +96,6 @@ allele1_internal <- function(
   alleles <- dplyr::inner_join(alleles, map, by = "mar")
   alleles$source <- factor(alleles$source, c("haplo","diplo",
                                              names(scan_pat$coef)))
-  if(trim)
-    alleles <- trim_quant(alleles)
-  
   tmpfn <- function(x) 
     sapply(stringr::str_split(x, ":"), 
            function(x) stringr::str_detect(x[2], alt))
@@ -137,23 +133,4 @@ summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) 
       min = min(effect[tmpfn(pos)]),
       max = max(effect[tmpfn(pos)]),
       pos = pos_Mbp))
-}
-trim_quant <- function(object, beyond = 3) {
-  quant <- quantile(object$effect, c(.25,.75))
-  range <- quant + c(-1,1) * beyond * diff(quant)
-  object$effect <- pmin(pmax(object$effect, range[1]), range[2])
-  object
-}
-trim_ends <- function(object, ends = 1, trim_val = NULL, effname = "effect") {
-  ends <- rep(ends, length = 2)
-  rk <- rank(object[[effname]])
-  mintrim <- (rk <= ends[1])
-  maxtrim <- (rk >= 1 + nrow(object) - ends[2])
-  if(is.null(trim_val)) {
-    trim_val <- c(object[[effname]][which(rk == min(rk[!mintrim]))[1]],
-                  object[[effname]][which(rk == max(rk[!maxtrim]))[1]])
-  }
-  object[[effname]][mintrim] <- trim_val[1]
-  object[[effname]][maxtrim] <- trim_val[2]
-  object
 }
