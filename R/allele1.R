@@ -131,6 +131,9 @@ summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) 
     dplyr::summarize(
       dplyr::group_by(object, source),
       min = min(effect[tmpfn(pos)]),
+      lo_25 = quantile(effect[tmpfn(pos)], 0.25),
+      median = median(effect[tmpfn(pos)]),
+      hi_75 = quantile(effect[tmpfn(pos)], 0.75),
       max = max(effect[tmpfn(pos)]),
       pos = pos_Mbp))
 }
