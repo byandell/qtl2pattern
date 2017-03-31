@@ -5,7 +5,7 @@
 \title{Allele plot for SNPs, alleles and allele pairs}
 \usage{
 allele1(phe_df = NULL, cov_mx = NULL, probD = NULL, map = NULL,
-  K_chr = NULL, patterns, alt = NULL, trim = TRUE, ...)
+  K_chr = NULL, patterns = NULL, alt = NULL, trim = TRUE, ...)
 }
 \arguments{
 \item{phe_df}{data frame with one phenotype}

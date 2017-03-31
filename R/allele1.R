@@ -22,10 +22,10 @@
 #' @export
 #' 
 #' @importFrom tidyr gather
-#' @importFrom dplyr bind_rows mutate
+#' @importFrom dplyr bind_rows filter mutate
 #' @importFrom stringr str_count str_detect str_split
 #' 
-allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns, 
+allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
                     alt=NULL, trim = TRUE, ...) {
   allele1_internal(phe_df, cov_mx, probD, map, K_chr, patterns,
                    alt, trim = TRUE, ...)
@@ -42,14 +42,28 @@ allele1_internal <- function(
   ...) 
 {
   if(!is.null(phe_df) && ncol(phe_df) > 1) {
-    message("using first phenotype")
+    warning("only using first phenotype")
     phe_df <- phe_df[, 1, drop = FALSE]
   }
+  pheno_name <- names(as.data.frame(phe_df))
+  
+  # Get patterns for pheno.
+  if(is.null(patterns)) {
+    if(is.null(scan_pat))
+      stop("need either patterns or scan_pat")
+    patterns <- dplyr::rename(scan_pat$patterns,
+                              pattern = founders)
+  } else {
+    patterns <- dplyr::filter(patterns,
+                              pheno == pheno_name)
+  }
+  if(!nrow(patterns))
+    return(NULL)
+  
   if(is.null(alt))
     alt <- paste0(
       stringr::str_split(
-        stringr::str_replace(
-          patterns$pattern[1], ".*:", ""),
+        stringr::str_replace(patterns$pattern[1], ".*:", ""),
         "")[[1]],
       collapse = "|")
 
