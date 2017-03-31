@@ -81,10 +81,10 @@ allele1_internal <- function(
     allele, effect, -mar, -source)
   
   alleles <- dplyr::bind_rows(
-    haplo = tidyr::gather(
+    haplotype = tidyr::gather(
       mar_df(coefH, 8),
       allele, effect, -mar),
-    diplo = tidyr::gather(
+    diplotype = tidyr::gather(
         mar_df(coefD, 36), 
         allele, effect, -mar),
     .id = "source")
@@ -94,7 +94,7 @@ allele1_internal <- function(
   mar <- names(map)
   map <- data.frame(pos=map, mar=mar, stringsAsFactors = FALSE)
   alleles <- dplyr::inner_join(alleles, map, by = "mar")
-  alleles$source <- factor(alleles$source, c("haplo","diplo",
+  alleles$source <- factor(alleles$source, c("haplotype","diplotype",
                                              names(scan_pat$coef)))
   tmpfn <- function(x) 
     sapply(stringr::str_split(x, ":"), 
