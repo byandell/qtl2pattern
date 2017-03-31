@@ -2,13 +2,20 @@
 #' 
 #' Create table of alleles for various model fits.
 #' 
-#' @param scan_apr Object of class \code{\link[qtl2scan]{scan1}} with allele scan.
-#' @param coefs Object of class \code{\link[qtl2scan]{scan1coef}}.
-#' @param coefs36 Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.
-#' @param scan_pat Object of class \code{\link{scan_pattern}}.
-#' @param map Genome map.
-#' @param haplo Haplotype allele letter to compare for number of copies.
+#' @param phe_df data frame with one phenotype
+#' @param cov_mx covariate matrix
+#' @param probD object of class \code{\link[qtl2geno]{calc_genoprob}}
+#' @param map list of genome maps
+#' @param K_chr kinship matrix
+#' @param patterns data frame of pattern information
+#' @param alt Haplotype allele letter(s) for alternative to reference.
 #' @param trim If \code{TRUE}, trim extreme alleles.
+#' @param ... additional parameters
+#' 
+#' @param scanH Object of class \code{\link[qtl2scan]{scan1}} with allele scan.
+#' @param coefH Object of class \code{\link[qtl2scan]{scan1coef}}.
+#' @param coefD Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.
+#' @param scan_pat Object of class \code{\link{scan_pattern}}.
 #' 
 #' @return Table with allele effects across sources.
 #' 
@@ -18,57 +25,104 @@
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom stringr str_count str_detect str_split
 #' 
-allele1 <- function(scan_apr, coefs, coefs36, scan_pat, map, haplo,
-                    trim = TRUE) {
-  
+allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns, 
+                    alt=NULL, trim = TRUE, ...) {
+  allele1_internal(phe_df, cov_mx, probD, map, K_chr, patterns,
+                   alt, trim = TRUE, ...)
+}
+allele1_internal <- function(
+  phe_df, cov_mx, probD, map, K_chr, patterns, alt, trim = TRUE, 
+  probH = qtl2geno::genoprob_to_alleleprob(probD),
+  scanH = qtl2scan::scan1(probH, phe_df, K_chr, cov_mx),
+  coefH = qtl2scan::scan1coef(probH, phe_df, K_chr, cov_mx),
+  coefD = qtl2scan::scan1coef(probD, phe_df, K_chr, cov_mx),
+  scan_pat = qtl2pattern::scan_pattern(probD, phe_df, K_chr, cov_mx,
+                                       map, patterns,
+                                       do_scans = FALSE),
+  ...) 
+{
+  if(!is.null(phe_df) && ncol(phe_df) > 1) {
+    message("using first phenotype")
+    phe_df <- phe_df[, 1, drop = FALSE]
+  }
+  if(is.null(alt))
+    alt <- paste0(
+      stringr::str_split(
+        stringr::str_replace(
+          patterns$pattern[1], ".*:", ""),
+        "")[[1]],
+      collapse = "|")
+
   # Combine effects estimates.
-  scan_pats <- dplyr::rename(
-    tidyr::gather(summary(scan_pat, map),
-                  allele, effect, -pheno, -chr, -pos, -lod),
-    source = pheno)
+  mar_df <- function(x, n) {
+    mar <- rownames(x)
+    x <- as.data.frame(x[, seq_len(n)])
+    x$mar <- mar
+    x
+  }
+
+  scan_pats <- tidyr::gather(
+    dplyr::bind_rows(
+      lapply(scan_pat$coef, mar_df, 3), 
+      .id = "source"),
+    allele, effect, -mar, -source)
+  
   alleles <- dplyr::bind_rows(
-    haplo = dplyr::mutate(
-      tidyr::gather(
-        summary(coefs, scan_apr, map), 
-        allele, effect, -pheno, -chr, -pos, -lod),
-      pheno = as.character(pheno),
-      chr = as.character(chr)),
-    diplo = dplyr::mutate(
-      tidyr::gather(
-        summary(coefs36, scan_apr, map), 
-        allele, effect, -pheno, -chr, -pos, -lod),
-      pheno = as.character(pheno),
-      chr = as.character(chr)),
+    haplo = tidyr::gather(
+      mar_df(coefH, 8),
+      allele, effect, -mar),
+    diplo = tidyr::gather(
+        mar_df(coefD, 36), 
+        allele, effect, -mar),
     .id = "source")
   
   alleles <- dplyr::bind_rows(alleles, scan_pats)
+  map <- map[[1]]
+  mar <- names(map)
+  map <- data.frame(pos=map, mar=mar, stringsAsFactors = FALSE)
+  alleles <- dplyr::inner_join(alleles, map, by = "mar")
   alleles$source <- factor(alleles$source, c("haplo","diplo",
-                                             colnames(scan_pat$scan)))
+                                             names(scan_pat$coef)))
   if(trim)
     alleles <- trim_quant(alleles)
   
   tmpfn <- function(x) 
     sapply(stringr::str_split(x, ":"), 
-           function(x) stringr::str_detect(x[2], haplo))
+           function(x) stringr::str_detect(x[2], alt))
   alleles <- dplyr::mutate(alleles,
-                           probe = stringr::str_count(allele, haplo),
+                           probe = stringr::str_count(allele, alt),
                            probe = ifelse(tmpfn(source) & (allele == "het"), 1, probe),
                            probe = ifelse(tmpfn(source) & (allele == "alt"), 2, probe),
                            probe = factor(probe))
-  attr(alleles, "probe") <- haplo
+  attr(alleles, "probe") <- alt
   class(alleles) <- c("allele1", class(alleles))
   alleles
 }
 #' @export
 #' @importFrom dplyr group_by summarize ungroup
 #' 
-summary.allele1 <- function(object, ...) {
+summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) {
+  if(is.null(pos)) {
+    if(is.null(scan1_object))
+      pos_Mbp <- median(object$pos)
+    else
+      pos_Mbp <- summary(scan1_object, map)$pos[1]
+  } else {
+    pos_Mbp <- pos
+    if(pos_Mbp < min(object$pos) | pos_Mbp > max(object$pos))
+      stop("position must be within range of allele positions")
+  }
+  
+  tmpfn <- function(pos) {
+    a <- abs(pos - pos_Mbp)
+    which(a == min(a))
+  }
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, source),
-      pos = pos[1],
-      min = min(effect),
-      max = max(effect)))
+      min = min(effect[tmpfn(pos)]),
+      max = max(effect[tmpfn(pos)]),
+      pos = pos_Mbp))
 }
 trim_quant <- function(object, beyond = 3) {
   quant <- quantile(object$effect, c(.25,.75))

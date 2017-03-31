@@ -6,7 +6,8 @@
 \title{Genome scan by pattern set}
 \usage{
 scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
-  haplos = NULL, diplos = NULL, condense_patterns = TRUE)
+  haplos = NULL, diplos = NULL, condense_patterns = TRUE,
+  do_scans = TRUE)
 
 \method{summary}{scan_pattern}(object, map, ...)
 }
@@ -29,10 +30,19 @@ scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
 
 \item{condense_patterns}{remove snp_action from contrasts if TRUE}
 
+\item{do_scans}{Do scans if \code{TRUE}.}
+
 \item{object}{object of class \code{\link{scan_pattern}}}
 }
 \value{
-ggplot2 object
+List containing:
+\itemize{
+\item{patterns} Data frame of summary for top patterns (column \code{founders} has pattern)
+\item{dip_set} Diplotype sets for contrasts
+\item{group} Group for each founder pattern
+\item{scan} Object of class \code{\link[qtl2scan]{scan1}}.
+\item{coef} Object of class \code{\link{listof_scan1coef}}.
+}
 }
 \description{
 Genome scan by pattern set

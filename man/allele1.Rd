@@ -4,22 +4,35 @@
 \alias{allele1}
 \title{Allele plot for SNPs, alleles and allele pairs}
 \usage{
-allele1(scan_apr, coefs, coefs36, scan_pat, map, haplo, trim = TRUE)
+allele1(phe_df = NULL, cov_mx = NULL, probD = NULL, map = NULL,
+  K_chr = NULL, patterns, alt = NULL, trim = TRUE, ...)
 }
 \arguments{
-\item{scan_apr}{Object of class \code{\link[qtl2scan]{scan1}} with allele scan.}
+\item{phe_df}{data frame with one phenotype}
 
-\item{coefs}{Object of class \code{\link[qtl2scan]{scan1coef}}.}
+\item{cov_mx}{covariate matrix}
 
-\item{coefs36}{Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.}
+\item{probD}{object of class \code{\link[qtl2geno]{calc_genoprob}}}
 
-\item{scan_pat}{Object of class \code{\link{scan_pattern}}.}
+\item{map}{list of genome maps}
 
-\item{map}{Genome map.}
+\item{K_chr}{kinship matrix}
 
-\item{haplo}{Haplotype allele letter to compare for number of copies.}
+\item{patterns}{data frame of pattern information}
+
+\item{alt}{Haplotype allele letter(s) for alternative to reference.}
 
 \item{trim}{If \code{TRUE}, trim extreme alleles.}
+
+\item{...}{additional parameters}
+
+\item{scanH}{Object of class \code{\link[qtl2scan]{scan1}} with allele scan.}
+
+\item{coefH}{Object of class \code{\link[qtl2scan]{scan1coef}}.}
+
+\item{coefD}{Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.}
+
+\item{scan_pat}{Object of class \code{\link{scan_pattern}}.}
 }
 \value{
 Table with allele effects across sources.

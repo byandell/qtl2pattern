@@ -9,8 +9,16 @@
 #' @param haplos vector of haplotype names
 #' @param diplos vector of diplotype names
 #' @param condense_patterns remove snp_action from contrasts if TRUE
+#' @param do_scans Do scans if \code{TRUE}.
 #'
-#' @return ggplot2 object
+#' @return List containing:
+#' \itemize{
+#' \item{patterns} Data frame of summary for top patterns (column \code{founders} has pattern)
+#' \item{dip_set} Diplotype sets for contrasts
+#' \item{group} Group for each founder pattern
+#' \item{scan} Object of class \code{\link[qtl2scan]{scan1}}.
+#' \item{coef} Object of class \code{\link{listof_scan1coef}}.
+#' }
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
@@ -25,7 +33,8 @@
 #'
 scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          map, patterns, haplos = NULL, diplos = NULL,
-                         condense_patterns = TRUE) {
+                         condense_patterns = TRUE,
+                         do_scans = TRUE) {
   if(!nrow(patterns))
     return(NULL)
 
@@ -77,10 +86,12 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   probs2 <- genoprob_to_patternprob(probs1, pattern_three[1,])
   coefs <- list()
   coefs[[1]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
-  scans <- qtl2scan::scan1(probs2, phe, K, covar)
-  lod <- matrix(scans, nrow(scans), ncol(dip_set))
-  dimnames(lod) <- list(dimnames(scans)[[1]],
-                        patterns$founders)
+  if(do_scans) {
+    scans <- qtl2scan::scan1(probs2, phe, K, covar)
+    lod <- matrix(scans, nrow(scans), ncol(dip_set))
+    dimnames(lod) <- list(rownames(scans),
+                          patterns$founders)
+  }
 
   # loop through other diplotype sets
   # While scans could be combined with cbind method, this seems more efficient.
@@ -90,17 +101,23 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
       probs2 <- genoprob_to_patternprob(probs1, pattern_three[i,])
       coefs[[i]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
       dimnames(coefs[[i]])[[2]][1:3] <- c("ref","het","alt")
-      lod[,i] <- qtl2scan::scan1(probs2, phe, K, covar)
+      if(do_scans)
+        lod[,i] <- qtl2scan::scan1(probs2, phe, K, covar)
     }
   }
-  # rearrange patterns by descending max LOD
-  patterns$max_pos <- apply(lod, 2,
-                            function(x) map[[1]][which.max(x)])
-  patterns <- dplyr::arrange(patterns,
-                             dplyr::desc(max_lod))
+  if(do_scans) {
+    # rearrange patterns by descending max LOD
+    patterns$max_pos <- apply(lod, 2,
+                              function(x) map[[1]][which.max(x)])
+    patterns <- dplyr::arrange(patterns,
+                               dplyr::desc(max_lod))
+  }
 
   ## Make sure we have attributes for scans and coefs
-  scans <- modify_object(scans, lod[, patterns$founders, drop=FALSE])
+  if(do_scans)
+    scans <- modify_object(scans, lod[, patterns$founders, drop=FALSE])
+  else
+    scans <- NULL
 
   names(coefs) <- patterns$founders
   coefs <- coefs[patterns$founders]
