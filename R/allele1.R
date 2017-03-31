@@ -36,9 +36,7 @@ allele1_internal <- function(
   scanH = qtl2scan::scan1(probH, phe_df, K_chr, cov_mx),
   coefH = qtl2scan::scan1coef(probH, phe_df, K_chr, cov_mx),
   coefD = qtl2scan::scan1coef(probD, phe_df, K_chr, cov_mx),
-  scan_pat = qtl2pattern::scan_pattern(probD, phe_df, K_chr, cov_mx,
-                                       map, patterns,
-                                       do_scans = FALSE),
+  scan_pat = NULL,
   ...) 
 {
   if(!is.null(phe_df) && ncol(phe_df) > 1) {
@@ -48,18 +46,20 @@ allele1_internal <- function(
   pheno_name <- names(as.data.frame(phe_df))
   
   # Get patterns for pheno.
-  if(is.null(patterns)) {
-    if(is.null(scan_pat))
-      stop("need either patterns or scan_pat")
+  if(!is.null(scan_pat)) {
     patterns <- dplyr::rename(scan_pat$patterns,
                               pattern = founders)
   } else {
+    if(is.null(patterns))
+      stop("need either patterns or scan_pat")
     patterns <- dplyr::filter(patterns,
                               pheno == pheno_name)
+    scan_pat <- qtl2pattern::scan_pattern(probD, phe_df, K_chr, cov_mx,
+                                          map, patterns)
   }
   if(!nrow(patterns))
     return(NULL)
-  
+
   if(is.null(alt))
     alt <- paste0(
       stringr::str_split(
