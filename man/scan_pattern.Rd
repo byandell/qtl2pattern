@@ -6,7 +6,7 @@
 \title{Genome scan by pattern set}
 \usage{
 scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
-  haplos = NULL, diplos = NULL, condense_patterns = TRUE,
+  haplos = NULL, diplos = NULL, condense_patterns = TRUE, blups = FALSE,
   do_scans = TRUE)
 
 \method{summary}{scan_pattern}(object, map, ...)
@@ -29,6 +29,8 @@ scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
 \item{diplos}{vector of diplotype names}
 
 \item{condense_patterns}{remove snp_action from contrasts if TRUE}
+
+\item{blups}{Create BLUPs if \code{TRUE}}
 
 \item{do_scans}{Do scans if \code{TRUE}.}
 

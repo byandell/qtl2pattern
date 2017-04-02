@@ -9,6 +9,7 @@
 #' @param haplos vector of haplotype names
 #' @param diplos vector of diplotype names
 #' @param condense_patterns remove snp_action from contrasts if TRUE
+#' @param blups Create BLUPs if \code{TRUE}
 #' @param do_scans Do scans if \code{TRUE}.
 #'
 #' @return List containing:
@@ -34,6 +35,7 @@
 scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          map, patterns, haplos = NULL, diplos = NULL,
                          condense_patterns = TRUE,
+                         blups = FALSE,
                          do_scans = TRUE) {
   if(!nrow(patterns))
     return(NULL)
@@ -84,8 +86,11 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 
   # set up first diplotype set
   probs2 <- genoprob_to_patternprob(probs1, pattern_three[1,])
+  scan1fn <- ifelse(blups, 
+                    qtl2scan::scan1blup, 
+                    qtl2scan::scan1coef)
   coefs <- list()
-  coefs[[1]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
+  coefs[[1]] <- scan1fn(probs2, phe, K, covar)
   if(do_scans) {
     scans <- qtl2scan::scan1(probs2, phe, K, covar)
     lod <- matrix(scans, nrow(scans), ncol(dip_set))
@@ -99,7 +104,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   if(npat > 1) {
     for(i in seq(2, npat)) {
       probs2 <- genoprob_to_patternprob(probs1, pattern_three[i,])
-      coefs[[i]] <- qtl2scan::scan1coef(probs2, phe, K, covar)
+      coefs[[i]] <- scan1fn(probs2, phe, K, covar)
       dimnames(coefs[[i]])[[2]][1:3] <- c("ref","het","alt")
       if(do_scans)
         lod[,i] <- qtl2scan::scan1(probs2, phe, K, covar)
