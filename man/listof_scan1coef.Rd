@@ -11,7 +11,7 @@
 \alias{[.listof_scan1coef}
 \title{List of scan1coef objects}
 \usage{
-listof_scan1coef(probs, phe, K = NULL, covar = NULL)
+listof_scan1coef(probs, phe, K = NULL, covar = NULL, blups = FALSE)
 
 summary_listof_scan1coef(object, scan1_object, map,
   coef_names = dimnames(object[[1]])[[2]], center = TRUE, ...)
@@ -36,6 +36,8 @@ subset_listof_scan1coef(x, elements, ...)
 \item{K}{list of length 1 with kinship matrix}
 
 \item{covar}{matrix of covariates}
+
+\item{blups}{Create BLUPs if \code{TRUE}}
 
 \item{object}{object of class \code{listof_scan1coeff}}
 
