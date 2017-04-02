@@ -6,6 +6,7 @@
 #' @param probs genotype probabilities object for one chromosome from \code{\link[qtl2geno]{calc_genoprob}}
 #' @param K list of length 1 with kinship matrix
 #' @param covar matrix of covariates
+#' @param blups Create BLUPs if \code{TRUE}
 #'
 #' @return object of class \code{listof_scan1coeff}
 #'
@@ -16,12 +17,16 @@
 #' \dontrun{listof_scan1coef(probs, phe)}
 #'
 #' @export
-#' @importFrom qtl2scan scan1coef
-listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL) {
+#' @importFrom qtl2scan scan1coef scan1blup
+#' 
+listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
   eff <- list()
   phename <- dimnames(phe)[[2]]
+  scan1fn <- ifelse(blups, 
+                    qtl2scan::scan1blup, 
+                    qtl2scan::scan1coef)
   for(pheno in phename)
-    eff[[pheno]] <- qtl2scan::scan1coef(probs, phe[, pheno, drop=FALSE], K, covar)
+    eff[[pheno]] <- scan1fn(probs, phe[, pheno, drop=FALSE], K, covar)
   class(eff) <- c("listof_scan1coef", class(eff))
   eff
 }
