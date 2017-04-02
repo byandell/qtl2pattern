@@ -110,6 +110,7 @@ allele1_internal <- function(
                            probe = ifelse(tmpfn(source) & (allele == "alt"), 2, probe),
                            probe = factor(probe))
   attr(alleles, "probe") <- alt
+  attr(alleles, "blups") <- blups
   class(alleles) <- c("allele1", class(alleles))
   alleles
 }

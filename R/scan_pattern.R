@@ -138,6 +138,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 
   ## Adjust max position from genome scan to SNP scan.
   ## Used for vertical line at max.
+  attr(out, "blups") <- blups
   class(out) <- c("scan_pattern", class(out))
   out
 }
