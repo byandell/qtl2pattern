@@ -9,6 +9,7 @@
 #' @param K_chr kinship matrix
 #' @param patterns data frame of pattern information
 #' @param alt Haplotype allele letter(s) for alternative to reference.
+#' @param blups Create BLUPs if \code{TRUE}
 #' @param ... additional parameters
 #' 
 #' @param scanH Object of class \code{\link[qtl2scan]{scan1}} with allele scan.
@@ -25,15 +26,15 @@
 #' @importFrom stringr str_count str_detect str_split
 #' 
 allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
-                    alt=NULL, ...) {
+                    alt=NULL, blups = FALSE, ...) {
   allele1_internal(phe_df, cov_mx, probD, map, K_chr, patterns,
-                   alt, ...)
+                   alt, blups, ...)
 }
 allele1_internal <- function(
-  phe_df, cov_mx, probD, map, K_chr, patterns, alt, 
+  phe_df, cov_mx, probD, map, K_chr, patterns, alt, blups,
   probH = qtl2geno::genoprob_to_alleleprob(probD),
   scanH = qtl2scan::scan1(probH, phe_df, K_chr, cov_mx),
-  coefH = qtl2scan::scan1coef(probH, phe_df, K_chr, cov_mx),
+  coefH = scan1fn(probH, phe_df, K_chr, cov_mx),
   coefD = qtl2scan::scan1coef(probD, phe_df, K_chr, cov_mx),
   scan_pat = NULL,
   ...) 
@@ -43,6 +44,10 @@ allele1_internal <- function(
     phe_df <- phe_df[, 1, drop = FALSE]
   }
   pheno_name <- names(as.data.frame(phe_df))
+  
+  scan1fn <- ifelse(blups, 
+                    qtl2scan::scan1blup, 
+                    qtl2scan::scan1coef)
   
   # Get patterns for pheno.
   if(!is.null(scan_pat)) {
@@ -54,7 +59,7 @@ allele1_internal <- function(
     patterns <- dplyr::filter(patterns,
                               pheno == pheno_name)
     scan_pat <- qtl2pattern::scan_pattern(probD, phe_df, K_chr, cov_mx,
-                                          map, patterns)
+                                          map, patterns, blups = blups)
   }
   if(!nrow(patterns))
     return(NULL)
