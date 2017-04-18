@@ -54,9 +54,6 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
     cov_mx <- cov_mx[ind2keep,, drop = FALSE]
   kinship <- kinship[ind2keep, ind2keep]
 
-  # Decompose kinship
-#  Ke <- qtl2scan::decomp_kinship(kinship)
-  
   if(!region) {
     # Find marker at pos_Mbp on chromosome chr_id
     mar_id <- qtl2geno::find_marker(map, chr_id, pos_Mbp)
@@ -69,7 +66,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
     map <- map[[chr_id]]
   
   # Raw fit
-  scan_max <- qtl2scan::scan1(probs_obj, phe_df, kinship, 
+  scan_obj <- qtl2scan::scan1(probs_obj, phe_df, kinship, 
                               cov_mx)
   
   raw_lod <- max(scan_obj, map)

@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern support for R/qtl2
-Version: 0.3.4
-Date: 2017-04-02
+Version: 0.3.5
+Date: 2017-04-18
 Author: Brian S Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
 Description: Routines used mostly by R/qtl2ggplot.

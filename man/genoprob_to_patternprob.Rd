@@ -4,12 +4,12 @@
 \alias{genoprob_to_patternprob}
 \title{Collapse genoprob according to pattern}
 \usage{
-genoprob_to_patternprob(probs1, pattern_sets)
+genoprob_to_patternprob(probs1, sdp)
 }
 \arguments{
 \item{probs1}{object of class \code{\link[qtl2scan]{calc_genoprob}}}
 
-\item{pattern_sets}{vector of pattern sets}
+\item{sdp}{SNP distribution pattern}
 }
 \value{
 object of class \code{\link[qtl2scan]{calc_genoprob}}

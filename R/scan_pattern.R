@@ -85,7 +85,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                             patterns$founders)
 
   # set up first diplotype set
-  probs2 <- genoprob_to_patternprob(probs1, pattern_three[1,])
+  probs2 <- genoprob_to_patternprob(probs1, patterns$sdp[1])
   scan1fn <- ifelse(blups, 
                     qtl2scan::scan1blup, 
                     qtl2scan::scan1coef)
@@ -103,7 +103,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   dimnames(coefs[[1]])[[2]][1:3] <- c("ref","het","alt")
   if(npat > 1) {
     for(i in seq(2, npat)) {
-      probs2 <- genoprob_to_patternprob(probs1, pattern_three[i,])
+      probs2 <- genoprob_to_patternprob(probs1, patterns$sdp[i])
       coefs[[i]] <- scan1fn(probs2, phe, K, covar)
       dimnames(coefs[[i]])[[2]][1:3] <- c("ref","het","alt")
       if(do_scans)
