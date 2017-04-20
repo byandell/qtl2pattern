@@ -52,23 +52,23 @@ How to incorporate this into shiny tool?
 
 All packages are now set up to formally import functions or data from other packages. Thus, no packages are actually loaded, which should speed up processes. All packages import from some <http://tidyverse.org> package.
 
-### DOread imports
-
-- dplyr
-- broman:   `winsorize`
-- qlt2scan: `interp_map`
-
 ### CCSanger imports
 
 - ggplot2, dplyr, readr
-- qtl2scan: `genoprob_to_snpprob`
+
+### DOread imports
+
+- dplyr
+- feather:  `read_feather`
+- broman:   `winsorize`
+- qlt2scan: `interp_map`
 
 ### qtl2pattern imports
 
 - dplyr, tidyr, stringr
 - RColorBrewer
 - qtl2scan: `scan1`, `scan1coef`
-- CCSanger: `sdp_to_logical`, `sdp_to_pattern`
+- CCSanger: `get_snpinfo`, `get_svs8`, `convert_bp`, `get_gene_exon_snp`, `sdp_to_logical`, `sdp_to_pattern`
 
 ### qtl2ggplot imports
 
@@ -77,17 +77,26 @@ All packages are now set up to formally import functions or data from other pack
 - grid, graphics
 - Rcpp: sourceCpp
 - qtl2scan: `scan1`, `scan1coef`
-- CCSanger: `sdp_to_pattern`
+- qtl2pattern: 
+- CCSanger: `sdp_to_pattern`, `CCcolors`, `convert_bp`
 
 ### qtl2shiny imports
 
 - ggplot2, dplyr, tidyr
 - shiny, shinydashboard
-- gdata, grid, gridBase, GGally
+- gdata, grid, GGally, plotly
 - qtl2scan: `scan1`
 - qtl2ggplot
 - qtl2pattern: `scan_pattern`
-- CCSanger
+- CCSanger: `get_gene_exon_snp`, `sdp_to_pattern`, `get_mgi_features`, `CCcolors`
+- CausalMST: `comediate1_test`, `mediate1_test`
+
+### CausalMST imports
+
+- dplyr, purrr, stringr, ggplot2, 
+- mnormt: `pmnorm`
+- corpcor: `is.positive.definite`, `make.positive.definite`
+- qtl2scan: `get_common_ids`, `fit1`, `decomp_kinship`
 
 ## Package functions and data
 
