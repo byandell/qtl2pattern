@@ -38,10 +38,33 @@
 #' @keywords utilities
 #'
 #' @examples
-#' dontrun(summary(object))
+#' # load qtl2geno package for data and genoprob calculation
+#' library(qtl2geno)
+#' library(qtl2scan)
+#' 
+#' # read data
+#' iron <- read_cross2(system.file("extdata", "iron.zip", package="qtl2geno"))
+#' # insert pseudomarkers into map
+#' map <- insert_pseudomarkers(iron$gmap, step=1)
+#' 
+#' # calculate genotype probabilities
+#' probs <- calc_genoprob(iron, map, error_prob=0.002)
+#' 
+#' # grab phenotypes and covariates; ensure that covariates have names attribute
+#' pheno <- iron$pheno
+#' covar <- match(iron$covar$sex, c("f", "m")) # make numeric
+#' names(covar) <- rownames(iron$covar)
+#' Xcovar <- get_x_covar(iron)
+#' 
+#' # perform genome scan
+#' out <- scan1(probs, pheno, addcovar=covar, Xcovar=Xcovar)
+#' 
+#' # summary
+#' summary(out, map)
 #'
 #' @export
-#' @importFrom dplyr arrange desc group_by mutate summarize tbl_df ungroup
+#' @importFrom dplyr arrange desc group_by mutate select summarize tbl_df ungroup
+#' @importFrom tidyr gather
 #' @importFrom CCSanger sdp_to_pattern
 #'
 summary_scan1 <- function(object, map, snpinfo=NULL,
@@ -52,30 +75,45 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                           ...) {
   if(is.null(snpinfo)) {
     # scan1 LOD summary
-    chr <- as.character(chr)
-    if(is.list(map))
-      map <- map[chr]
-    peak_pos <-
-      matrix(NA, length(chr), length(lodcolumn))
-    if(is.numeric(lodcolumn))
-      lodcolumn <- dimnames(object)[[2]][lodcolumn]
-    dimnames(peak_pos) <- list(as.character(chr), lodcolumn)
-    peak_lod <- peak_pos
-    for(lodc in lodcolumn)
-      for(chri in as.character(chr)) {
-        tmp <- max(object, map, lodc, chri)
-        if(nrow(tmp)) {
-          if(is.finite(tmp[[3]])) {
-            peak_pos[chri,lodc] <- mean(tmp$pos)
-            ## lod column of max_scan1 has name of trait
-            peak_lod[chri,lodc] <- max(tmp[[3]])
-          }
-        }
-      }
-    dplyr::tbl_df(data.frame(pheno=rep(lodcolumn, each=length(chr)),
-                      chr=rep(chr, times=length(lodcolumn)),
-                      pos=c(peak_pos),
-                      lod=c(peak_lod)))
+    thechr <- factor(qtl2scan:::map2chr(map), names(map))
+    thepos <- qtl2scan:::map2pos(map)
+    lod <- unclass(object)
+    sign <- (lod >= 0) * 2 - 1
+    coln <- colnames(lod)
+    mnames <- rownames(lod)
+    if (is.character(lodcolumn)) {
+      tmp <- match(lodcolumn, coln)
+      if (any(is.na(tmp))) 
+        stop("column \"", paste(lodcolumn, collapse = ","), "\" not found")
+      lodcolumn <- tmp
+    }
+    if (any(lodcolumn < 1) || any(lodcolumn > ncol(lod))) 
+      stop("column [", paste(lodcolumn, collapse = ","), "] out of range (should be in 1, ..., ", 
+           ncol(lod), ")")
+    
+    lod <- lod[, lodcolumn, drop = FALSE]
+    sign <- sign[, lodcolumn, drop = FALSE]
+    if (!is.null(chr)) {
+      keep <- (thechr %in% chr)
+      thechr <- thechr[keep]
+      thepos <- thepos[keep]
+      mnames <- mnames[keep]
+      lod <- lod[keep,, drop = FALSE] * sign[keep,, drop = FALSE]
+    }
+    lod <- data.frame(chr = thechr, 
+                      pos = thepos, 
+                      mnames = mnames,
+                      lod)
+    dplyr::arrange(
+      dplyr::ungroup(
+        dplyr::summarize(
+          dplyr::group_by(
+            tidyr::gather(lod, pheno, lod, -chr, -pos, -mnames),
+            pheno, chr),
+          marker = mnames[which.max(lod)],
+          pos = pos[which.max(lod)],
+          lod = max(lod))),
+      chr)
   } else {
     # snpinfo summary
     ## top_snps() Adapted to multiple phenotypes.

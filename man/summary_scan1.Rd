@@ -56,7 +56,29 @@ tbl summary
 Summary of scan1 object
 }
 \examples{
-dontrun(summary(object))
+# load qtl2geno package for data and genoprob calculation
+library(qtl2geno)
+library(qtl2scan)
+
+# read data
+iron <- read_cross2(system.file("extdata", "iron.zip", package="qtl2geno"))
+# insert pseudomarkers into map
+map <- insert_pseudomarkers(iron$gmap, step=1)
+
+# calculate genotype probabilities
+probs <- calc_genoprob(iron, map, error_prob=0.002)
+
+# grab phenotypes and covariates; ensure that covariates have names attribute
+pheno <- iron$pheno
+covar <- match(iron$covar$sex, c("f", "m")) # make numeric
+names(covar) <- rownames(iron$covar)
+Xcovar <- get_x_covar(iron)
+
+# perform genome scan
+out <- scan1(probs, pheno, addcovar=covar, Xcovar=Xcovar)
+
+# summary
+summary(out, map)
 
 }
 \author{
