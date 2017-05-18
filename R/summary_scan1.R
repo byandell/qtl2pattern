@@ -74,6 +74,9 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                           show_all_snps = TRUE,
                           ...) {
   if(is.null(snpinfo)) {
+    if(!is.null(chr))
+      map <- map[chr]
+    
     # scan1 LOD summary
     thechr <- factor(qtl2scan:::map2chr(map), names(map))
     thepos <- qtl2scan:::map2pos(map)
