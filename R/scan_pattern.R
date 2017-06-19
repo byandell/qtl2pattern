@@ -6,8 +6,6 @@
 #' @param covar covariate matrix
 #' @param map genome map
 #' @param patterns data frame of pattern information
-#' @param haplos vector of haplotype names
-#' @param diplos vector of diplotype names
 #' @param condense_patterns remove snp_action from contrasts if TRUE
 #' @param blups Create BLUPs if \code{TRUE}
 #' @param do_scans Do scans if \code{TRUE}.
@@ -33,43 +31,36 @@
 #' @importFrom CCSanger sdp_to_pattern
 #'
 scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
-                         map, patterns, haplos = NULL, diplos = NULL,
+                         map, patterns,
                          condense_patterns = TRUE,
                          blups = FALSE,
                          do_scans = TRUE) {
   if(!nrow(patterns))
     return(NULL)
 
-  if(!("contrast" %in% names(patterns)))
-    patterns$contrast <- ""
-
-  if(is.null(diplos)) {
-    diplos <- dimnames(probs1[[1]])[[2]]
-  }
-  if(is.null(haplos)) {
-    haplos <- unique(unlist(stringr::str_split(diplos, "")))
-  }
-  if(ncol(phe) > 1) {
-    warning("only using first phenotype")
-    phe <- phe[, 1, drop=FALSE]
-  }
-
   ## For now, limit to one phenotype.
   ## But see how to have a list across phenotypes
   ## Also need to take care of covariates properly; see qtl2shiny:::scan1_covar.
-  pheno_name <- dimnames(phe)[[2]]
+  pheno_names <- colnames(phe)
 
+  diplos <- dimnames(probs1[[1]])[[2]]
+  haplos <- unique(unlist(stringr::str_split(diplos, "")))
+  
+  if(!("contrast" %in% names(patterns))) 
+    patterns$contrast <- ""
+  
   ## SDP patterns
   patterns <- dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(
         dplyr::filter(patterns,
-                      pheno == pheno_name),
-        sdp, max_snp, max_pos),
+                      pheno %in% pheno_names),
+        sdp, max_snp, max_pos, pheno),
       founders = CCSanger::sdp_to_pattern(sdp, haplos),
       contrast = paste(contrast, collapse=","),
       max_lod = max(max_lod)))
-  if(!condense_patterns) {
+  
+  if(!condense_patterns & !all(patterns$contrast == "")) {
     dplyr::mutate(patterns,
                   founders = paste(founders, contrast, sep = "_"))
   }
@@ -90,9 +81,13 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                     qtl2scan::scan1blup, 
                     qtl2scan::scan1coef)
   coefs <- list()
-  coefs[[1]] <- scan1fn(probs2, phe, K, covar)
+  coefs[[1]] <- scan1fn(probs2, 
+                        phe[, patterns$pheno[1], drop = FALSE],
+                        K, covar)
   if(do_scans) {
-    scans <- qtl2scan::scan1(probs2, phe, K, covar)
+    scans <- qtl2scan::scan1(probs2, 
+                             phe[, patterns$pheno[1], drop = FALSE],
+                             K, covar)
     lod <- matrix(scans, nrow(scans), ncol(dip_set))
     dimnames(lod) <- list(rownames(scans),
                           patterns$founders)
@@ -104,10 +99,14 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   if(npat > 1) {
     for(i in seq(2, npat)) {
       probs2 <- genoprob_to_patternprob(probs1, patterns$sdp[i])
-      coefs[[i]] <- scan1fn(probs2, phe, K, covar)
+      coefs[[i]] <- scan1fn(probs2, 
+                            phe[, patterns$pheno[i], drop = FALSE],
+                            K, covar)
       dimnames(coefs[[i]])[[2]][1:3] <- c("ref","het","alt")
       if(do_scans)
-        lod[,i] <- qtl2scan::scan1(probs2, phe, K, covar)
+        lod[,i] <- qtl2scan::scan1(probs2, 
+                                   phe[, patterns$pheno[i], drop = FALSE],
+                                   K, covar)
     }
   }
   if(do_scans) {
@@ -125,7 +124,6 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
     scans <- NULL
 
   names(coefs) <- patterns$founders
-  coefs <- coefs[patterns$founders]
   class(coefs) <- c("listof_scan1coef", class(coefs))
 
   # return object.
@@ -148,5 +146,9 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 #' @method summary scan_pattern
 #' @rdname scan_pattern
 summary.scan_pattern <- function(object, map, ...) {
+  # Set up unique names as pheno_pattern_contrast
+  pheno <- paste(object$patterns$pheno, object$patterns$founders, sep = "_")
+  names(object$coef) <- pheno
+  colnames(object$scan) <- pheno
   summary(object$coef, scan1_object = object$scan, map, ...)
 }

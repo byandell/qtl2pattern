@@ -6,8 +6,7 @@
 \title{Genome scan by pattern set}
 \usage{
 scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
-  haplos = NULL, diplos = NULL, condense_patterns = TRUE, blups = FALSE,
-  do_scans = TRUE)
+  condense_patterns = TRUE, blups = FALSE, do_scans = TRUE)
 
 \method{summary}{scan_pattern}(object, map, ...)
 }
@@ -23,10 +22,6 @@ scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
 \item{map}{genome map}
 
 \item{patterns}{data frame of pattern information}
-
-\item{haplos}{vector of haplotype names}
-
-\item{diplos}{vector of diplotype names}
 
 \item{condense_patterns}{remove snp_action from contrasts if TRUE}
 

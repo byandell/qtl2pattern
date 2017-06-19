@@ -58,8 +58,14 @@ summary_listof_scan1coef <-
            ...) {
   phename <- names(object)
   chr_id <- names(map)
+  
+  # Summary of phenos on chr; reorder and rename by phename
   sum_chr <- summary(scan1_object, map, lodcolumn=phename, chr=chr_id)
-  pos <- sum_chr$pos[match(phename, sum_chr$pheno)]
+  m <- match(make.names(phename), sum_chr$pheno)
+  sum_chr <- sum_chr[m,]
+  sum_chr$pheno <- phename
+  
+  pos <- sum_chr$pos
   names(pos) <- phename
   wh <- apply(scan1_object,2,function(x) which.max(x)[1])
   sum_coef <- as.data.frame(matrix(NA,
@@ -69,7 +75,7 @@ summary_listof_scan1coef <-
   for(pheno_id in phename) {
     if(!is.null(object[[pheno_id]])) {
       ## Need to save these in data frame.
-      tmp <- object[[pheno_id]][wh[pheno_id],seq_along(coef_names)]
+      tmp <- object[[pheno_id]][wh[pheno_id], seq_along(coef_names)]
       if(center)
         tmp <- tmp - mean(tmp)
       sum_coef[match(pheno_id, sum_chr$pheno),] <- tmp
