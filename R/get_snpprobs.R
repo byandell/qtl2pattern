@@ -48,6 +48,7 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
       svs_type = "Indel"),
     -allele)
   svsinfo <- CCSanger::get_svs8(chr_id, peak_Mbp, window_Mbp, datapath)
+  svsinfo$chr <- as.character(svsinfo$chr)
   snpinfo <- dplyr::bind_rows(snpinfo, indelinfo, svsinfo)
   ## Need names pos and snp for genoprob_to_snpprob.
   snpinfo <- dplyr::mutate(snpinfo,
