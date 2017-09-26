@@ -1,3 +1,4 @@
+
 #' Summary of scan1 object
 #'
 #' @param object object from \code{\link[qtl2scan]{scan1}}
@@ -106,7 +107,8 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
     lod <- data.frame(chr = thechr, 
                       pos = thepos, 
                       mnames = mnames,
-                      lod)
+                      lod,
+                      check.names = FALSE)
     dplyr::arrange(
       dplyr::ungroup(
         dplyr::summarize(
