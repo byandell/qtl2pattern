@@ -159,7 +159,7 @@ subset.top_snps_all <- function(x, start_val=0, stop_val=max(x$pos),
                                 pheno = NULL, ...) {
   x <- dplyr::filter(x,
                      pos >= CCSanger::convert_bp(start_val, FALSE),
-                     posp <= CCSanger::convert_bp(stop_val, FALSE))
+                     pos <= CCSanger::convert_bp(stop_val, FALSE))
   pheno_val <- pheno # need to be different from column name in x
   if(!is.null(pheno_val))
     x <-dplyr::filter(x, pheno %in% pheno_val)
