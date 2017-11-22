@@ -11,7 +11,7 @@ top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE)
 \method{summary}{top_snps_all}(object, sum_type = c("range", "peak", "best"),
   ...)
 
-\method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos_Mbp),
+\method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos),
   pheno = NULL, ...)
 }
 \arguments{

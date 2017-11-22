@@ -33,10 +33,10 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
     dplyr::select(
       dplyr::distinct(top_snps_tbl, snp_id, .keep_all=TRUE),
       -pheno),
-    pos_Mbp)
+    pos)
 
   ## Add columns for exons.
-  tmp <- CCSanger::convert_bp(top_snps_tbl$pos_Mbp)
+  tmp <- CCSanger::convert_bp(top_snps_tbl$pos, FALSE)
   ins <- outer(gene_exon$start, tmp, "<=") &
     outer(gene_exon$stop, tmp, ">=")
   ## SNP position should be in 1 (or more if splice variant) exon(s).
