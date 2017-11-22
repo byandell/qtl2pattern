@@ -103,7 +103,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
              dplyr::arrange(
                dplyr::select(object, -index,-sdp),
                dplyr::desc(lod)),
-             csq = abbreviate(csq, 15))
+             consequence = abbreviate(consequence, 15))
          },
          range = {
            ## Most frequent SNP patterns within 1.5 of max LOD.

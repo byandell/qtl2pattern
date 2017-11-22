@@ -60,7 +60,7 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
   }
   out <- dplyr::select(
     dplyr::mutate(top_snps_tbl,
-                  snp_type = abbreviate(csq,15)),
+                  snp_type = abbreviate(consequence,15)),
     -lod)
   class(out) <- c("merge_feature", class(out))
   out
