@@ -5,7 +5,7 @@
 \title{Get SNP genotype probabilities in window around peak}
 \usage{
 get_snpprobs(chr_id = NULL, peak_Mbp = NULL, window_Mbp = NULL, phename,
-  probs_obj, probs_map, datapath)
+  probs_obj, probs_map)
 }
 \arguments{
 \item{chr_id}{chromosome identifier}
@@ -19,8 +19,6 @@ get_snpprobs(chr_id = NULL, peak_Mbp = NULL, window_Mbp = NULL, phename,
 \item{probs_obj}{object of class \code{\link[qtl2geno]{calc_genoprob}} for \code{chr_id}}
 
 \item{probs_map}{map of markers/pseudomarkers in \code{probs_obj}}
-
-\item{datapath}{path to Derived Data}
 }
 \value{
 list with \code{snpprobs} and \code{snpinfo}

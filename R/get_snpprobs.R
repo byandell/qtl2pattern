@@ -8,7 +8,6 @@
 #' @param phename names of phenotypes
 #' @param probs_obj object of class \code{\link[qtl2geno]{calc_genoprob}} for \code{chr_id}
 #' @param probs_map map of markers/pseudomarkers in \code{probs_obj}
-#' @param datapath path to Derived Data
 #'
 #' @return list with \code{snpprobs} and \code{snpinfo}
 #'
@@ -22,10 +21,9 @@
 #'
 #' @importFrom dplyr bind_rows mutate
 #' @importFrom qtl2scan genoprob_to_snpprob index_snps
-#' @importFrom CCSanger get_snpinfo get_svs8
 #'
 get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
-                         phename, probs_obj, probs_map, datapath) {
+                         phename, probs_obj, probs_map) {
   if(is.null(chr_id) | is.null(peak_Mbp) | is.null(window_Mbp))
     return(NULL)
 
@@ -39,22 +37,12 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
         "\nNo peak_Mbp provided -- set to midpoint\n")
     peak_Mbp <- mean(range(probs_map[[1]]))
   }
-  snpinfo <- dplyr::mutate(
-    CCSanger::get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath),
-    svs_type = "SNP")
-  indelinfo <- dplyr::select(
-    dplyr::mutate(
-      CCSanger::get_snpinfo(chr_id, peak_Mbp, window_Mbp, datapath, info_type = "indels"),
-      svs_type = "Indel"),
-    -allele)
-  svsinfo <- CCSanger::get_svs8(chr_id, peak_Mbp, window_Mbp, datapath)
-  svsinfo$chr <- as.character(svsinfo$chr)
-  snpinfo <- dplyr::bind_rows(snpinfo, indelinfo, svsinfo)
-  ## Need names pos and snp for genoprob_to_snpprob.
-  snpinfo <- dplyr::mutate(snpinfo,
-                           pos = pos_Mbp,
-                           snp = snp_id,
-                           svs_type = factor(svs_type))
+  
+  # User supplied routine; see https://github.com/rqtl/qtl2db
+  snpinfo <- query_variants(chr_id,
+                            peak_Mbp - window_Mbp,
+                            peak_Mbp + window_Mbp)
+
   snpinfo <- qtl2scan::index_snps(probs_map, snpinfo)
   
   list(snpprobs = qtl2scan::genoprob_to_snpprob(probs_obj, snpinfo),

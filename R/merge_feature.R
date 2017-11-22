@@ -8,8 +8,6 @@
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
 #' @param dropchar number of characters to drop on phenames
 #' @param gene_exon tbl from \code{\link{get_gene_exon_snp}}
-#' @param sql_filename path to \code{\link{get_mgi_features}}
-#' @param datapath path to use with \code{\link{get_mgi_features}}
 #'
 #' @return tbl with added information on genes and exons
 #'
@@ -27,11 +25,7 @@
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
                           gene_exon =
-                            CCSanger::get_gene_exon_snp(top_snps_tbl,
-                                                        sql_filename),
-                          sql_filename = file.path(datapath,
-                                                   "mgi_db.sqlite"),
-                          datapath) {
+                            CCSanger::get_gene_exon_snp(top_snps_tbl)) {
   phename <- dimnames(out_lmm_snps)[[2]]
 
   ## Add lod by phename to top_snps_tbl

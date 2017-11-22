@@ -6,8 +6,7 @@
 \title{Merge SNP lod peaks with SNP feature information}
 \usage{
 merge_feature(top_snps_tbl, snpinfo, out_lmm_snps, drop = 1.5, dropchar = 0,
-  gene_exon = CCSanger::get_gene_exon_snp(top_snps_tbl, sql_filename),
-  sql_filename = file.path(datapath, "mgi_db.sqlite"), datapath)
+  gene_exon = CCSanger::get_gene_exon_snp(top_snps_tbl))
 
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"),
   ...)
@@ -24,10 +23,6 @@ merge_feature(top_snps_tbl, snpinfo, out_lmm_snps, drop = 1.5, dropchar = 0,
 \item{dropchar}{number of characters to drop on phenames}
 
 \item{gene_exon}{tbl from \code{\link{get_gene_exon_snp}}}
-
-\item{sql_filename}{path to \code{\link{get_mgi_features}}}
-
-\item{datapath}{path to use with \code{\link{get_mgi_features}}}
 
 \item{object}{of class \code{merge_feature}}
 
