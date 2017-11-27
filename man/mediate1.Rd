@@ -5,7 +5,7 @@
 \title{Mediate phenotype with nearby expression phenotypes}
 \usage{
 mediate1(chr_id, pos_Mbp, window_Mbp, phe_df, cov_mx = NULL, probs_obj,
-  kinship = NULL, map, datapath, verbose = FALSE, region = FALSE)
+  kinship = NULL, map, verbose = FALSE, region = FALSE)
 }
 \arguments{
 \item{chr_id}{Chromosome identifier.}
@@ -24,12 +24,12 @@ mediate1(chr_id, pos_Mbp, window_Mbp, phe_df, cov_mx = NULL, probs_obj,
 
 \item{map}{Physical map.}
 
-\item{datapath}{Directory name for expression traits objects.}
-
 \item{verbose}{Show expression trait number as calculated if \code{TRUE}}
 
 \item{region}{Mediate over whole region if \code{TRUE}}
+
+\item{datapath}{Directory name for expression traits objects.}
 }
 \description{
-Mediate phenotype with nearby expression phenotypes
+Relies on user-provided \code{query_mrna}.
 }

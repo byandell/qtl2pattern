@@ -5,7 +5,7 @@ Version: 0.3.11
 Date: 2017-09-25
 Author: Brian S Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
-Description: Routines used mostly by R/qtl2ggplot.
+Description: Routines in R/qtl2 to study allele patterns.
     Includes some summary routines that might go better in R/qtl2scan.
 Depends:
     R (>= 3.1.0)
@@ -14,11 +14,10 @@ Imports:
     tidyr,
     stringr,
     RColorBrewer,
-    qtl2scan (>= 0.5-2),
     CCSanger,
-    DOread
+    qtl2scan (>= 0.5-2)
 License: GPL-3
-URL: http://kbroman.org/qtl2
+URL: http://github.com/byandell/qtl2pattern
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1

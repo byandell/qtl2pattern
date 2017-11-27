@@ -1,5 +1,7 @@
 #' Mediate phenotype with nearby expression phenotypes
 #'
+#' Relies on user-provided \code{query_mrna}.
+#' 
 #' @param chr_id Chromosome identifier.
 #' @param pos_Mbp Position in megabase pairs.
 #' @param window_Mbp Window width to scan for expression traits.
@@ -15,11 +17,10 @@
 #' @export
 #' @importFrom qtl2geno find_marker
 #' @importFrom qtl2scan get_common_ids scan1
-#' @importFrom DOread read_mrna
 #'
 mediate1 <- function(chr_id, pos_Mbp, window_Mbp, 
                      phe_df, cov_mx=NULL, probs_obj, kinship=NULL, map,
-                     datapath, verbose = FALSE,
+                     verbose = FALSE,
                      region = FALSE) {
 
   if(ncol(phe_df) > 1) {
@@ -32,7 +33,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
   ## RNAseq data
   # Get subset of expression data within scan window.
   indID <- rownames(phe_df)
-  expr_mrna <- DOread::read_mrna(indID, chr_id, scan_window[1], scan_window[2], datapath)
+  expr_mrna <- query_mrna(indID, chr_id, scan_window[1], scan_window[2])
   annot_mrna <- expr_mrna$annot
   expr_mrna <- expr_mrna$expr
   
