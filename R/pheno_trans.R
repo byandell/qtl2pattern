@@ -18,13 +18,11 @@
 #'
 #' @export
 #'
-#' @importFrom broman winsorize
-#'
 pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
                         winsor = 0.02) {
   # Get phenotype names. Make sure it is character, not factor.
   tmp <- !duplicated(phename)
-  stopifnot(any(!tmp))
+  stopifnot(all(tmp))
   phename <- as.character(phename)
   phe <- phe[, match(phename, colnames(phe), nomatch=0), drop=FALSE]
 
@@ -40,7 +38,7 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
         offset <- rep_len(offset, length(phename))
       stopifnot(length(phename) == length(offset))
       for(i in which(not.id))
-        phe[,phename[i]] <- get(transf[i])(phe[, phename[i]] + offset[i])
+        phe[,phename[i]] <- get(transform[i])(phe[, phename[i]] + offset[i])
     }
     
     ## Parameter to winsorize will later be a value.
@@ -52,7 +50,7 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
     wh <- which(winsor > 0)
     if(length(wh)) {
       for(i in wh)
-        phe[,phename[i]] <- broman::winsorize(unlist(phe[,phename[i]]), winsor[i])
+        phe[,phename[i]] <- winsorize(unlist(phe[,phename[i]]), winsor[i])
     }
   }
   phe
