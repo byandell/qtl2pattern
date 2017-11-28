@@ -17,26 +17,27 @@
 #' \dontrun{get_pheno(phe, analyses_tbl)}
 #'
 #' @export
+#' @importFrom assertthat assert_that is.number
 #'
 pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
                         winsor = 0.02) {
   # Get phenotype names. Make sure it is character, not factor.
   tmp <- !duplicated(phename)
-  stopifnot(all(tmp))
+  assertthat::assert_that(all(tmp))
   phename <- as.character(phename)
   phe <- phe[, match(phename, colnames(phe), nomatch=0), drop=FALSE]
 
   if(!is.null(transform)) {
     if(length(transform) == 1)
       transform <- rep_len(transform, length(phename))
-    stopifnot(length(phename) == length(transform))
+    assertthat::assert_that(length(phename) == length(transform))
     
     ## Transform phenotype.
     not.id <- !(transform %in% c("id","identity"))
     if(any(not.id)) {
       if(length(offset == 1))
         offset <- rep_len(offset, length(phename))
-      stopifnot(length(phename) == length(offset))
+      assertthat::assert_that(length(phename) == length(offset))
       for(i in which(not.id))
         phe[,phename[i]] <- get(transform[i])(phe[, phename[i]] + offset[i])
     }
@@ -46,7 +47,7 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
       winsor <- ifelse(winsor, 0.02, 0)
     if(length(winsor == 1))
       winsor <- rep_len(winsor, length(phename))
-    stopifnot(length(phename) == length(winsor))
+    assertthat::assert_that(length(phename) == length(winsor))
     wh <- which(winsor > 0)
     if(length(wh)) {
       for(i in wh)

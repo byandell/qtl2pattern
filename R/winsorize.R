@@ -1,8 +1,8 @@
 # Copied from github.com/kbroman/broman package
 winsorize <- function (x, q = 0.006) 
 {
-  assert_that(is.numeric(x))
-  assert_that(is.number(q), q >= 0, q <= 1)
+  assertthat::assert_that(is.numeric(x))
+  assertthat::assert_that(assertthat::is.number(q), q >= 0, q <= 1)
   lohi <- stats::quantile(x, c(q, 1 - q), na.rm = TRUE)
   if (diff(lohi) < 0) 
     lohi <- rev(lohi)

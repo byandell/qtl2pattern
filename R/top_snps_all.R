@@ -14,7 +14,7 @@
 #' \item \code{sdp} - Strain distribution pattern: an integer, between
 #'     1 and \eqn{2^n - 2} where \eqn{n} is the number of strains, whose
 #'     binary encoding indicates the founder genotypes
-#' \item \code{snp} - Character string with SNP identifier (if
+#' \item \code{snp_id} - Character string with SNP identifier (if
 #'     missing, the rownames are used).
 #' \item \code{index} - Indices that indicate equivalent
 #'     groups of SNPs.
@@ -116,7 +116,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                    min_lod = min(lod),
                    max_lod = max(lod),
                    max_pos = pos[which.max(lod)][1],
-                   max_snp = snp[which.max(lod)][1])),
+                   max_snp = snp_id[which.max(lod)][1])),
                pattern = CCSanger::sdp_to_pattern(sdp)),
              dplyr::desc(pct))
          },
