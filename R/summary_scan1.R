@@ -66,7 +66,6 @@
 #' @export
 #' @importFrom dplyr arrange desc group_by mutate select summarize tbl_df ungroup
 #' @importFrom tidyr gather
-#' @importFrom CCSanger sdp_to_pattern
 #'
 summary_scan1 <- function(object, map, snpinfo=NULL,
                           lodcolumn=seq_len(ncol(object)),
@@ -127,6 +126,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
     if(!nrow(object))
       return(NULL)
 
+    haplos <- snpinfo_to_haplos(snpinfo)
     sum_type <- match.arg(sum_type)
     switch(sum_type,
            best = { ## Top SNPs across all phenotypes.
@@ -134,7 +134,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                return(NULL)
              dplyr::arrange(
                dplyr::mutate(object,
-                             pattern = CCSanger::sdp_to_pattern(sdp)),
+                             pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(lod))},
            common = { ## Find most common patterns by pheno.
              dplyr::arrange(
@@ -148,7 +148,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                     max_lod=max(lod),
                     max_snp=snp_id[which.max(lod)],
                     max_pos=pos_Mbp[which.max(lod)])),
-                 pattern = CCSanger::sdp_to_pattern(sdp)),
+                 pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(max_lod))
            })
   }

@@ -32,13 +32,16 @@
 #' @export
 #' @importFrom dplyr filter group_by inner_join select ungroup
 #' @importFrom tidyr gather
-#' @importFrom CCSanger convert_bp
 #'
-top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE)
+top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
+                          haplos)
 {
     if (missing(snpinfo) || is.null(snpinfo))
         stop("No snpinfo found")
     map <- snpinfo_to_map(snpinfo)
+    
+    if(missing(haplos) || is.null(haplos))
+      haplos <- snpinfo_to_haplos(snpinfo)
 
     chr <- names(map)
     if (length(chr) > 1) {
@@ -70,6 +73,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
                                    dplyr::select(lod_df, -index),
                                    by = "snp_id")
     }
+    attr(snpinfo, "haplos") <- haplos
     class(snpinfo) <- c("top_snps_all", class(snpinfo))
     snpinfo
 }
@@ -92,10 +96,10 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #' @rdname top_snps_all
 #' @export
 #' @importFrom dplyr arrange desc filter group_by mutate select summarize ungroup
-#' @importFrom CCSanger sdp_to_pattern
 #'
 summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                                  ...) {
+  haplos <- attr(object, "haplos")
   sum_type <- match.arg(sum_type)
   switch(sum_type,
          best = { ## Top SNPs across all phenotypes.
@@ -117,7 +121,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                    max_lod = max(lod),
                    max_pos = pos[which.max(lod)][1],
                    max_snp = snp_id[which.max(lod)][1])),
-               pattern = CCSanger::sdp_to_pattern(sdp)),
+               pattern = sdp_to_pattern(sdp, haplos)),
              dplyr::desc(pct))
          },
          peak = {
@@ -134,7 +138,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                      min_Mbp = min(pos),
                      max_Mbp = max(pos),
                      phenos = paste(unique(pheno), collapse=","))),
-                 pattern = CCSanger::sdp_to_pattern(sdp)),
+                 pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(lod)),
              -chr)
          })
@@ -157,13 +161,29 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
 #' @importFrom dplyr filter
 subset.top_snps_all <- function(x, start_val=0, stop_val=max(x$pos),
                                 pheno = NULL, ...) {
+  haplos <- attr(x, "haplos")
   x <- dplyr::filter(x,
-                     pos >= CCSanger::convert_bp(start_val, FALSE),
-                     pos <= CCSanger::convert_bp(stop_val, FALSE))
+                     pos >= start_val,
+                     pos <= stop_val)
   pheno_val <- pheno # need to be different from column name in x
   if(!is.null(pheno_val))
     x <-dplyr::filter(x, pheno %in% pheno_val)
+  attr(x, "haplos") <- haplos
   class(x) <- unique(c("top_snps_tbl", class(x)))
   x
+}
+
+snpinfo_to_haplos <- function(snpinfo) {
+  alleles <- dplyr::select(
+    snpinfo,
+    -(snp_id:consequence), 
+    -type)
+  # Columns in between consequence and type should be alleles.
+  # If not provided, assume we are in mouse with 8.
+  if((nc <- ncol(alleles)) < 2) {
+    warning("no alleles in snpinfo; assuming 8")
+    nc <- 8
+  }
+  LETTERS[seq_len(nc)]
 }
 

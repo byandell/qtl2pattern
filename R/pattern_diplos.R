@@ -11,12 +11,11 @@
 #' @keywords utilities
 #'
 #' @importFrom stringr str_detect
-#' @importFrom CCSanger sdp_to_logical sdp_to_pattern
 #'
 pattern_diplos <- function(sdp, haplos, diplos, cont=NULL) {
   if(!length(sdp))
     return(NULL)
-  hap_logic <- CCSanger::sdp_to_logical(sdp, haplos)
+  hap_logic <- sdp_to_logical(sdp, haplos)
 
   if(is.null(cont))
     cont <- rep("add", length(sdp))
@@ -36,7 +35,7 @@ pattern_diplos <- function(sdp, haplos, diplos, cont=NULL) {
            b6r = str_hap,
            b6d = !str_hap0)
   }
-  pattern <- CCSanger::sdp_to_pattern(sdp)
+  pattern <- sdp_to_pattern(sdp, haplos)
   patternl <- matrix(0, length(sdp), length(diplos),
                      dimnames = list(pattern, diplos))
   for(i in seq_along(pattern)) {
@@ -55,12 +54,11 @@ pattern_diplos <- function(sdp, haplos, diplos, cont=NULL) {
 #' @keywords utilities
 #'
 #' @rdname pattern_diplos
-#' @importFrom CCSanger sdp_to_logical
 #'
 pattern_haplos <- function(sdp, haplos) {
   if(!length(sdp))
     return(NULL)
-  hap_logic <- 1 * t(CCSanger::sdp_to_logical(sdp, haplos))
+  hap_logic <- 1 * t(sdp_to_logical(sdp, haplos))
   dimnames(hap_logic) <- list(pattern, haplos)
   hap_logic
 }

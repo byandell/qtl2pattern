@@ -28,7 +28,6 @@
 #' @export
 #' @importFrom dplyr group_by summarize ungroup
 #' @importFrom stringr str_split
-#' @importFrom CCSanger sdp_to_pattern
 #'
 scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          map, patterns,
@@ -56,7 +55,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
         dplyr::filter(patterns,
                       pheno %in% pheno_names),
         sdp, max_snp, max_pos, pheno),
-      founders = CCSanger::sdp_to_pattern(sdp, haplos),
+      founders = sdp_to_pattern(sdp, haplos),
       contrast = paste(contrast, collapse=","),
       max_lod = max(max_lod)))
   

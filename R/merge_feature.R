@@ -20,7 +20,7 @@
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
 #' @importFrom qtl2scan top_snps
-#' @importFrom CCSanger convert_bp get_gene_exon_snp
+#' @importFrom CCSanger get_gene_exon_snp
 #'
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
@@ -36,7 +36,7 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
     pos)
 
   ## Add columns for exons.
-  tmp <- CCSanger::convert_bp(top_snps_tbl$pos, FALSE)
+  tmp <- top_snps_tbl$pos
   ins <- outer(gene_exon$start, tmp, "<=") &
     outer(gene_exon$stop, tmp, ">=")
   ## SNP position should be in 1 (or more if splice variant) exon(s).
@@ -62,6 +62,11 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
     dplyr::mutate(top_snps_tbl,
                   snp_type = abbreviate(consequence,15)),
     -lod)
+  
+  # haplos
+  haplos <- snpinfo_to_haplos(snpinfo)
+  attr(out, "haplos") <- haplos
+  
   class(out) <- c("merge_feature", class(out))
   out
 }
@@ -81,12 +86,13 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
 #' @export
 summary.merge_feature <- function(object,
                                   sum_type = c("SNP type","pattern"), ...) {
+  haplos <- attr(object, "haplos")
   sum_type <- match.arg(sum_type)
   switch(sum_type,
          "SNP type" = {
            t(table(object$snp_type))
          },
          "pattern" = {
-           t(table(sdp_to_pattern(object$sdp)))
+           t(table(sdp_to_pattern(object$sdp, haplos)))
          })
 }

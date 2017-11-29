@@ -15,10 +15,11 @@
 #' @importFrom ggplot2 aes facet_wrap geom_jitter ggplot ggtitle xlab ylab
 #'
 plot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...) {
+  haplos <- attr(x, "haplos")
   plot_by <- match.arg(plot_by)
   x$lod <- x[[pheno]]
   x <- dplyr::filter(
-    dplyr::mutate(x, pattern = sdp_to_pattern(sdp)),
+    dplyr::mutate(x, pattern = sdp_to_pattern(sdp, haplos)),
     !is.na(lod))
   switch(plot_by,
          pattern = {
