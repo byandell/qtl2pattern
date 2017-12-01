@@ -29,7 +29,7 @@ subset_listof_scan1coef(x, elements, ...)
 \method{[}{listof_scan1coef}(x, ...)
 }
 \arguments{
-\item{probs}{genotype probabilities object for one chromosome from \code{\link[qtl2geno]{calc_genoprob}}}
+\item{probs}{genotype probabilities object for one chromosome from \code{\link[qtl2]{calc_genoprob}}}
 
 \item{phe}{data frame of phenotypes}
 
@@ -44,13 +44,13 @@ subset_listof_scan1coef(x, elements, ...)
 \item{scan1_object}{object from \code{scan1}}
 
 \item{map}{A list of vectors of marker positions, as produced by
-\code{\link[qtl2geno]{insert_pseudomarkers}}.}
+\code{\link[qtl2]{insert_pseudomarkers}}.}
 
 \item{coef_names}{names of effect coefficients (default is all coefficient names)}
 
 \item{center}{center coefficients if \code{TRUE}}
 
-\item{...}{arguments for \code{\link[qtl2scan]{plot_coef}}}
+\item{...}{arguments for \code{\link[qtl2ggplot]{ggplot_coef}}}
 
 \item{x}{object of class \code{listof_scan1coeff}}
 
@@ -60,7 +60,7 @@ subset_listof_scan1coef(x, elements, ...)
 
 \item{scan1_object}{object from \code{scan1}}
 
-\item{...}{arguments for \code{\link[qtl2scan]{plot_coef}}}
+\item{...}{arguments for \code{\link[qtl2ggplot]{ggplot_coef}}}
 
 \item{...}{ignored}
 }
@@ -68,7 +68,7 @@ subset_listof_scan1coef(x, elements, ...)
 object of class \code{listof_scan1coeff}
 }
 \description{
-Create a list of scan1coef objects using \code{\link[qtl2scan]{scan1coef}}.
+Create a list of scan1coef objects using \code{\link[qtl2]{scan1coef}}.
 
 Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
 

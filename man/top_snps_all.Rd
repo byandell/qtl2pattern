@@ -16,11 +16,11 @@ top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
   pheno = NULL, ...)
 }
 \arguments{
-\item{scan1_output}{output of linear mixed model for \code{phename} (see \code{\link[qtl2scan]{scan1}})}
+\item{scan1_output}{output of linear mixed model for \code{phename} (see \code{\link[qtl2]{scan1}})}
 
 \item{snpinfo}{Data frame with SNP information with the following
     columns (the last three are generally derived from with
-    \code{\link[qtl2scan]{index_snps}}):
+    \code{\link[qtl2]{index_snps}}):
 \itemize{
 \item \code{chr} - Character string or factor with chromosome
 \item \code{pos} - Position (in same units as in the \code{"map"}

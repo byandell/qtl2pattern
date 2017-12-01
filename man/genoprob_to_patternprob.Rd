@@ -7,12 +7,12 @@
 genoprob_to_patternprob(probs1, sdp)
 }
 \arguments{
-\item{probs1}{object of class \code{\link[qtl2scan]{calc_genoprob}}}
+\item{probs1}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
 \item{sdp}{SNP distribution pattern}
 }
 \value{
-object of class \code{\link[qtl2scan]{calc_genoprob}}
+object of class \code{\link[qtl2]{calc_genoprob}}
 }
 \description{
 Collapse genoprob according to pattern

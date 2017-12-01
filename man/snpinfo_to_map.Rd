@@ -9,7 +9,7 @@ snpinfo_to_map(snpinfo)
 \arguments{
 \item{snpinfo}{Data frame with SNP information with the following
     columns (the last three are generally derived from with
-    \code{\link[qtl2scan]{index_snps}}):
+    \code{\link[qtl2]{index_snps}}):
 \itemize{
 \item \code{chr} - Character string or factor with chromosome
 \item \code{pos} - Position (in same units as in the \code{"map"}

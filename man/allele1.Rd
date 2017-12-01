@@ -12,7 +12,7 @@ allele1(phe_df = NULL, cov_mx = NULL, probD = NULL, map = NULL,
 
 \item{cov_mx}{covariate matrix}
 
-\item{probD}{object of class \code{\link[qtl2geno]{calc_genoprob}}}
+\item{probD}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
 \item{map}{list of genome maps}
 
@@ -26,11 +26,11 @@ allele1(phe_df = NULL, cov_mx = NULL, probD = NULL, map = NULL,
 
 \item{...}{additional parameters}
 
-\item{scanH}{Object of class \code{\link[qtl2scan]{scan1}} with allele scan.}
+\item{scanH}{Object of class \code{\link[qtl2]{scan1}} with allele scan.}
 
-\item{coefH}{Object of class \code{\link[qtl2scan]{scan1coef}}.}
+\item{coefH}{Object of class \code{\link[qtl2]{scan1coef}}.}
 
-\item{coefD}{Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.}
+\item{coefD}{Object of class \code{\link[qtl2]{scan1coef}} with allele pair coefficients.}
 
 \item{scan_pat}{Object of class \code{\link{scan_pattern}}.}
 }

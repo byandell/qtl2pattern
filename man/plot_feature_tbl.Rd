@@ -17,7 +17,7 @@ plot_feature_tbl(x, rect_col = "grey70", strand_col = c(`-` = "#1b9e77", `+`
 \method{plot}{feature_tbl}(x, ...)
 }
 \arguments{
-\item{x}{tbl of gene information from \code{query_variants}; see package \code{qtl2db}}
+\item{x}{tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
 
 \item{rect_col}{fill color of rectangle (default "grey70")}
 
@@ -33,7 +33,7 @@ plot_feature_tbl(x, rect_col = "grey70", strand_col = c(`-` = "#1b9e77", `+`
 
 \item{snp_lod}{LOD of SNPs (for color plotting)}
 
-\item{top_snps_tbl}{table from \code{\link[qtl2scan]{top_snps}}}
+\item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
 \item{snp_col}{color of SNP vertical lines (default "grey70")}
 

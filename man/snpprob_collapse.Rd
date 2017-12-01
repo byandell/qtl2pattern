@@ -10,10 +10,10 @@ snpprob_collapse(snpprobs, action = c("additive", "add+dom", "non-add",
 \arguments{
 \item{action}{SNP gene action type}
 
-\item{probs1}{object of class \code{\link[qtl2scan]{calc_genoprob}}}
+\item{probs1}{object of class \code{\link[qtl2]{calc_genoprob}}}
 }
 \value{
-object of class \code{\link[qtl2scan]{calc_genoprob}}
+object of class \code{\link[qtl2]{calc_genoprob}}
 }
 \description{
 Collapse genoprob according to pattern

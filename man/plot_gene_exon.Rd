@@ -14,13 +14,13 @@ plot_gene_exon(gene_exon, top_snps_tbl = NULL, plot_now = TRUE,
 \method{plot}{gene_exon}(x, ...)
 }
 \arguments{
-\item{top_snps_tbl}{table from \code{\link[qtl2scan]{top_snps}}}
+\item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
 \item{plot_now}{plot now if TRUE}
 
 \item{...}{arguments passed along to \code{\link{gene_plot}}}
 
-\item{exon_tbl}{tbl of feature information from \code{query_variants}; see package \code{qtl2db}}
+\item{exon_tbl}{tbl of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 }
 \value{
 list of ggplots (see \code{\link{gene_plot}})

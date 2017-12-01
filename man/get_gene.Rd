@@ -14,5 +14,5 @@ get_gene(chr_id, start, stop)
 \item{stop}{stop position in Mbp}
 }
 \description{
-Get gene using \code{query_genes}; see \code{qtl2db}.
+Get gene using \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}.
 }

@@ -6,17 +6,17 @@
 \title{Merge SNP lod peaks with SNP feature information}
 \usage{
 merge_feature(top_snps_tbl, snpinfo, out_lmm_snps, drop = 1.5, dropchar = 0,
-  gene_exon = CCSanger::get_gene_exon_snp(top_snps_tbl))
+  gene_exon = get_gene_exon_snp(top_snps_tbl))
 
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"),
   ...)
 }
 \arguments{
-\item{top_snps_tbl}{tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2scan]{top_snps}}}
+\item{top_snps_tbl}{tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2]{top_snps}}}
 
 \item{snpinfo}{SNP information table}
 
-\item{out_lmm_snps}{tbl from \code{\link[qtl2scan]{scan1}} on SNPs}
+\item{out_lmm_snps}{tbl from \code{\link[qtl2]{scan1}} on SNPs}
 
 \item{drop}{include LOD scores within \code{drop} of max for each phenotype}
 

@@ -10,7 +10,7 @@
 \method{subset}{feature_tbl}(x, start_val = 0, stop_val = max(x$stop), ...)
 }
 \arguments{
-\item{object}{tbl of feature information from \code{\link[qtl2db]{create_gene_query_func}}}
+\item{object}{tbl of feature information from \code{\link[qtl2]{create_gene_query_func}}}
 
 \item{major}{if \code{TRUE} (default), only summarize genes and exons}
 

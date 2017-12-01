@@ -11,7 +11,7 @@ scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
 \method{summary}{scan_pattern}(object, map, ...)
 }
 \arguments{
-\item{probs1}{object of class \code{\link[qtl2geno]{calc_genoprob}}}
+\item{probs1}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
 \item{phe}{data frame with one phenotype}
 
@@ -37,7 +37,7 @@ List containing:
 \item{patterns} Data frame of summary for top patterns (column \code{founders} has pattern)
 \item{dip_set} Diplotype sets for contrasts
 \item{group} Group for each founder pattern
-\item{scan} Object of class \code{\link[qtl2scan]{scan1}}.
+\item{scan} Object of class \code{\link[qtl2]{scan1}}.
 \item{coef} Object of class \code{\link{listof_scan1coef}}.
 }
 }

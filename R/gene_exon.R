@@ -1,6 +1,6 @@
 #' Get exons for set of genes
 #'
-#' Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code\link[qtl2]{create_gene_query_func}}.
+#' Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code{\link[qtl2]{create_gene_query_func}}.
 #'
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #'
@@ -45,7 +45,7 @@ get_gene_exon_snp <- function(top_snps_tbl) {
 #'
 #' Match up exon start,stop,strand with genes.
 #'
-#' @param feature_tbl tbl of features from \code{query_variants}; see \code\link[qtl2]{create_variant_query_func}}
+#' @param feature_tbl tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
 #' @param gene_snp tbl of genes with SNPs IDs from \code{\link{match_feature_snp}}
 #'
 #' @return tbl of exon and gene features

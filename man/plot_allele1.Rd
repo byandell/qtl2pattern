@@ -8,9 +8,9 @@ plot_allele1(x, scan1_object = NULL, map = NULL, pos = NULL,
   trim = TRUE, frame = FALSE, ...)
 }
 \arguments{
-\item{x}{Object of class \code{\link[qtl2pattern]{allele1}}.}
+\item{x}{Object of class \code{\link{allele1}}.}
 
-\item{scan1_object}{Optional object of class \code{\link[qtl2scan]{scan1}} to find peak.}
+\item{scan1_object}{Optional object of class \code{\link[qtl2]{scan1}} to find peak.}
 
 \item{map}{Genome map (required if \code{scan1_object} present)}
 

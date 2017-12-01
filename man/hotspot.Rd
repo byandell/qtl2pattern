@@ -16,7 +16,7 @@ hotspot(map, peaks, peak_window = 1, minLOD = 5.5)
 \item{minLOD}{minimum LOD to include in count}
 }
 \value{
-object of class hotspot as list of \code{\link[qtl2scan]{scan1}} and \code{map} objects.
+object of class hotspot as list of \code{\link[qtl2]{scan1}} and \code{map} objects.
 }
 \description{
 Count hotspots by pheno_group and pheno_type.

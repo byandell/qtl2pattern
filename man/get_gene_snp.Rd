@@ -10,7 +10,7 @@ get_gene_snp(snp_tbl, feature_tbl, feature_snp = get_feature_snp(snp_tbl,
 \arguments{
 \item{snp_tbl}{tbl of SNPs from \code{assoc.map}}
 
-\item{feature_tbl}{tbl of feature information from \code{query_variants}; see package \code{qtl2db}}
+\item{feature_tbl}{tbl of feature information from \code{query_variants}; see package \code{\link[qtl2]{create_variant_query_func}}}
 
 \item{feature_snp}{tbl of feature information from \code{\link{get_feature_snp}}}
 }
