@@ -20,12 +20,10 @@
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
 #' @importFrom qtl2scan top_snps
-#' @importFrom CCSanger get_gene_exon_snp
 #'
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
-                          gene_exon =
-                            CCSanger::get_gene_exon_snp(top_snps_tbl)) {
+                          gene_exon = get_gene_exon_snp(top_snps_tbl)) {
   phename <- dimnames(out_lmm_snps)[[2]]
 
   ## Add lod by phename to top_snps_tbl
