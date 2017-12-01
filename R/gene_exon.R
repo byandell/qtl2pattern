@@ -1,8 +1,8 @@
 #' Get exons for set of genes
 #'
-#' Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code{qtl2db}.
+#' Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code\link[qtl2]{create_gene_query_func}}.
 #'
-#' @param top_snps_tbl table from \code{\link[qtl2scan]{top_snps}}
+#' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #'
 #' @return tbl of exon and gene features
 #'
@@ -45,7 +45,7 @@ get_gene_exon_snp <- function(top_snps_tbl) {
 #'
 #' Match up exon start,stop,strand with genes.
 #'
-#' @param feature_tbl tbl of features from \code{query_variants}; see package \code{qtl2db}
+#' @param feature_tbl tbl of features from \code{query_variants}; see \code\link[qtl2]{create_variant_query_func}}
 #' @param gene_snp tbl of genes with SNPs IDs from \code{\link{match_feature_snp}}
 #'
 #' @return tbl of exon and gene features
@@ -100,7 +100,7 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #'
 #' @param gene_exon tbl of feature information from \code{\link{get_gene_exon}}
 #' @param gene_name name of gene as character string
-#' @param top_snps_tbl table of top SNPs in region from \code{\link[qtl2scan]{top_snps}}
+#' @param top_snps_tbl table of top SNPs in region from \code{\link[qtl2]{top_snps}}
 #' @param extra extra region beyond gene for SNPs (in Mbp)
 #'
 #' @return tbl of summary

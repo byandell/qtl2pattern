@@ -1,6 +1,6 @@
 #' Genome scan by pattern set
 #'
-#' @param probs1 object of class \code{\link[qtl2geno]{calc_genoprob}}
+#' @param probs1 object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param phe data frame with one phenotype
 #' @param K kinship matrix
 #' @param covar covariate matrix
@@ -15,7 +15,7 @@
 #' \item{patterns} Data frame of summary for top patterns (column \code{founders} has pattern)
 #' \item{dip_set} Diplotype sets for contrasts
 #' \item{group} Group for each founder pattern
-#' \item{scan} Object of class \code{\link[qtl2scan]{scan1}}.
+#' \item{scan} Object of class \code{\link[qtl2]{scan1}}.
 #' \item{coef} Object of class \code{\link{listof_scan1coef}}.
 #' }
 #'
@@ -77,14 +77,14 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   # set up first diplotype set
   probs2 <- genoprob_to_patternprob(probs1, patterns$sdp[1])
   scan1fn <- ifelse(blups, 
-                    qtl2scan::scan1blup, 
-                    qtl2scan::scan1coef)
+                    qtl2::scan1blup, 
+                    qtl2::scan1coef)
   coefs <- list()
   coefs[[1]] <- scan1fn(probs2, 
                         phe[, patterns$pheno[1], drop = FALSE],
                         K, covar)
   if(do_scans) {
-    scans <- qtl2scan::scan1(probs2, 
+    scans <- qtl2::scan1(probs2, 
                              phe[, patterns$pheno[1], drop = FALSE],
                              K, covar)
     lod <- matrix(scans, nrow(scans), ncol(dip_set))
@@ -103,7 +103,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                             K, covar)
       dimnames(coefs[[i]])[[2]][1:3] <- c("ref","het","alt")
       if(do_scans)
-        lod[,i] <- qtl2scan::scan1(probs2, 
+        lod[,i] <- qtl2::scan1(probs2, 
                                    phe[, patterns$pheno[i], drop = FALSE],
                                    K, covar)
     }

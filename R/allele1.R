@@ -4,7 +4,7 @@
 #' 
 #' @param phe_df data frame with one phenotype
 #' @param cov_mx covariate matrix
-#' @param probD object of class \code{\link[qtl2geno]{calc_genoprob}}
+#' @param probD object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param map list of genome maps
 #' @param K_chr kinship matrix
 #' @param patterns data frame of pattern information
@@ -12,9 +12,9 @@
 #' @param blups Create BLUPs if \code{TRUE}
 #' @param ... additional parameters
 #' 
-#' @param scanH Object of class \code{\link[qtl2scan]{scan1}} with allele scan.
-#' @param coefH Object of class \code{\link[qtl2scan]{scan1coef}}.
-#' @param coefD Object of class \code{\link[qtl2scan]{scan1coef}} with allele pair coefficients.
+#' @param scanH Object of class \code{\link[qtl2]{scan1}} with allele scan.
+#' @param coefH Object of class \code{\link[qtl2]{scan1coef}}.
+#' @param coefD Object of class \code{\link[qtl2]{scan1coef}} with allele pair coefficients.
 #' @param scan_pat Object of class \code{\link{scan_pattern}}.
 #' 
 #' @return Table with allele effects across sources.
@@ -24,6 +24,7 @@
 #' @importFrom tidyr gather
 #' @importFrom dplyr bind_rows filter mutate
 #' @importFrom stringr str_count str_detect str_split
+#' @importFrom qtl2 genoprob_to_alleleprob scan1 scan1blup scan1coef
 #' 
 allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
                     alt=NULL, blups = FALSE, ...) {
@@ -32,10 +33,10 @@ allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, 
 }
 allele1_internal <- function(
   phe_df, cov_mx, probD, map, K_chr, patterns, alt, blups,
-  probH = qtl2geno::genoprob_to_alleleprob(probD),
-  scanH = qtl2scan::scan1(probH, phe_df, K_chr, cov_mx),
+  probH = qtl2::genoprob_to_alleleprob(probD),
+  scanH = qtl2::scan1(probH, phe_df, K_chr, cov_mx),
   coefH = scan1fn(probH, phe_df, K_chr, cov_mx),
-  coefD = qtl2scan::scan1coef(probD, phe_df, K_chr, cov_mx),
+  coefD = qtl2::scan1coef(probD, phe_df, K_chr, cov_mx),
   scan_pat = NULL,
   ...) 
 {
@@ -46,8 +47,8 @@ allele1_internal <- function(
   pheno_name <- names(as.data.frame(phe_df))
   
   scan1fn <- ifelse(blups, 
-                    qtl2scan::scan1blup, 
-                    qtl2scan::scan1coef)
+                    qtl2::scan1blup, 
+                    qtl2::scan1coef)
   
   # Get patterns for pheno.
   if(!is.null(scan_pat)) {
@@ -58,8 +59,8 @@ allele1_internal <- function(
       stop("need either patterns or scan_pat")
     patterns <- dplyr::filter(patterns,
                               pheno == pheno_name)
-    scan_pat <- qtl2pattern::scan_pattern(probD, phe_df, K_chr, cov_mx,
-                                          map, patterns, blups = blups)
+    scan_pat <- scan_pattern(probD, phe_df, K_chr, cov_mx,
+                             map, patterns, blups = blups)
   }
   if(!nrow(patterns))
     return(NULL)

@@ -3,7 +3,7 @@
 #' Find features that overlap with SNPs
 #'
 #' @param snp_tbl tbl of SNPs from \code{assoc.map}
-#' @param feature_tbl tbl of feature information from \code{\link[qtl2db]{create_gene_query_func}}
+#' @param feature_tbl tbl of feature information from \code{\link[qtl2]{create_gene_query_func}}
 #' @param extend extend region for SNPs in Mbp (default 0.005)
 #'
 #' @return tbl of features covering SNPs

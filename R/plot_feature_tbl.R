@@ -4,7 +4,7 @@
 #' Stagger genes for easy reading.
 #' Written original by Dan Gatti 2013-02-13
 #'
-#' @param x tbl of gene information from \code{query_variants}; see package \code{qtl2db}
+#' @param x tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
 #' @param rect_col fill color of rectangle (default "grey70")
 #' @param strand_col edge color of rectangle by strand from \code{x} (default -="blue", +="red"; none if NULL)
 #' @param type_col color of type from \code{x} (default "black" for gene, "blue" for pseudogene; none if NULL)
@@ -12,7 +12,7 @@
 #' @param xlim horizontal axis limits (default is range of features)
 #' @param snp_pos position of SNPs in bp if used (default NULL)
 #' @param snp_lod LOD of SNPs (for color plotting)
-#' @param top_snps_tbl table from \code{\link[qtl2scan]{top_snps}}
+#' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param snp_col color of SNP vertical lines (default "grey70")
 #' @param extend extend region for SNPs in bp (default 5000)
 #' @param ... additional arguments (not used)

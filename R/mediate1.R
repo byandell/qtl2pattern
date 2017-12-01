@@ -15,8 +15,7 @@
 #' @param region Mediate over whole region if \code{TRUE}
 #'
 #' @export
-#' @importFrom qtl2geno find_marker
-#' @importFrom qtl2scan get_common_ids scan1
+#' @importFrom qtl2 find_marker get_common_ids scan1
 #'
 mediate1 <- function(chr_id, pos_Mbp, window_Mbp, 
                      phe_df, cov_mx=NULL, probs_obj, kinship=NULL, map,
@@ -47,7 +46,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
 
   # Keep individuals with full records.
   ind2keep <- 
-    qtl2scan::get_common_ids(phe_df, expr_mrna, cov_mx, kinship,
+    qtl2::get_common_ids(phe_df, expr_mrna, cov_mx, kinship,
                              complete.cases = TRUE)
   phe_df <- phe_df[ind2keep,, drop = FALSE]
   expr_mrna <- expr_mrna[ind2keep,, drop = FALSE]
@@ -57,7 +56,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
 
   if(!region) {
     # Find marker at pos_Mbp on chromosome chr_id
-    mar_id <- qtl2geno::find_marker(map, chr_id, pos_Mbp)
+    mar_id <- qtl2::find_marker(map, chr_id, pos_Mbp)
 
     # Subset genotype probabilities to this marker.
     probs_obj <- subset(probs_obj, chr = chr_id, mar = mar_id)
@@ -67,7 +66,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
     map <- map[[chr_id]]
   
   # Raw fit
-  scan_obj <- qtl2scan::scan1(probs_obj, phe_df, kinship, 
+  scan_obj <- qtl2::scan1(probs_obj, phe_df, kinship, 
                               cov_mx)
   
   raw_lod <- max(scan_obj, map)
@@ -80,7 +79,7 @@ mediate1 <- function(chr_id, pos_Mbp, window_Mbp,
   scans[,1] <- scan_obj
   for(i in seq_len(n_mrna)) {
     if(verbose) cat(i, "")
-    scans[,i] <- qtl2scan::scan1(probs_obj, phe_df, kinship,
+    scans[,i] <- qtl2::scan1(probs_obj, phe_df, kinship,
                                  cbind(cov_mx,
                                        expr_mrna[, annot_mrna$id[i], drop = FALSE]))
   }

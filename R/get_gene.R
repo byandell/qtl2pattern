@@ -1,6 +1,6 @@
 #' Get gene in region
 #' 
-#' Get gene using \code{query_genes}; see \code{qtl2db}.
+#' Get gene using \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}.
 #' 
 #' @param chr_id chromosome identifier
 #' @param start start position in Mbp

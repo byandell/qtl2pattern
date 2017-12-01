@@ -7,7 +7,7 @@
 #' @param peak_window half-width of peak window in Mbp
 #' @param minLOD minimum LOD to include in count
 #'
-#' @return object of class hotspot as list of \code{\link[qtl2scan]{scan1}} and \code{map} objects.
+#' @return object of class hotspot as list of \code{\link[qtl2]{scan1}} and \code{map} objects.
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities

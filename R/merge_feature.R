@@ -2,9 +2,9 @@
 #'
 #' Merge all SNPs in small region with LOD peaks across multiple phenotype.
 #'
-#' @param top_snps_tbl tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2scan]{top_snps}}
+#' @param top_snps_tbl tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2]{top_snps}}
 #' @param snpinfo SNP information table
-#' @param out_lmm_snps tbl from \code{\link[qtl2scan]{scan1}} on SNPs
+#' @param out_lmm_snps tbl from \code{\link[qtl2]{scan1}} on SNPs
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
 #' @param dropchar number of characters to drop on phenames
 #' @param gene_exon tbl from \code{\link{get_gene_exon_snp}}
@@ -19,7 +19,7 @@
 #'
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
-#' @importFrom qtl2scan top_snps
+#' @importFrom qtl2 top_snps
 #'
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
@@ -48,7 +48,7 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
   for(i in phename) {
     tmp2 <- dplyr::distinct(
       dplyr::filter(
-        qtl2scan::top_snps(
+        qtl2::top_snps(
           subset(out_lmm_snps, lodcolumn=match(i, phename)),
           snpinfo,
           drop=drop),

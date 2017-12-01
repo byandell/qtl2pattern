@@ -1,14 +1,14 @@
 
 #' Summary of scan1 object
 #'
-#' @param object object from \code{\link[qtl2scan]{scan1}}
+#' @param object object from \code{\link[qtl2]{scan1}}
 #'
 #' @param map A list of vectors of marker positions, as produced by
-#' \code{\link[qtl2geno]{insert_pseudomarkers}}.
+#' \code{\link[qtl2]{insert_pseudomarkers}}.
 #'
 #' @param snpinfo Data frame with SNP information with the following
 #'     columns (the last three are generally derived from with
-#'     \code{\link[qtl2scan]{index_snps}}):
+#'     \code{\link[qtl2]{index_snps}}):
 #' \itemize{
 #' \item \code{chr} - Character string or factor with chromosome
 #' \item \code{pos} - Position (in same units as in the \code{"map"}
@@ -39,12 +39,11 @@
 #' @keywords utilities
 #'
 #' @examples
-#' # load qtl2geno package for data and genoprob calculation
-#' library(qtl2geno)
-#' library(qtl2scan)
+#' # load qtl2 package for data and genoprob calculation
+#' library(qtl2)
 #' 
 #' # read data
-#' iron <- read_cross2(system.file("extdata", "iron.zip", package="qtl2geno"))
+#' iron <- read_cross2(system.file("extdata", "iron.zip", package="qtl2"))
 #' # insert pseudomarkers into map
 #' map <- insert_pseudomarkers(iron$gmap, step=1)
 #' 
@@ -78,8 +77,8 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
       map <- map[chr]
     
     # scan1 LOD summary
-    thechr <- factor(qtl2scan:::map2chr(map), names(map))
-    thepos <- qtl2scan:::map2pos(map)
+    thechr <- factor(qtl2:::map2chr(map), names(map))
+    thepos <- qtl2:::map2pos(map)
     lod <- unclass(object)
     sign <- (lod >= 0) * 2 - 1
     coln <- colnames(lod)

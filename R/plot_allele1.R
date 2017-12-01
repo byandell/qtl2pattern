@@ -2,8 +2,8 @@
 #' 
 #' Plot alleles for haplotype, diplotype and top patterns and genome position.
 #' 
-#' @param x Object of class \code{\link[qtl2pattern]{allele1}}.
-#' @param scan1_object Optional object of class \code{\link[qtl2scan]{scan1}} to find peak.
+#' @param x Object of class \code{\link{allele1}}.
+#' @param scan1_object Optional object of class \code{\link[qtl2]{scan1}} to find peak.
 #' @param map Genome map (required if \code{scan1_object} present)
 #' @param pos Genome position in Mbp (supercedes \code{scan1_object})
 #' @param trim If \code{TRUE}, trim extreme alleles.

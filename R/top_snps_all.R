@@ -2,11 +2,11 @@
 #'
 #' Separate fine mapping scans by allele pattern.
 #'
-#' @param scan1_output output of linear mixed model for \code{phename} (see \code{\link[qtl2scan]{scan1}})
+#' @param scan1_output output of linear mixed model for \code{phename} (see \code{\link[qtl2]{scan1}})
 #' 
 #' @param snpinfo Data frame with SNP information with the following
 #'     columns (the last three are generally derived from with
-#'     \code{\link[qtl2scan]{index_snps}}):
+#'     \code{\link[qtl2]{index_snps}}):
 #' \itemize{
 #' \item \code{chr} - Character string or factor with chromosome
 #' \item \code{pos} - Position (in same units as in the \code{"map"}
@@ -49,7 +49,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
         chr <- chr[1]
     }
 
-    ## Following is generalized from qtl2scan::top_snps()
+    ## Following is generalized from qtl2::top_snps()
     lod_df <- as.data.frame(subset(scan1_output, map, chr = chr))
     lod_df$index <- unique(snpinfo$index)
     lod_df$snp_id <- rownames(lod_df)

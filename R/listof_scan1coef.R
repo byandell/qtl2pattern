@@ -1,9 +1,9 @@
 #' List of scan1coef objects
 #'
-#' Create a list of scan1coef objects using \code{\link[qtl2scan]{scan1coef}}.
+#' Create a list of scan1coef objects using \code{\link[qtl2]{scan1coef}}.
 #'
 #' @param phe data frame of phenotypes
-#' @param probs genotype probabilities object for one chromosome from \code{\link[qtl2geno]{calc_genoprob}}
+#' @param probs genotype probabilities object for one chromosome from \code{\link[qtl2]{calc_genoprob}}
 #' @param K list of length 1 with kinship matrix
 #' @param covar matrix of covariates
 #' @param blups Create BLUPs if \code{TRUE}
@@ -17,14 +17,14 @@
 #' \dontrun{listof_scan1coef(probs, phe)}
 #'
 #' @export
-#' @importFrom qtl2scan scan1coef scan1blup
+#' @importFrom qtl2 scan1coef scan1blup
 #' 
 listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
   eff <- list()
   phename <- dimnames(phe)[[2]]
   scan1fn <- ifelse(blups, 
-                    qtl2scan::scan1blup, 
-                    qtl2scan::scan1coef)
+                    qtl2::scan1blup, 
+                    qtl2::scan1coef)
   for(pheno in phename)
     eff[[pheno]] <- scan1fn(probs, phe[, pheno, drop=FALSE], K, covar)
   class(eff) <- c("listof_scan1coef", class(eff))
@@ -39,11 +39,11 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
 #' @param scan1_object object from \code{scan1}
 #'
 #' @param map A list of vectors of marker positions, as produced by
-#' \code{\link[qtl2geno]{insert_pseudomarkers}}.
+#' \code{\link[qtl2]{insert_pseudomarkers}}.
 #'
 #' @param coef_names names of effect coefficients (default is all coefficient names)
 #' @param center center coefficients if \code{TRUE}
-#' @param ... arguments for \code{\link[qtl2scan]{plot_coef}}
+#' @param ... arguments for \code{\link[qtl2ggplot]{ggplot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
@@ -95,7 +95,7 @@ summary.listof_scan1coef <- function(object, ...)
 #'
 #' @param object object of class \code{listof_scan1coeff}
 #' @param scan1_object object from \code{scan1}
-#' @param ... arguments for \code{\link[qtl2scan]{plot_coef}}
+#' @param ... arguments for \code{\link[qtl2ggplot]{ggplot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities

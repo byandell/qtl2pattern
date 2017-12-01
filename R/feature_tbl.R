@@ -2,7 +2,7 @@
 #'
 #' Show count min and max of features by type
 #'
-#' @param object tbl of feature information from \code{\link[qtl2db]{create_gene_query_func}}
+#' @param object tbl of feature information from \code{\link[qtl2]{create_gene_query_func}}
 #' @param major if \code{TRUE} (default), only summarize genes and exons
 #'
 #' @return tbl of feature summaries by type

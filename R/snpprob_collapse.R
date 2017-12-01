@@ -1,9 +1,9 @@
 #' Collapse genoprob according to pattern
 #'
-#' @param probs1 object of class \code{\link[qtl2scan]{calc_genoprob}}
+#' @param probs1 object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param action SNP gene action type
 #'
-#' @return object of class \code{\link[qtl2scan]{calc_genoprob}}
+#' @return object of class \code{\link[qtl2]{calc_genoprob}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
