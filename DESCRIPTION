@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern support for R/qtl2
-Version: 0.4.1
-Date: 2017-09-28
+Version: 0.5.1
+Date: 2017-12-03
 Author: Brian S Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
 Description: Routines in R/qtl2 to study allele patterns.
@@ -14,8 +14,7 @@ Imports:
     tidyr,
     stringr,
     RColorBrewer,
-    CCSanger,
-    qtl2scan (>= 0.5-2)
+    qtl2
 License: GPL-3
 URL: http://github.com/byandell/qtl2pattern
 Encoding: UTF-8

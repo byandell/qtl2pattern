@@ -30,7 +30,7 @@
 #' ggplot scale_color_gradient theme xlab ylab
 #' @importFrom dplyr arrange filter
 #' 
-plot_feature_tbl <- function(x,
+ggplot_feature_tbl <- function(x,
                              rect_col = "grey70",
                              strand_col = c("-"="#1b9e77", "+"="#d95f02"),
                              type_col = c(gene="black", pseudogene="#1b9e77", other="#d95f02"),
@@ -166,20 +166,11 @@ plot_feature_tbl <- function(x,
 #' @method autoplot feature_tbl
 #' @export
 #' @export autoplot.feature_tbl
-#' @rdname plot_feature_tbl
-#' 
 #' @importFrom ggplot2 autoplot
+#' @rdname ggplot_feature_tbl
 #' 
 autoplot.feature_tbl <- function(x, ...)
-  plot_feature_tbl(x, ...)
-
-#' @method plot feature_tbl
-#' @export
-#' @export plot.feature_tbl
-#' @rdname plot_feature_tbl
-#' 
-plot.feature_tbl <- function(x, ...)
-  autoplot.feature_tbl(x, ...)
+  ggplot_feature_tbl(x, ...)
 
 #' Helper function to set gene locations on plot.
 #'

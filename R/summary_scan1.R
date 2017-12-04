@@ -146,7 +146,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                     min_lod=min(lod),
                     max_lod=max(lod),
                     max_snp=snp_id[which.max(lod)],
-                    max_pos=pos_Mbp[which.max(lod)])),
+                    max_pos=pos[which.max(lod)])),
                  pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(max_lod))
            })

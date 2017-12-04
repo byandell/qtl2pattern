@@ -15,29 +15,29 @@
 #' facet_grid geom_text ggplot scale_x_continuous theme
 #' @importFrom dplyr filter group_by mutate ungroup
 #' 
-plot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
+ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
                          frame = FALSE, ...) {
   
   if(is.null(pos)) {
     if(is.null(scan1_object))
-      pos_Mbp <- median(x$pos)
+      pos_center <- median(x$pos)
     else
-      pos_Mbp <- summary(scan1_object, map)$pos[1]
+      pos_center <- summary(scan1_object, map)$pos[1]
   } else {
-    pos_Mbp <- pos
-    if(pos_Mbp < min(x$pos) | pos_Mbp > max(x$pos))
+    pos_center <- pos
+    if(pos_center < min(x$pos) | pos_center > max(x$pos))
       stop("position must be within range of scans")
   }
   
   if(!frame) {
-    tmpfn <- function(pos) {
-      a <- abs(pos - pos_Mbp)
+    tmpfn <- function(pos, pos_center) {
+      a <- abs(pos - pos_center)
       a == min(a)
     }
     x <- dplyr::ungroup(
       dplyr::filter(
         dplyr::group_by(x, source),
-        tmpfn(pos)))
+        tmpfn(pos, pos_center)))
   }
   
   if(trim & !attr(x, "blups"))
@@ -69,12 +69,9 @@ plot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE,
     ggplot2::scale_x_continuous(expand=c(0,0.01))
 } 
 #' @export
+#' @rdname ggplot_allele1
 autoplot.allele1 <- function(x, ...)
-  plot_allele1(x, ...)
-#' @export
-plot.allele1 <- function(x, ...) {
-  autoplot.allele1(x, ...)
-}
+  ggplot_allele1(x, ...)
 
 trim_quant <- function(object, beyond = 3) {
   quant <- quantile(object$effect, c(.25,.75))

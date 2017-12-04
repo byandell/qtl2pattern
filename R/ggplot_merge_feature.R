@@ -14,7 +14,7 @@
 #' @importFrom dplyr filter mutate
 #' @importFrom ggplot2 aes facet_wrap geom_jitter ggplot ggtitle xlab ylab
 #'
-plot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...) {
+ggplot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...) {
   haplos <- attr(x, "haplos")
   plot_by <- match.arg(plot_by)
   x$lod <- x[[pheno]]
@@ -24,7 +24,7 @@ plot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...
   switch(plot_by,
          pattern = {
            ggplot2::ggplot(x,
-                           ggplot2::aes(x=pos_Mbp,y=lod,col=pattern)) +
+                           ggplot2::aes(x=pos,y=lod,col=pattern)) +
              ggplot2::geom_jitter() +
              ggplot2::facet_wrap(~snp_type, scale = "free") +
              ggplot2::xlab("Position in Mbp") +
@@ -33,7 +33,7 @@ plot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...
          },
          consequence = {
            ggplot2::ggplot(x,
-                           ggplot2::aes(x=pos_Mbp,y=lod,col=snp_type)) +
+                           ggplot2::aes(x=pos,y=lod,col=snp_type)) +
              ggplot2::geom_jitter() +
              ggplot2::facet_wrap(~pattern, scale = "free") +
              ggplot2::xlab("Position in Mbp") +
@@ -45,17 +45,9 @@ plot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...
 #' @method autoplot merge_feature
 #' @export
 #' @export autoplot.merge_feature
-#' @rdname plot_merge_feature
+#' @rdname ggplot_merge_feature
 #' 
 #' @importFrom ggplot2 autoplot
 #' 
 autoplot.merge_feature <- function(x, ...)
   plot_merge_feature(x, ...)
-
-#' @method plot merge_feature
-#' @export
-#' @export plot.merge_feature
-#' @rdname plot_merge_feature
-#' 
-plot.merge_feature <- function(x, ...)
-  autoplot.merge_feature(x, ...)

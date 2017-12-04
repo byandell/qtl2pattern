@@ -103,11 +103,16 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
   sum_type <- match.arg(sum_type)
   switch(sum_type,
          best = { ## Top SNPs across all phenotypes.
-           dplyr::mutate(
+           out <- 
              dplyr::arrange(
                dplyr::select(object, -index,-sdp),
-               dplyr::desc(lod)),
-             consequence = abbreviate(consequence, 15))
+               dplyr::desc(lod))
+           if(!is.null(out$consequence)) {
+             out <- 
+               dplyr::mutate(out,
+                 consequence = abbreviate(consequence, 15))
+           }
+           out
          },
          range = {
            ## Most frequent SNP patterns within 1.5 of max LOD.
@@ -176,8 +181,11 @@ subset.top_snps_all <- function(x, start_val=0, stop_val=max(x$pos),
 snpinfo_to_haplos <- function(snpinfo) {
   alleles <- dplyr::select(
     snpinfo,
-    -(snp_id:consequence), 
-    -type)
+    -(snp_id:alleles))
+  infonames <- c("consequence","type","sdp","index","interval","on_map","pheno","lod")
+  if(length(wh <- which(infonames %in% names(alleles)))) {
+    alleles <- alleles[, -wh, drop = FALSE]
+  }
   # Columns in between consequence and type should be alleles.
   # If not provided, assume we are in mouse with 8.
   if((nc <- ncol(alleles)) < 2) {

@@ -121,26 +121,26 @@ allele1_internal <- function(
 summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) {
   if(is.null(pos)) {
     if(is.null(scan1_object))
-      pos_Mbp <- median(object$pos)
+      pos_center <- median(object$pos)
     else
-      pos_Mbp <- summary(scan1_object, map)$pos[1]
+      pos_center <- summary(scan1_object, map)$pos[1]
   } else {
-    pos_Mbp <- pos
-    if(pos_Mbp < min(object$pos) | pos_Mbp > max(object$pos))
+    pos_center <- pos
+    if(pos_center < min(object$pos) | pos_center > max(object$pos))
       stop("position must be within range of allele positions")
   }
   
   tmpfn <- function(pos) {
-    a <- abs(pos - pos_Mbp)
+    a <- abs(pos - pos_center)
     which(a == min(a))
   }
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, source),
-      min = min(effect[tmpfn(pos)]),
+      min = min(effect[tmpfn(pos, pos_center)]),
       lo_25 = quantile(effect[tmpfn(pos)], 0.25),
       median = median(effect[tmpfn(pos)]),
       hi_75 = quantile(effect[tmpfn(pos)], 0.75),
       max = max(effect[tmpfn(pos)]),
-      pos = pos_Mbp))
+      pos = pos_center))
 }

@@ -17,7 +17,7 @@
 #' @importFrom dplyr group_by summarize ungroup
 #' @importFrom ggplot2 ggtitle
 #' 
-plot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
+ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
                            genes = unique(gene_exon$gene), ...) {
   p <- list()
   ## Reduce to max lod per SNP
@@ -47,17 +47,9 @@ plot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
 #' @method autoplot gene_exon
 #' @export
 #' @export autoplot.gene_exon
-#' @rdname plot_gene_exon
+#' @rdname ggplot_gene_exon
 #' 
 #' @importFrom ggplot2 autoplot
 #' 
 autoplot.gene_exon <- function(x, ...)
-  plot_gene_exon(x, ...)
-
-#' @method plot gene_exon
-#' @export
-#' @export plot.gene_exon
-#' @rdname plot_gene_exon
-#' 
-plot.gene_exon <- function(x, ...)
-  autoplot.gene_exon(x, ...)
+  ggplot_gene_exon(x, ...)

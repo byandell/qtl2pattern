@@ -61,7 +61,7 @@ summary_listof_scan1coef <-
   
   # Summary of phenos on chr; reorder and rename by phename
   sum_chr <- summary(scan1_object, map, lodcolumn=phename, chr=chr_id)
-  m <- match(make.names(phename), sum_chr$pheno)
+  m <- match(phename, sum_chr$pheno)
   sum_chr <- sum_chr[m,]
   sum_chr$pheno <- phename
   
