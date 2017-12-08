@@ -8,6 +8,7 @@
 #' @param phename names of phenotypes
 #' @param probs_obj object of class \code{\link[qtl2]{calc_genoprob}} for \code{chr_id}
 #' @param probs_map map of markers/pseudomarkers in \code{probs_obj}
+#' @param snpinfo SNP information table from user supplied \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
 #'
 #' @return list with \code{snpprobs} and \code{snpinfo}
 #'
@@ -23,7 +24,10 @@
 #' @importFrom qtl2 genoprob_to_snpprob index_snps
 #'
 get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
-                         phename, probs_obj, probs_map) {
+                         phename, probs_obj, probs_map,
+                         snpinfo = query_variants(chr_id,
+                                                  peak_Mbp - window_Mbp,
+                                                  peak_Mbp + window_Mbp)) {
   if(is.null(chr_id) | is.null(peak_Mbp) | is.null(window_Mbp))
     return(NULL)
 
@@ -37,11 +41,6 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
         "\nNo peak_Mbp provided -- set to midpoint\n")
     peak_Mbp <- mean(range(probs_map[[1]]))
   }
-  
-  # User supplied routine; see qtl2:create_variant_query_func
-  snpinfo <- query_variants(chr_id,
-                            peak_Mbp - window_Mbp,
-                            peak_Mbp + window_Mbp)
 
   snpinfo <- qtl2::index_snps(probs_map, snpinfo)
   
