@@ -3,6 +3,7 @@
 #' Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code{\link[qtl2]{create_gene_query_func}}.
 #'
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
+#' @param feature_tbl table of features from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}
 #'
 #' @return tbl of exon and gene features
 #'
@@ -15,7 +16,8 @@
 #' @export
 #' @rdname gene_exon
 #' @importFrom dplyr arrange desc distinct mutate select
-get_gene_exon_snp <- function(top_snps_tbl) {
+get_gene_exon_snp <- function(top_snps_tbl,
+                              feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])) {
   ## Only need distinct snp_id.
   top_snps_tbl <- dplyr::arrange(
     dplyr::select(
@@ -32,7 +34,6 @@ get_gene_exon_snp <- function(top_snps_tbl) {
   if(length(chr_id) != 1)
     stop("need exactly 1 chromosome in top_snps_tbl")
   range_Mbp <- range(top_snps_tbl$pos) + c(-1,1) * 0.005
-  feature_tbl <- query_genes(chr_id, range_Mbp[1], range_Mbp[2])
   gene_snp <- get_gene_snp(
     dplyr::select(
       top_snps_tbl, 
@@ -83,7 +84,7 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
                     stop <= gene_snp$stop[exoni]),
       (!is.na(Name) & Name==genei) | type=="exon")
     strandi <- gene_snp$strand[exoni]
-    if(strandi != ".")
+    if(strandi != "." & !is.na(strandi))
       exons[[genei]] <- dplyr::filter(exons[[genei]], strand==strandi)
   }
   out <- dplyr::distinct(

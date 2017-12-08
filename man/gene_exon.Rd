@@ -7,7 +7,8 @@
 \alias{subset.gene_exon}
 \title{Get exons for set of genes}
 \usage{
-get_gene_exon_snp(top_snps_tbl)
+get_gene_exon_snp(top_snps_tbl, feature_tbl = query_genes(chr_id,
+  range_Mbp[1], range_Mbp[2]))
 
 get_gene_exon(feature_tbl, gene_snp)
 
@@ -19,7 +20,7 @@ get_gene_exon(feature_tbl, gene_snp)
 \arguments{
 \item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
-\item{feature_tbl}{tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
+\item{feature_tbl}{table of features from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 
 \item{gene_snp}{tbl of genes with SNPs IDs from \code{\link{match_feature_snp}}}
 
@@ -28,6 +29,8 @@ get_gene_exon(feature_tbl, gene_snp)
 \item{gene_name}{name of gene as character string}
 
 \item{extra}{extra region beyond gene for SNPs (in Mbp)}
+
+\item{feature_tbl}{tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
 
 \item{top_snps_tbl}{table of top SNPs in region from \code{\link[qtl2]{top_snps}}}
 }

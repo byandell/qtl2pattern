@@ -130,7 +130,7 @@ summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) 
       stop("position must be within range of allele positions")
   }
   
-  tmpfn <- function(pos) {
+  tmpfn <- function(pos, pos_center) {
     a <- abs(pos - pos_center)
     which(a == min(a))
   }
@@ -138,9 +138,9 @@ summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) 
     dplyr::summarize(
       dplyr::group_by(object, source),
       min = min(effect[tmpfn(pos, pos_center)]),
-      lo_25 = quantile(effect[tmpfn(pos)], 0.25),
-      median = median(effect[tmpfn(pos)]),
-      hi_75 = quantile(effect[tmpfn(pos)], 0.75),
-      max = max(effect[tmpfn(pos)]),
+      lo_25 = quantile(effect[tmpfn(pos, pos_center)], 0.25),
+      median = median(effect[tmpfn(pos, pos_center)]),
+      hi_75 = quantile(effect[tmpfn(pos, pos_center)], 0.75),
+      max = max(effect[tmpfn(pos, pos_center)]),
       pos = pos_center))
 }

@@ -9,7 +9,7 @@ ggplot_feature_tbl(x, rect_col = "grey70", strand_col = c(`-` = "#1b9e77",
   `+` = "#d95f02"), type_col = c(gene = "black", pseudogene = "#1b9e77", other
   = "#d95f02"), text_size = 3, xlim = NULL, snp_pos = top_snps_tbl$pos,
   snp_lod = top_snps_tbl$lod, top_snps_tbl = NULL, snp_col = "grey70",
-  extend = 5000, ...)
+  extend = 0.005, ...)
 
 \method{autoplot}{feature_tbl}(x, ...)
 }
@@ -34,7 +34,7 @@ ggplot_feature_tbl(x, rect_col = "grey70", strand_col = c(`-` = "#1b9e77",
 
 \item{snp_col}{color of SNP vertical lines (default "grey70")}
 
-\item{extend}{extend region for SNPs in bp (default 5000)}
+\item{extend}{extend region for SNPs in bp (default 0.005)}
 
 \item{...}{additional arguments (not used)}
 }

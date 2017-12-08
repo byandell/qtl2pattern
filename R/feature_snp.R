@@ -45,15 +45,18 @@ get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
   tmp <- apply(as.matrix(genes[,2:3]), 1, tmpfn, snp_tbl)
   names(tmp) <- genes$Dbxref
   tmp <- dplyr::bind_rows(tmp, .id = "Dbxref")
-  out <- dplyr::distinct(
+  out <- 
     dplyr::arrange(
       dplyr::select(
         dplyr::mutate(
-          dplyr::inner_join(feature_tbl, tmp, by = "Dbxref"),
+          dplyr::inner_join(
+            dplyr::distinct(
+              feature_tbl,
+              start, stop, strand, type, .keep_all=TRUE),
+            tmp, by = "Dbxref"),
           SNP = snp_id), 
         -snp_id),
-      Name, type), 
-    SNP, start, stop, strand, type, .keep_all=TRUE)
+      Name, type)
 
   if(!nrow(out))
     return(NULL)

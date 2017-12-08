@@ -29,7 +29,7 @@ ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
   }
   for(genei in genes) {
     p[[genei]] <-
-      plot_feature_tbl(
+      ggplot_feature_tbl(
         dplyr::mutate(
           dplyr::filter(gene_exon, gene==genei),
           gene = NA),

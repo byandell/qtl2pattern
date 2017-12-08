@@ -14,7 +14,7 @@
 #' @param snp_lod LOD of SNPs (for color plotting)
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param snp_col color of SNP vertical lines (default "grey70")
-#' @param extend extend region for SNPs in bp (default 5000)
+#' @param extend extend region for SNPs in bp (default 0.005)
 #' @param ... additional arguments (not used)
 #'
 #' @return data frame of gene information (invisible)
@@ -40,7 +40,7 @@ ggplot_feature_tbl <- function(x,
                              snp_lod = top_snps_tbl$lod,
                              top_snps_tbl = NULL,
                              snp_col = "grey70",
-                             extend = 5000,
+                             extend = 0.005,
                              ...) {
   # If we have no genes, just plot an empty frame and return.
   if(is.null(x) || length(x) == 0) {
