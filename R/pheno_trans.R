@@ -38,8 +38,14 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
       if(length(offset == 1))
         offset <- rep_len(offset, length(phename))
       assertthat::assert_that(length(phename) == length(offset))
-      for(i in which(not.id))
-        phe[,phename[i]] <- get(transform[i])(phe[, phename[i]] + offset[i])
+      for(i in which(not.id)) {
+        tmp <- phe[, phename[i]] + offset[i]
+        if(transform[i] %in% c("log","sqrt")) {
+          # This will still yield -Inf if transform is log
+          tmp[tmp < 0] <- NA
+        }
+        phe[,phename[i]] <- get(transform[i])(tmp)
+      }
     }
     
     ## Parameter to winsorize will later be a value.
