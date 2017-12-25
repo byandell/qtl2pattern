@@ -42,6 +42,8 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
                                    peaks = split(peaks, peaks$chr)))
 
   peaks_type <- function(posi, peaks, peak_window=1) {
+    if(is.null(peaks))
+      return(NULL)
     # count peaks at position by type
     peaks_by_type <- split(peaks, peaks$pheno_type)
     out <- data.frame(purrr::map(peaks_by_type,
