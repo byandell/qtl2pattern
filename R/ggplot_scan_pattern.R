@@ -50,12 +50,12 @@ ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod
          lod = autoplot(x$scan, map, lodcolumn = lodcolumn,
                         pattern = pattern, 
                         facet = facet, ...),
-         coef = autoplot(x$coef, map, columns, ...),
+         coef = autoplot(x$coef, map, columns, CC = FALSE, ...),
          coef_and_lod = autoplot(x$coef, map, columns, 
                                  scan1_output = x$scan,
                                  lodcolumn = lodcolumn,
                                  pattern_lod = pattern, 
-                                 facet_lod = facet, ...))
+                                 facet_lod = facet, CC = FALSE, ...))
 }
 
 #' @method autoplot scan_pattern
