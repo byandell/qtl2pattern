@@ -182,7 +182,8 @@ snpinfo_to_haplos <- function(snpinfo) {
   alleles <- dplyr::select(
     snpinfo,
     -(snp_id:alleles))
-  infonames <- c("consequence","type","sdp","index","interval","on_map","pheno","lod")
+  # Would be better to have object that gives allele names rather than this opposite approach.
+  infonames <- c("consequence","type","sdp","index","interval","on_map","pheno","lod","ensembl_gene")
   if(length(wh <- which(infonames %in% names(alleles)))) {
     alleles <- alleles[, -wh, drop = FALSE]
   }
