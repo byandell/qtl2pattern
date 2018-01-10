@@ -27,6 +27,15 @@ ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod
                               facet = "pheno", ...) {
   plot_type <- match.arg(plot_type)
   
+  ggplot_scan_pattern_internal(x, map, plot_type, 
+                               patterns, columns, min_lod,
+                               lodcolumn, facet, ...)
+}
+ggplot_scan_pattern_internal <- function(x, map, plot_type, 
+                                         patterns, columns, min_lod,
+                                         lodcolumn, facet,
+                                         colors = NULL, ...) {
+  
   x$patterns <- dplyr::filter(x$patterns,
                               max_lod >= min_lod)
   
@@ -50,12 +59,12 @@ ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod
          lod = autoplot(x$scan, map, lodcolumn = lodcolumn,
                         pattern = pattern, 
                         facet = facet, ...),
-         coef = autoplot(x$coef, map, columns, CC = FALSE, ...),
+         coef = autoplot(x$coef, map, columns, colors = colors, ...),
          coef_and_lod = autoplot(x$coef, map, columns, 
                                  scan1_output = x$scan,
                                  lodcolumn = lodcolumn,
                                  pattern_lod = pattern, 
-                                 facet_lod = facet, CC = FALSE, ...))
+                                 facet_lod = facet, colors = colors, ...))
 }
 
 #' @method autoplot scan_pattern
