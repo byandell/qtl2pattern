@@ -5,14 +5,14 @@
 \alias{sdp_to_logical}
 \title{Convert sdp to pattern}
 \usage{
-sdp_to_pattern(sdp, haplos = LETTERS[1:8])
+sdp_to_pattern(sdp, haplos)
 
-sdp_to_logical(sdp, haplos = LETTERS[1:8])
+sdp_to_logical(sdp, haplos)
 }
 \arguments{
 \item{sdp}{vector of sdp values}
 
-\item{haplos}{letter codes for haplotypes (defaults to first 8 \code{LETTERS})}
+\item{haplos}{letter codes for haplotypes (required)}
 }
 \value{
 vector of letter patterns
@@ -21,7 +21,7 @@ vector of letter patterns
 Convert strain distribution pattern (sdp) to letter pattern.
 }
 \examples{
-\dontrun{sdp_to_pattern(snp)}
+\dontrun{sdp_to_pattern(snp, haplos)}
 
 }
 \author{

@@ -2,9 +2,9 @@
 #' 
 #' Create table of alleles for various model fits.
 #' 
+#' @param probD object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param phe_df data frame with one phenotype
 #' @param cov_mx covariate matrix
-#' @param probD object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param map list of genome maps
 #' @param K_chr kinship matrix
 #' @param patterns data frame of pattern information
@@ -26,7 +26,7 @@
 #' @importFrom stringr str_count str_detect str_split
 #' @importFrom qtl2 genoprob_to_alleleprob scan1 scan1blup scan1coef
 #' 
-allele1 <- function(phe_df=NULL, cov_mx=NULL, probD=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
+allele1 <- function(probD, phe_df=NULL, cov_mx=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
                     alt=NULL, blups = FALSE, ...) {
   allele1_internal(phe_df, cov_mx, probD, map, K_chr, patterns,
                    alt, blups, ...)
@@ -72,9 +72,10 @@ allele1_internal <- function(
         "")[[1]],
       collapse = "|")
 
-  # Combine effects estimates.
-  mar_df <- function(x, n) {
+  # Combine effects estimates. Object a has information about number of alleles.
+  mar_df <- function(x, a) {
     mar <- rownames(x)
+    n <- dim(a[[1]])[2]
     x <- as.data.frame(x[, seq_len(n)])
     x$mar <- mar
     x
@@ -82,16 +83,16 @@ allele1_internal <- function(
 
   scan_pats <- tidyr::gather(
     dplyr::bind_rows(
-      lapply(scan_pat$coef, mar_df, 3), 
+      lapply(scan_pat$coef, mar_df, scan_pat$coef), 
       .id = "source"),
     allele, effect, -mar, -source)
   
   alleles <- dplyr::bind_rows(
     haplotype = tidyr::gather(
-      mar_df(coefH, 8),
+      mar_df(coefH, probH),
       allele, effect, -mar),
     diplotype = tidyr::gather(
-        mar_df(coefD, 36), 
+        mar_df(coefD, probD), 
         allele, effect, -mar),
     .id = "source")
   

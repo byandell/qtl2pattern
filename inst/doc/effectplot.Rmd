@@ -40,6 +40,8 @@ Load example DO data from web
 ```{r}
 library(qtl2)
 library(qtl2ggplot)
+library(ggplot2)
+library(qtl2pattern)
 ```
 
 ```{r}
@@ -81,6 +83,10 @@ if(!file.exists(file <- file.path(dirpath, "c2_snpinfo.rds"))) {
 }
 ```
 
+```{r}
+snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+```
+
 Calculate strain distribution patterns
 
 ```{r}
@@ -112,13 +118,22 @@ Best patterns from SNP association.
 
 ```{r}
 out_snppr <- scan1(snppr, DOex$pheno)
-(patterns <- summary(out_snppr, DOex$pmap, snpinfo))
+```
+
+```{r}
+topsnps <- top_snps_all(out_snppr, snpinfo)
+```
+
+```{r}
+(patterns <- dplyr::arrange(
+  summary(topsnps),
+  dplyr::desc(max_lod)))
 ```
 
 Propagate best SNP patterns across chromosome.
 
 ```{r}
-scan_pat <- qtl2pattern::scan_pattern(pr, DOex$pheno, 
+scan_pat <- scan_pattern(pr, DOex$pheno, 
                                       map = DOex$pmap,
                                       patterns = patterns)
 ```
@@ -134,7 +149,7 @@ scans <- scan_pr
 # change the pheno names to be distinct
 dimnames(scans)[[2]] <- paste0(dimnames(scans)[[2]], "_36")
 scans <- cbind(scan_apr, scans, scan_pat$scan)
-plot(scans, DOex$pmap,
+autoplot(scans, DOex$pmap,
      lodcolumn = seq(ncol(scans)))
 ```
 
@@ -153,7 +168,7 @@ coefs <- scan1coef(apr, DOex$pheno)
 ```
 
 ```{r}
-plot(coefs, DOex$pmap)
+autoplot(coefs, DOex$pmap)
 ```
 
 ```{r}
@@ -169,7 +184,7 @@ coefs36 <- scan1coef(pr, DOex$pheno)
 All 36 allele pair QTL effects.
 
 ```{r}
-plot(coefs36, DOex$pmap, CC = FALSE, ylim=c(-100,100))
+autoplot(coefs36, DOex$pmap, colors = NULL, ylim=c(-100,100))
 ```
 
 Only 8 allele pair QTL effects that contain `E`.
@@ -177,7 +192,7 @@ Only 8 allele pair QTL effects that contain `E`.
 ```{r}
 tmp <- qtl2pattern:::modify_object(coefs36, 
                     coefs36[, stringr::str_detect(dimnames(coefs36)[[2]], "E")])
-plot(tmp, DOex$pmap, ylim=c(-100,100))
+autoplot(tmp, DOex$pmap, ylim=c(-100,100))
 ```
 
 ```{r}
@@ -200,7 +215,7 @@ effects36(coefs36, scan_pr, DOex$pmap)
 Here is a plot of the `ref`, `het` and `alt` sets for the two scan patterns in the neighborhood of the peak.
 
 ```{r}
-plot(scan_pat, DOex$pmap, "coef_and_lod", ylim=c(-100,100), xlim=c(90,110))
+autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim=c(-100,100), xlim=c(90,110))
 ```
 
 ```{r}
@@ -230,19 +245,20 @@ effects36(coefs36, subset(scan_pat$scan, lodcolumn = 2), DOex$pmap)
 Allele effects are trimmed slightly.
 
 ```{r}
-alleles <- allele1(scanH = scan_apr, coefH = coefs, coefD = coefs36, 
+alleles <- allele1(probD = pr,
+                   scanH = scan_apr, coefH = coefs, coefD = coefs36, 
                    scan_pat = scan_pat, map = DOex$pmap, alt = "E",
                    trim = TRUE)
 ```
 
 ```{r}
-plot(alleles, scan_apr, DOex$pmap, frame = FALSE)
+autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
 ```
 
 The following sort of works, but only some of the points are showing. I am working with Casper Sievert, [plotly](https://github.com/ropensci/plotly) developer on animation improvements.
 
 ```{r}
-plotly::ggplotly(plot(alleles, scan_apr, DOex$pmap, frame = TRUE), tooltip = "ids")
+plotly::ggplotly(autoplot(alleles, scan_apr, DOex$pmap, frame = TRUE), tooltip = "ids")
 ```
 
 ```{r}
@@ -264,19 +280,19 @@ Also troublesome is how the mean for `DE` is at opposite end of other `het` pair
 Highlight only top SDP patterns in SNPs.
 
 ```{r}
-plot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
+autoplot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
 ```
 
 Here is interactive version. Particularly useful when there are mutliple SV Types (`INS, DEL, InDel, ...`).
 
 ```{r}
-plotly::ggplotly(plot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2))
+plotly::ggplotly(autoplot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2))
 ```
 
 ```{r}
-plot(coefs, scan1_output = scan_apr, DOex$pmap)
+autoplot(coefs, scan1_output = scan_apr, DOex$pmap)
 ```
 
 ```{r}
-plot(scan_pat, DOex$pmap, "coef_and_lod", ylim_coef = c(-100,100))
+autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim_coef = c(-100,100))
 ```

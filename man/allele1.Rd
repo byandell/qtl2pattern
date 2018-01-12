@@ -4,15 +4,15 @@
 \alias{allele1}
 \title{Allele plot for SNPs, alleles and allele pairs}
 \usage{
-allele1(phe_df = NULL, cov_mx = NULL, probD = NULL, map = NULL,
-  K_chr = NULL, patterns = NULL, alt = NULL, blups = FALSE, ...)
+allele1(probD, phe_df = NULL, cov_mx = NULL, map = NULL, K_chr = NULL,
+  patterns = NULL, alt = NULL, blups = FALSE, ...)
 }
 \arguments{
+\item{probD}{object of class \code{\link[qtl2]{calc_genoprob}}}
+
 \item{phe_df}{data frame with one phenotype}
 
 \item{cov_mx}{covariate matrix}
-
-\item{probD}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
 \item{map}{list of genome maps}
 

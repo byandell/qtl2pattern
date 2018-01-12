@@ -31,18 +31,18 @@ You will also need the following packages for qtl2ggplot:
 Then, install R/qtl2 using `devtools::install_github()`.
 
     library(devtools)
-    install_github(paste0("rqtl/qtl2", c("geno", "scan")))
+    install_github("rqtl/qtl2")
 
-Once you have installed these, install qtl2ggplot as
+Once you have installed these, install qtl2pattern as
 
-    install_github(paste0("byandell/", c("CCSanger","DOread")))
-    install_github(paste0("byandell/qtl2", c("pattern", "ggplot")))
+    install_github("byandell/qtl2pattern")
 
 ---
 
 ### Vignettes
 
-coming ...
+- [qtl2pattern](https://github.com/byandell/qtl2ggplot/blob/master/inst/doc/qtl2pattern.Rmd)
+- [effectplot](https://github.com/byandell/qtl2ggplot/blob/master/inst/doc/effectplot.Rmd)
 
 ---
 
