@@ -19,13 +19,15 @@
 #' @param facet Plot facets if multiple phenotypes and group provided (default = \code{"pattern"}).
 #' @param pattern Use phenotype names as pattern.
 #'
-#' @param ... arguments for \code{\link{ggplot_coef}}
+#' @param ... arguments for \code{\link[qtl2ggplot]{ggplot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords hplot
 #'
 #' @export
 #' @importFrom dplyr bind_rows
+#' @importFrom qtl2ggplot ggplot_coef
+#' 
 ggplot_listof_scan1coef <- function(x, map, columns = NULL, col = NULL,
                                   scan1_output = NULL,
                                   facet = "pattern",
@@ -54,7 +56,7 @@ ggplot_listof_scan1coef <- function(x, map, columns = NULL, col = NULL,
   attr(coefs, "SE") <- attr(x[[1]], "SE")
   class(coefs) <- class(x[[1]])
 
-  ggplot_coef(coefs, map, columns, col, scan1_output,
+  qtl2ggplot::ggplot_coef(coefs, map, columns, col, scan1_output,
             facet = facet,
             pattern = pheno,
             patterns = "all", ...)
