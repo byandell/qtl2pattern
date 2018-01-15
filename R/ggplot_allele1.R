@@ -4,10 +4,11 @@
 #' 
 #' @param x Object of class \code{\link{allele1}}.
 #' @param scan1_object Optional object of class \code{\link[qtl2]{scan1}} to find peak.
-#' @param map Genome map (required if \code{scan1_object} present)
-#' @param pos Genome position in Mbp (supercedes \code{scan1_object})
+#' @param map Genome map (required if \code{scan1_object} present).
+#' @param pos Genome position in Mbp (supercedes \code{scan1_object}).
 #' @param trim If \code{TRUE}, trim extreme alleles.
-#' @param frame If \code{TRUE}, enable frames for \code{\link[plotly]{ggplotly}}
+#' @param frame If \code{TRUE}, enable frames for \code{\link[plotly]{ggplotly}}.
+#' @param legend.position Legend position (default is \code{"none"}).
 #' @param ... Other parameters ignored.
 #' 
 #' @export
@@ -16,7 +17,8 @@
 #' @importFrom dplyr filter group_by mutate ungroup
 #' 
 ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
-                         frame = FALSE, ...) {
+                         frame = FALSE,
+                         legend.position = "none", ...) {
   
   if(is.null(pos)) {
     if(is.null(scan1_object))
@@ -65,7 +67,8 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
           axis.text.x = ggplot2::element_blank(),
           axis.ticks.x = ggplot2::element_blank(),
           panel.grid.major.x = ggplot2::element_blank(),
-          panel.grid.minor.x = ggplot2::element_blank()) +
+          panel.grid.minor.x = ggplot2::element_blank(),
+          legend.position = legend.position) +
     ggplot2::scale_x_continuous(expand=c(0,0.01))
 } 
 #' @export

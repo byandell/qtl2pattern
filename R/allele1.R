@@ -38,6 +38,7 @@ allele1_internal <- function(
   coefH = scan1fn(probH, phe_df, K_chr, cov_mx),
   coefD = qtl2::scan1coef(probD, phe_df, K_chr, cov_mx),
   scan_pat = NULL,
+  drop_covar = TRUE,
   ...) 
 {
   if(!is.null(phe_df) && ncol(phe_df) > 1) {
@@ -86,7 +87,18 @@ allele1_internal <- function(
       lapply(scan_pat$coef, mar_df, scan_pat$coef), 
       .id = "source"),
     allele, effect, -mar, -source)
+  # Identify covariates
+  scan_pats <- dplyr::mutate(
+    scan_pats,
+    covar = !(allele %in% c("alt","ref","het"))
+  )
+  if(drop_covar) {
+    scan_pats <- dplyr::filter(
+      scan_pats,
+      !covar)
+  }
   
+  # Combine alleles and allele pairs using codes inferred from probH and probD.
   alleles <- dplyr::bind_rows(
     haplotype = tidyr::gather(
       mar_df(coefH, probH),
@@ -95,21 +107,28 @@ allele1_internal <- function(
         mar_df(coefD, probD), 
         allele, effect, -mar),
     .id = "source")
-  
+  # Bind alleles with scan patterns (ref/het/alt)
   alleles <- dplyr::bind_rows(alleles, scan_pats)
+  # Make sure covar has no missing values for alleles.
+  alleles <- dplyr::mutate(
+    alleles,
+    covar = ifelse(is.na(covar), FALSE, covar))
+  
   map <- map[[1]]
   mar <- names(map)
   map <- data.frame(pos=map, mar=mar, stringsAsFactors = FALSE)
   alleles <- dplyr::inner_join(alleles, map, by = "mar")
   alleles$source <- factor(alleles$source, c("haplotype","diplotype",
                                              names(scan_pat$coef)))
-  tmpfn <- function(x) 
-    sapply(stringr::str_split(x, ":"), 
-           function(x) stringr::str_detect(x[2], alt))
+  
+  # Set up probe for color in plot as number of copies of alternative allele.
+  # ref = 0, het = 1, alt = 2; covariates = 5.
+  tmpfn <- function(x) stringr::str_detect(x, ":")
   alleles <- dplyr::mutate(alleles,
                            probe = stringr::str_count(allele, alt),
                            probe = ifelse(tmpfn(source) & (allele == "het"), 1, probe),
                            probe = ifelse(tmpfn(source) & (allele == "alt"), 2, probe),
+                           probe = ifelse(covar, 5, probe),
                            probe = factor(probe))
   attr(alleles, "probe") <- alt
   attr(alleles, "blups") <- blups

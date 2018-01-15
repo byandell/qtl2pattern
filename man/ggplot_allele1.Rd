@@ -6,7 +6,7 @@
 \title{Plot allele1 object}
 \usage{
 ggplot_allele1(x, scan1_object = NULL, map = NULL, pos = NULL,
-  trim = TRUE, frame = FALSE, ...)
+  trim = TRUE, frame = FALSE, legend.position = "none", ...)
 
 \method{autoplot}{allele1}(x, ...)
 }
@@ -15,13 +15,15 @@ ggplot_allele1(x, scan1_object = NULL, map = NULL, pos = NULL,
 
 \item{scan1_object}{Optional object of class \code{\link[qtl2]{scan1}} to find peak.}
 
-\item{map}{Genome map (required if \code{scan1_object} present)}
+\item{map}{Genome map (required if \code{scan1_object} present).}
 
-\item{pos}{Genome position in Mbp (supercedes \code{scan1_object})}
+\item{pos}{Genome position in Mbp (supercedes \code{scan1_object}).}
 
 \item{trim}{If \code{TRUE}, trim extreme alleles.}
 
-\item{frame}{If \code{TRUE}, enable frames for \code{\link[plotly]{ggplotly}}}
+\item{frame}{If \code{TRUE}, enable frames for \code{\link[plotly]{ggplotly}}.}
+
+\item{legend.position}{Legend position (default is \code{"none"}).}
 
 \item{...}{Other parameters ignored.}
 }
