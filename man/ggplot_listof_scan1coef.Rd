@@ -27,7 +27,7 @@ score column; if multiple, only the first is used.}
 
 \item{facet}{Plot facets if multiple phenotypes and group provided (default = \code{"pattern"}).}
 
-\item{...}{arguments for \code{\link{ggplot_coef}}}
+\item{...}{arguments for \code{\link[qtl2ggplot]{ggplot_coef}}}
 
 \item{pattern}{Use phenotype names as pattern.}
 }
