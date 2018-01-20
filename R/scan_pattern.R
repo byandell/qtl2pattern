@@ -39,7 +39,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
 
   ## For now, limit to one phenotype.
   ## But see how to have a list across phenotypes
-  ## Also need to take care of covariates properly; see qtl2shiny:::scan1_covar.
+  ## Also need to take care of covariates properly; see scan1_covar.
   pheno_names <- colnames(phe)
 
   diplos <- dimnames(probs1[[1]])[[2]]
