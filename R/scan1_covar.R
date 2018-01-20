@@ -7,12 +7,12 @@
 #' 
 #' @export
 #' 
-#' @importFrom qtl2scan scan1
+#' @importFrom qtl2 scan1
 #' @importFrom dplyr select
 #'
 scan1_covar <- function(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...) {
   # This is set up for different types of models (e.g. "binary"),
-  # but qtl2scan::scan1 ignores "binary" this right now if kinship is provided.
+  # but qtl2::scan1 ignores "binary" this right now if kinship is provided.
   # So below, force kinship to NULL if any "binary", 
   # and force attr "hsq" to null as well.
   models <- analyses_df$model
@@ -52,7 +52,7 @@ scanfn <- function(probs_obj, phe_mx, kinship, cov_df, analyses_df, wh, models,
       scansex(probs_obj, phe_mx, kinship, cov_df,
               models[1], sex_type)
     } else { # no covariates (unlikely)
-      qtl2scan::scan1(probs_obj, phe_mx, kinship,
+      qtl2::scan1(probs_obj, phe_mx, kinship,
                       model = models[1])
     }
   } else { # multiple models
@@ -74,7 +74,7 @@ scanfn <- function(probs_obj, phe_mx, kinship, cov_df, analyses_df, wh, models,
       }
     } else { # no covariates (unlikely)
       kinship <- if(umod[1] == "binary") NULL else kinship
-      out <- qtl2scan::scan1(probs_obj, 
+      out <- qtl2::scan1(probs_obj, 
                              phe_mx[, whm, drop=FALSE], 
                              kinship, 
                              model = umod[1])
@@ -82,7 +82,7 @@ scanfn <- function(probs_obj, phe_mx, kinship, cov_df, analyses_df, wh, models,
       for(mod in umod[-1]) {
         whm <- which(models == mod)
         kinship <- if(mod == "binary") NULL else kinship
-        tmp <- qtl2scan::scan1(probs_obj, 
+        tmp <- qtl2::scan1(probs_obj, 
                                phe_mx[, whm, drop=FALSE], 
                                kinship, 
                                model = mod)
@@ -123,7 +123,7 @@ scansex <- function(genoprobs, pheno, kinship, addcovar = NULL,
     }
     addcovar <- covar_df_mx(addcovar)
   }
-  qtl2scan::scan1(genoprobs, pheno, kinship, addcovar, 
+  qtl2::scan1(genoprobs, pheno, kinship, addcovar, 
                   intcovar = intcovar,
                   model = model)
 }
