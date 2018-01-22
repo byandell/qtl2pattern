@@ -2,9 +2,21 @@
 % Please edit documentation in R/scan1_covar.R
 \name{scan1_covar}
 \alias{scan1_covar}
-\title{scan1 for multiple traits with possibly different covariates}
+\alias{which_covar}
+\alias{covar_df_mx}
+\alias{wh_covar}
+\alias{sexcovar}
+\title{Scan1 for multiple traits with possibly different covariates, and some helper routines.}
 \usage{
 scan1_covar(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...)
+
+which_covar(analyses_df)
+
+covar_df_mx(addcovar)
+
+wh_covar(analyses_df, wh, cov_df)
+
+sexcovar(addcovar, sex_type)
 }
 \arguments{
 \item{phe_mx}{matrix of phenotypes}
@@ -16,5 +28,5 @@ scan1_covar(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...)
 \item{analyses_df}{data frame of analyses information}
 }
 \description{
-scan1 for multiple traits with possibly different covariates
+Scan1 for multiple traits with possibly different covariates, and some helper routines.
 }
