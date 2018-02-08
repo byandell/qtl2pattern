@@ -1,5 +1,5 @@
 ---
-title: "R/qtl2ggplot Vignette"
+title: "R/qtl2pattern Vignette"
 author: "Brian S. Yandell"
 date: "2/1/2017"
 output: html_document
