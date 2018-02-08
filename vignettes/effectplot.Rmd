@@ -94,7 +94,8 @@ snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
 Calculate strain distribution patterns
 
 ```{r}
-snpinfo$sdp <- calc_sdp(snpinfo[,-(1:4)])
+if(is.null(snpinfo$sdp))
+  snpinfo$sdp <- calc_sdp(snpinfo[,-(1:4)])
 snpinfo <- index_snps(DOex$pmap, snpinfo)
 ```
 
