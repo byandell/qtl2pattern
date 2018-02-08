@@ -36,13 +36,17 @@ Then, install R/qtl2 using `devtools::install_github()`.
 Once you have installed these, install qtl2pattern as
 
     install_github("byandell/qtl2pattern")
+    
+To install vignettes:
+
+    install_github("byandell/qtl2pattern", build_vignettes = TRUE)
 
 ---
 
 ### Vignettes
 
-- [qtl2pattern](https://github.com/byandell/qtl2pattern/blob/master/inst/doc/qtl2pattern.Rmd)
-- [effectplot](https://github.com/byandell/qtl2pattern/blob/master/inst/doc/effectplot.Rmd)
+- [qtl2pattern](https://github.com/byandell/qtl2pattern/blob/master/vignettes/qtl2pattern.Rmd)
+- [effectplot](https://github.com/byandell/qtl2pattern/blob/master/vignettes/effectplot.Rmd)
 
 ---
 
