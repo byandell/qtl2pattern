@@ -41,8 +41,8 @@ Once you have installed these, install qtl2pattern as
 
 ### Vignettes
 
-- [qtl2pattern](https://github.com/byandell/qtl2ggplot/blob/master/inst/doc/qtl2pattern.Rmd)
-- [effectplot](https://github.com/byandell/qtl2ggplot/blob/master/inst/doc/effectplot.Rmd)
+- [qtl2pattern](https://github.com/byandell/qtl2pattern/blob/master/inst/doc/qtl2pattern.Rmd)
+- [effectplot](https://github.com/byandell/qtl2pattern/blob/master/inst/doc/effectplot.Rmd)
 
 ---
 
