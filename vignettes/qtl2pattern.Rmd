@@ -23,11 +23,12 @@ library(ggplot2)
 ```
 
 ```{r}
+dirpath <- "."
 if(!file.exists("DOex.zip")) {
   dirpath <- paste0("https://raw.githubusercontent.com/rqtl/",
                     "qtl2data/master/DOex")
 }
-DOex <- read_cross2("DOex.zip")
+DOex <- read_cross2(file.path(dirpath, "DOex.zip"))
 ```
 
 Create artificial second phenotype as arcsic sqrt of first one.
@@ -75,7 +76,8 @@ snpinfo <-
 Calculate strain distribution patterns
 
 ```{r}
-snpinfo$sdp <- calc_sdp(snpinfo[,-(1:4)])
+if(is.null(snpinfo$sdp))
+  snpinfo$sdp <- calc_sdp(snpinfo[,-(1:4)])
 ```
 
 Create index to non-equivalent set of SNPs.
