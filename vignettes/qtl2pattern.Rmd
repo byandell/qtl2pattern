@@ -23,9 +23,12 @@ library(ggplot2)
 ```
 
 ```{r}
-DOex <- read_cross2(file.path("https://raw.githubusercontent.com/rqtl",
-                              "qtl2data/master/DOex",
-                              "DOex.zip"))
+DOex <-
+  read_cross2(
+    file.path(
+      "https://raw.githubusercontent.com/rqtl",
+      "qtl2data/master/DOex",
+      "DOex.zip"))
 ```
 
 Create artificial second phenotype as arcsic sqrt of first one.
