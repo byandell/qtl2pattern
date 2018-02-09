@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
 This continues and example developed in library `qtl2ggplot` using tools found in `qtl2pattern`.
@@ -23,12 +23,9 @@ library(ggplot2)
 ```
 
 ```{r}
-dirpath <- "."
-if(!file.exists("DOex.zip")) {
-  dirpath <- paste0("https://raw.githubusercontent.com/rqtl/",
-                    "qtl2data/master/DOex")
-}
-DOex <- read_cross2(file.path(dirpath, "DOex.zip"))
+DOex <- read_cross2(file.path("https://raw.githubusercontent.com/rqtl",
+                              "qtl2data/master/DOex",
+                              "DOex.zip"))
 ```
 
 Create artificial second phenotype as arcsic sqrt of first one.
@@ -53,37 +50,20 @@ pr <- calc_genoprob(DOex, error_prob=0.002)
 apr <- genoprob_to_alleleprob(pr)
 ```
 
-Download snp info from web
+Download snp info from web and read as RDS.
 
 ```{r}
-if(!file.exists(filename <- "c2_snpinfo.rds")) {
-  filename <- file.path("https://raw.githubusercontent.com/rqtl",
-                        "qtl2data/master/DOex", 
-                        "c2_snpinfo.rds")
-  tmpfile <- tempfile()
-  download.file(filename, tmpfile, quiet=TRUE)
-  snpinfo <- readRDS(tmpfile)
-  unlink(tmpfile)
-} else {
-  snpinfo <- readRDS(filename)
-}
-snpinfo <- 
-  dplyr::rename(
-    snpinfo,
-    pos = pos_Mbp)
+filename <- file.path("https://raw.githubusercontent.com/rqtl",
+                      "qtl2data/master/DOex", 
+                      "c2_snpinfo.rds")
+tmpfile <- tempfile()
+download.file(filename, tmpfile, quiet=TRUE)
+snpinfo <- readRDS(tmpfile)
+unlink(tmpfile)
 ```
 
-Calculate strain distribution patterns
-
 ```{r}
-if(is.null(snpinfo$sdp))
-  snpinfo$sdp <- calc_sdp(snpinfo[,-(1:4)])
-```
-
-Create index to non-equivalent set of SNPs.
-
-```{r}
-snpinfo <- index_snps(DOex$pmap, snpinfo)
+snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
 ```
 
 Convert to snp probabilities
