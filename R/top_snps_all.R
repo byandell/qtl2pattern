@@ -129,7 +129,7 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                      max_pos = pos[which.max(lod)][1],
                      max_snp = snp_id[which.max(lod)][1])),
                  pattern = sdp_to_pattern(sdp, haplos)),
-               dplyr::desc(pct)),
+               dplyr::desc(max_lod)),
              pattern, max_lod, max_pos, pheno, pct, min_lod,
              dplyr::everything())
          },
