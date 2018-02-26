@@ -95,7 +95,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #' @method summary top_snps_all
 #' @rdname top_snps_all
 #' @export
-#' @importFrom dplyr arrange desc filter group_by mutate select summarize ungroup
+#' @importFrom dplyr arrange desc everything filter group_by mutate select summarize ungroup
 #'
 summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                                  ...) {
@@ -112,22 +112,26 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                dplyr::mutate(out,
                  consequence = abbreviate(consequence, 15))
            }
-           out
+           dplyr::select(out, snp_id, type, chr, pos, lod, pheno,
+                         dplyr::everything())
          },
          range = {
            ## Most frequent SNP patterns within 1.5 of max LOD.
-           dplyr::arrange(
-             dplyr::mutate(
-               dplyr::ungroup(
-                 dplyr::summarize(
-                   dplyr::group_by(object, sdp, pheno),
-                   pct = round(100 * n() / nrow(object), 2),
-                   min_lod = min(lod),
-                   max_lod = max(lod),
-                   max_pos = pos[which.max(lod)][1],
-                   max_snp = snp_id[which.max(lod)][1])),
-               pattern = sdp_to_pattern(sdp, haplos)),
-             dplyr::desc(pct))
+           dplyr::select(
+             dplyr::arrange(
+               dplyr::mutate(
+                 dplyr::ungroup(
+                   dplyr::summarize(
+                     dplyr::group_by(object, sdp, pheno),
+                     pct = round(100 * n() / nrow(object), 2),
+                     min_lod = min(lod),
+                     max_lod = max(lod),
+                     max_pos = pos[which.max(lod)][1],
+                     max_snp = snp_id[which.max(lod)][1])),
+                 pattern = sdp_to_pattern(sdp, haplos)),
+               dplyr::desc(pct)),
+             pattern, max_lod, max_pos, pheno, pct, min_lod,
+             dplyr::everything())
          },
          peak = {
            dplyr::select(
@@ -145,7 +149,8 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                      phenos = paste(unique(pheno), collapse=","))),
                  pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(lod)),
-             -chr)
+             pattern, lod, phenos, min_Mbp, max_Mbp,
+             dplyr::everything())
          })
 }
 #' Subset of features
