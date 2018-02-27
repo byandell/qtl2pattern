@@ -52,6 +52,8 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
                       check.names = FALSE)
     if(!nrow(out))
       return(NULL)
+    # count peaks by group. But should check to make sure group has unique name.
+    # and if pheno_group = pheno_type, then only need one?
     groups <- dplyr::distinct(peaks, pheno_group, pheno_type)
     groups <- split(groups$pheno_type, groups$pheno_group)
     grps <- data.frame(
@@ -62,6 +64,10 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
                  out),
       check.names = FALSE)
     out$all <- apply(out, 1, sum)
+    # This is adding extra column sometimes. Fix.
+    m <- match(colnames(grps), colnames(out), nomatch = 0)
+    if(any(m > 0))
+      colnames(grps) <- paste0(colnames(grps), "G")
     out <- dplyr::bind_cols(out, grps)
     if(max(out) == 0)
       return(NULL)
