@@ -15,7 +15,7 @@
 #'
 #' @export
 #' @rdname gene_exon
-#' @importFrom dplyr arrange desc distinct mutate select
+#' @importFrom dplyr arrange desc distinct everything mutate select
 get_gene_exon_snp <- function(top_snps_tbl,
                               feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])) {
   ## Only need distinct snp_id.
@@ -142,6 +142,10 @@ summary.gene_exon <- function(gene_exon, gene_name=NULL,
         min_Mbp = min(start),
         max_Mbp = max(stop),
         strand = strand[1]))
+    out <- dplyr::select(
+      out,
+      gene, exons, strand, min_Mbp, max_Mbp, dplyr::everything())
+    
     if(!is.null(top_snps_tbl)) {
       ## Goal: add columns to out for each pheno in top_snps_tbl.
       ## Column should have number of SNPs within extra of gene.
@@ -162,6 +166,13 @@ summary.gene_exon <- function(gene_exon, gene_name=NULL,
                 },
                 dplyr::filter(top_snps_tbl, pheno == pheno_val))
       }
+      tmp <- out[pheno_names]
+      out$max_lod <- apply(tmp, 1, max)
+      out <- dplyr::arrange(
+        dplyr::select(
+          out,
+          gene, max_lod, dplyr::everything()),
+        dplyr::desc(max_lod))
     }
   }
   out
