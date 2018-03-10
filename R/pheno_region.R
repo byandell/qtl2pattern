@@ -15,6 +15,7 @@
 pheno_region <- function(chr_id, start_val, end_val, covar, map, 
                          peaks, analyses, pheno_data) {
   
+  # Reduce peaks to those in region and in analyses.
   peaks <- dplyr::filter(
     peaks, 
     chr == chr_id,
@@ -41,7 +42,12 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   # Identify markers for drivers of mediators.
   annot$driver <- qtl2::find_marker(map, chr_id, annot$pos)
   
-  list(pheno = pheno_data, annot = annot, peaks = peaks, covar = covar)
+  m <- match(colnames(pheno_data), peaks$pheno)
+  if(all(is.na(m)))
+    return(NULL)
+  
+  list(pheno = pheno_data[, !is.na(m)],
+       annot = annot, peaks = peaks, covar = covar)
 }
 
 #' Create list with expression phenotypes in region
@@ -49,6 +55,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
 #' @param project_dir project directory with mRNA data in subdirector \code{RNAseq}
 #' @param query_mrna query routine for mRNA data (see \code{\link{create_mrna_query_func}})
 #' 
+#' @seealso \code{\link{create_mrna_query_func}}
 #' @rdname pheno_region
 #' @export
 expr_region <- function(chr_id, start_val, end_val, covar, map, 
