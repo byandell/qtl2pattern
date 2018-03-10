@@ -33,3 +33,6 @@ Create list with phenotypes in region
 
 Create list with expression phenotypes in region
 }
+\seealso{
+\code{\link{create_mrna_query_func}}
+}
