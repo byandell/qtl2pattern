@@ -6,6 +6,7 @@
 #' @param peaks table of peaks
 #' @param analyses table of analyses
 #' @param pheno_data matrix of phenotype data
+#' @param drivers number of drivers (1 or 2; default is 2)
 #' 
 #' @export
 #' @importFrom dplyr filter group_by inner_join left_join rename summarize ungroup
@@ -13,7 +14,8 @@
 #' @importFrom stringr str_split
 #' 
 pheno_region <- function(chr_id, start_val, end_val, covar, map, 
-                         peaks, analyses, pheno_data) {
+                         peaks, analyses, pheno_data,
+                         drivers = 2) {
   
   # Reduce peaks to those in region and in analyses.
   peaks <- dplyr::filter(
@@ -27,10 +29,15 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   annot <- 
     dplyr::rename(
       dplyr::inner_join(
-        dplyr::left_join(peaks, analyses, by = "pheno"),
+        dplyr::left_join(
+          peaks, 
+          analyses, 
+          by = c("pheno", "longname", "output", "pheno_group", "pheno_type")),
         dplyr::ungroup(
           dplyr::summarize(
-            dplyr::group_by(peaks, pheno),
+            dplyr::group_by(
+              peaks, 
+              pheno),
             qtl_ct = n(),
             QTL = paste0(chr, "@",
                          round(pos), ":",
@@ -39,8 +46,10 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
       id = pheno,
       biotype = pheno_type)
   annot$local <- FALSE
+  
   # Identify markers for drivers of mediators.
-  annot$driver <- qtl2::find_marker(map, chr_id, annot$pos)
+  if(drivers == 2)
+    annot$driver <- qtl2::find_marker(map, chr_id, annot$pos)
   
   m <- match(colnames(pheno_data), peaks$pheno)
   if(all(is.na(m)))
@@ -59,7 +68,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
 #' @rdname pheno_region
 #' @export
 expr_region <- function(chr_id, start_val, end_val, covar, map, 
-                        project_dir,
+                        project_dir, drivers = 2,
                         query_mrna = create_mrna_query_func(project_dir)) {
   
   # Get expression mRMNA measurements.
@@ -69,7 +78,8 @@ expr_region <- function(chr_id, start_val, end_val, covar, map,
     return(NULL)
   
   # Identify markers for drivers of expression mediators.
-  out$annot$driver <- qtl2::find_marker(map, chr_id, out$annot$qtl_pos)
+  if(drivers == 2)
+    out$annot$driver <- qtl2::find_marker(map, chr_id, out$annot$qtl_pos)
   
   # Identify covariates
   expr_covars <- unique(out$annot$covar)

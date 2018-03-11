@@ -6,9 +6,9 @@
 \title{Create list with phenotypes in region}
 \usage{
 pheno_region(chr_id, start_val, end_val, covar, map, peaks, analyses,
-  pheno_data)
+  pheno_data, drivers = 2)
 
-expr_region(chr_id, start_val, end_val, covar, map, project_dir,
+expr_region(chr_id, start_val, end_val, covar, map, project_dir, drivers = 2,
   query_mrna = create_mrna_query_func(project_dir))
 }
 \arguments{
@@ -23,6 +23,8 @@ expr_region(chr_id, start_val, end_val, covar, map, project_dir,
 \item{analyses}{table of analyses}
 
 \item{pheno_data}{matrix of phenotype data}
+
+\item{drivers}{number of drivers (1 or 2; default is 2)}
 
 \item{project_dir}{project directory with mRNA data in subdirector \code{RNAseq}}
 
