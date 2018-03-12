@@ -17,23 +17,15 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
                          peaks, analyses, pheno_data,
                          drivers = 2) {
   
-  # Reduce peaks to those in region and in analyses.
-  peaks <- dplyr::filter(
-    peaks, 
-    chr == chr_id,
-    pos >= start_val,
-    pos <= end_val,
-    pheno %in% analyses$pheno)
-  
-  # Covariates used by pheno_data.
+  # Replace NA covariate calls by FALSE.
   covars <- colnames(covar)
   covars <- covars[!is.na(match(covars, colnames(analyses)))]
   # Replace any NA with FALSE.
   analyses[, covars] <- apply(analyses[, covars], 2, 
                               function(x) ifelse(is.na(x), FALSE, x))
-  # Kludge to get names of covariates that are used by comediators.
-  covars <- apply(analyses[, covars], 2, any)
-  covars <- names(covars)[covars]
+  
+  # Reduce to peaks that match analyses.
+  peaks <- dplyr::filter(peaks, pheno %in% analyses$pheno)
 
   ## Annotation
   annot <- 
@@ -55,6 +47,15 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
         by = "pheno"),
       id = pheno,
       biotype = pheno_type)
+  
+  # Reduce to phenotypes with peaks in region.
+  annot <- dplyr::filter(
+    annot, 
+    chr == chr_id,
+    pos >= start_val,
+    pos <= end_val)
+  
+  # This limits to traits that reside locally. Only make sense for expression data.
   annot$local <- FALSE
   
   # Identify markers for drivers of mediators.
@@ -65,15 +66,19 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   m <- match(colnames(pheno_data), peaks$pheno)
   if(all(is.na(m)))
     return(NULL)
-
+  
+  # Kludge to get names of covariates that are used by comediators.
+  covars <- apply(analyses[, covars], 2, any)
+  covars <- names(covars)[covars]
+  
   # Transform data if needed.
   pheno_data <- qtl2pattern::pheno_trans(
-    pheno_data[, !is.na(m)], analyses$pheno, analyses$transf,
+    pheno_data[, !is.na(m)],
+    analyses$pheno, analyses$transf,
     analyses$offset, analyses$winsorize)
   
   list(pheno = pheno_data,
        annot = annot, 
-       peaks = peaks,
        covar = covar)
 }
 
