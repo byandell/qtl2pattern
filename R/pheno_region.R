@@ -61,12 +61,20 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   if(drivers == 2)
     annot$driver <- qtl2::find_marker(map, chr_id, annot$pos)
   
+  # Make sure some pheno_data have peaks.
   m <- match(colnames(pheno_data), peaks$pheno)
   if(all(is.na(m)))
     return(NULL)
+
+  # Transform data if needed.
+  pheno_data <- qtl2pattern::pheno_trans(
+    pheno_data[, !is.na(m)], analyses$pheno, analyses$transf,
+    analyses$offset, analyses$winsorize)
   
-  list(pheno = pheno_data[, !is.na(m)],
-       annot = annot, peaks = peaks, covar = covar)
+  list(pheno = pheno_data,
+       annot = annot, 
+       peaks = peaks,
+       covar = covar)
 }
 
 #' Create list with expression phenotypes in region
