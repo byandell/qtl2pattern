@@ -24,6 +24,16 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
     pos >= start_val,
     pos <= end_val,
     pheno %in% analyses$pheno)
+  
+  # Covariates used by pheno_data.
+  covars <- colnames(covar)
+  covars <- covars[!is.na(match(covars, colnames(analyses_tbl)))]
+  # Replace any NA with FALSE.
+  analyses[, covars] <- apply(analyses[, covars], 2, 
+                              function(x) ifelse(is.na(x), FALSE, x))
+  # Kludge to get names of covariates that are used by comediators.
+  covars <- apply(analyses_tbl[, covars], 2, any)
+  covars <- names(covars)[covars]
 
   ## Annotation
   annot <- 
