@@ -27,7 +27,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   
   # Covariates used by pheno_data.
   covars <- colnames(covar)
-  covars <- covars[!is.na(match(covars, colnames(analyses_tbl)))]
+  covars <- covars[!is.na(match(covars, colnames(analyses)))]
   # Replace any NA with FALSE.
   analyses[, covars] <- apply(analyses[, covars], 2, 
                               function(x) ifelse(is.na(x), FALSE, x))
