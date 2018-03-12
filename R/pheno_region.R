@@ -63,17 +63,18 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
     annot$driver <- qtl2::find_marker(map, chr_id, annot$pos)
   
   # Make sure some pheno_data have peaks.
-  m <- match(colnames(pheno_data), peaks$pheno)
-  if(all(is.na(m)))
+  m <- match(annot$id, colnames(pheno_data))
+  if(any(is.na(m)))
     return(NULL)
   
   # Kludge to get names of covariates that are used by comediators.
   covars <- apply(analyses[, covars], 2, any)
   covars <- names(covars)[covars]
+  covar <- covar[,covars, drop = FALSE]
   
   # Transform data if needed.
   pheno_data <- qtl2pattern::pheno_trans(
-    pheno_data[, !is.na(m)],
+    pheno_data[, m, drop = FALSE],
     analyses$pheno, analyses$transf,
     analyses$offset, analyses$winsorize)
   
