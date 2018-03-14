@@ -8,6 +8,7 @@
 #' @param local read only mRNA values local to region if \code{TRUE};
 #' otherwise include distal mRNA values that map to region
 #' @param qtl read only mRNA values with QTL peak in region if \code{TRUE}
+#' @param fast type of fast database used (\code{feather} or \code{fst})
 #'
 #' @return list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
 #'
@@ -22,7 +23,7 @@
 #' @importFrom feather read_feather
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
-                      local = TRUE, qtl = FALSE) {
+                      local = TRUE, qtl = FALSE, fast = c("feather","fst")) {
 
   if(is.null(chr_id) || is.null(start_val) || is.null(end_val))
     stop("must supply chr_id, start_val and end_val")
@@ -90,12 +91,8 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
     return(NULL)
 
   # Get expression data.
-  expr.mrna <- as.data.frame(feather::read_feather(file.path(datapath, "RNAseq", "expr.mrna.feather"),
-                                     c("Mouse.ID", expr_id)))
-  if(nrow(expr.mrna) == 0)
-    return(NULL)
+  fast <- match.arg(fast)
+  expr.mrna <- read_fast(datapath, expr_id, fast = fast)
 
-  rownames(expr.mrna) <- expr.mrna$Mouse.ID
-
-  list(expr = expr.mrna[,-1, drop = FALSE], annot = annot.mrna, peaks = peaks.mrna)
+  list(expr = expr.mrna, annot = annot.mrna, peaks = peaks.mrna)
 }
