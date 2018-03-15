@@ -18,7 +18,6 @@ read_fast <- function(datapath, columns = NULL, rownames = TRUE, fast = c("feath
 
   # Set up fast specific stuff.
   fast <- match.arg(fast)
-  datapath <- file.path(datapath, "RNAseq", paste0("expr.mrna.", fast))
   readfn <- switch(fast,
                    feather = feather::read_feather,
                    fst     = fst::read_fst)
@@ -30,9 +29,10 @@ read_fast <- function(datapath, columns = NULL, rownames = TRUE, fast = c("feath
   
   if(rownames) {
     rownames <- as.integer(rownames)
-    # Row names (IDs) must be in first column of database
-    rowId <- unlist(readfn(datapath, 1))
-    if(length(rowId) == nrow(out))
+    # Row names (IDs) must be in first column of database (or use rownames as integer)
+    # Row names not applied if any duplication.
+    rowId <- unlist(readfn(datapath, rownames))
+    if(length(rowId) == nrow(out) & !any(duplicated(rowId)))
       rownames(out) <- rowId
   }
   out

@@ -23,13 +23,20 @@
 #' @importFrom feather read_feather
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
-                      local = TRUE, qtl = FALSE, fast = c("feather","fst")) {
+                      local = TRUE, qtl = FALSE, 
+                      dirname = "RNAseq", fast = c("feather","fst")) {
 
   if(is.null(chr_id) || is.null(start_val) || is.null(end_val))
     stop("must supply chr_id, start_val and end_val")
+  
+  fast <- match.arg(fast)
+  readfn <- switch(fast,
+                   feather = feather::read_feather,
+                   fst     = fst::read_fst)
+  
 
   # Identify mRNA located in region or with QTL peak in region.
-  peaks.mrna <- feather::read_feather(file.path(datapath, "RNAseq", "peaks.mrna.feather"))
+  peaks.mrna <- readfn(file.path(datapath, dirname, paste0("peaks.mrna.", fast)))
   if(local) {
     peaks.mrna <- dplyr::filter(peaks.mrna,
                                 gene_chr == chr_id,
@@ -50,7 +57,7 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
   annot.mrna <-
     dplyr::rename(
       dplyr::filter(
-        readRDS(file.path(datapath, "RNAseq", "annot.mrna.rds")),
+        readRDS(file.path(datapath, dirname, "annot.mrna.rds")),
         id %in% mrna_ids),
       pos = middle_point)
 
@@ -91,8 +98,8 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
     return(NULL)
 
   # Get expression data.
-  fast <- match.arg(fast)
-  expr.mrna <- read_fast(datapath, expr_id, fast = fast)
+  expr.mrna <- read_fast(file.path(datapath, dirname, paste0("expr.mrna.", fast)),
+                         expr_id, rownames = TRUE, fast = fast)
 
   list(expr = expr.mrna, annot = annot.mrna, peaks = peaks.mrna)
 }

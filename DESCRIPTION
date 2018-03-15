@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern support for R/qtl2
-Version: 0.5.26
-Date: 2018-03-12
+Version: 0.6.1
+Date: 2018-03-15
 Author: Brian S. Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
 Description: Routines in R/qtl2 to study allele patterns.
@@ -13,9 +13,15 @@ Imports:
     dplyr,
     tidyr,
     stringr,
+    ggplot2,
+    assertthat,
     RColorBrewer,
-    qtl2
-Suggests: knitr, rmarkdown
+    qtl2,
+    qtl2feather,
+    feather,
+    fst
+Suggests:
+    knitr, rmarkdown
 VignetteBuilder: knitr
 License: GPL-3
 URL: http://github.com/byandell/qtl2pattern
