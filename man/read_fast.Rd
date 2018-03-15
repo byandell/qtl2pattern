@@ -18,7 +18,8 @@ read_fast(datapath, columns = NULL, rownames = TRUE, fast = c("feather",
 }
 \description{
 Read fast database with format \code{feather} or \code{fst}. Use first column
-of database as rownames if desired.
+of database as rownames if desired. R/qtl2 routines assume data frames have
+rownames to use to align individuals.
 }
 \seealso{
 \code{\link[fst]{read_fst}}, \code{\link[feather]{read_feather}}

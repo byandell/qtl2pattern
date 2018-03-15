@@ -5,7 +5,8 @@
 \title{Read mrna expression object from file}
 \usage{
 read_mrna(chr_id = NULL, start_val = NULL, end_val = NULL, datapath,
-  local = TRUE, qtl = FALSE, fast = c("feather", "fst"))
+  local = TRUE, qtl = FALSE, dirname = "RNAseq", fast = c("feather",
+  "fst"))
 }
 \arguments{
 \item{chr_id}{vector of chromosome identifiers}
