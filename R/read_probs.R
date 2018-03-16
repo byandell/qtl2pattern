@@ -18,10 +18,12 @@
 #'
 #' @export
 #' @importFrom qtl2feather subset_feather_genoprob
+#' @importFrom qtl2fst subset_fst_genoprob
 #' @importFrom stringr str_replace
 #'
 read_probs <- function(chr=NULL, start_val=NULL, end_val=NULL, datapath,
-                       allele = TRUE, method = c("feather","calc")) {
+                       allele = TRUE, method = c("feather","fst","calc"), 
+                       dirname = "genoprob") {
 
   method <- match.arg(method)
 
@@ -37,7 +39,9 @@ read_probs <- function(chr=NULL, start_val=NULL, end_val=NULL, datapath,
   map <- map[chr]
 
   probs <- switch(method,
-                  feather = read_probs_feather(chr, datapath, allele),
+                  fst     =,
+                  feather = read_probs_fast(chr, datapath, allele, 
+                                               fast = method, dirname = dirname),
                   calc    = read_probs_calc   (chr, datapath, allele))
 
   # Map may have extra markers. Trim.

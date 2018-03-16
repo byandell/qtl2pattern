@@ -8,7 +8,7 @@
 #' @param local read only mRNA values local to region if \code{TRUE};
 #' otherwise include distal mRNA values that map to region
 #' @param qtl read only mRNA values with QTL peak in region if \code{TRUE}
-#' @param fast type of fast database used (\code{feather} or \code{fst})
+#' @param fast type of fast database used ( \code{fst} or \code{feather})
 #'
 #' @return list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
 #'
@@ -24,7 +24,7 @@
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                       local = TRUE, qtl = FALSE, 
-                      dirname = "RNAseq", fast = c("feather","fst")) {
+                      fast = c("fst","feather"), dirname = "RNAseq") {
 
   if(is.null(chr_id) || is.null(start_val) || is.null(end_val))
     stop("must supply chr_id, start_val and end_val")
@@ -33,7 +33,6 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
   readfn <- switch(fast,
                    feather = feather::read_feather,
                    fst     = fst::read_fst)
-  
 
   # Identify mRNA located in region or with QTL peak in region.
   peaks.mrna <- readfn(file.path(datapath, dirname, paste0("peaks.mrna.", fast)))
