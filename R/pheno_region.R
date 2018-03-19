@@ -26,6 +26,11 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   
   # Reduce to peaks that match analyses.
   peaks <- dplyr::filter(peaks, pheno %in% analyses$pheno)
+  
+  # Match below by pheno and other optional columns.
+  bycols <- c("pheno", "longname", "output", "pheno_group", "pheno_type")
+  m <- match(bycols, names(peaks))
+  bycols <- bycols[!is.na(m)]
 
   ## Annotation
   annot <- 
@@ -34,7 +39,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
         dplyr::left_join(
           peaks, 
           analyses, 
-          by = c("pheno", "longname", "output", "pheno_group", "pheno_type")),
+          by = bycols),
         dplyr::ungroup(
           dplyr::summarize(
             dplyr::group_by(

@@ -9,6 +9,7 @@
 #' otherwise include distal mRNA values that map to region
 #' @param qtl read only mRNA values with QTL peak in region if \code{TRUE}
 #' @param fast type of fast database used ( \code{fst} or \code{feather})
+#' @param mrnadir name of directory with mRNA data
 #'
 #' @return list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
 #'
@@ -24,7 +25,7 @@
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                       local = TRUE, qtl = FALSE, 
-                      fast = c("fst","feather"), dirname = "RNAseq") {
+                      fast = c("fst","feather"), mrnadir = "RNAseq") {
 
   if(is.null(chr_id) || is.null(start_val) || is.null(end_val))
     stop("must supply chr_id, start_val and end_val")
@@ -35,7 +36,7 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                    fst     = fst::read_fst)
 
   # Identify mRNA located in region or with QTL peak in region.
-  peaks.mrna <- readfn(file.path(datapath, dirname, paste0("peaks.mrna.", fast)))
+  peaks.mrna <- readfn(file.path(datapath, mrnadir, paste0("peaks.mrna.", fast)))
   if(local) {
     peaks.mrna <- dplyr::filter(peaks.mrna,
                                 gene_chr == chr_id,
@@ -56,7 +57,7 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
   annot.mrna <-
     dplyr::rename(
       dplyr::filter(
-        readRDS(file.path(datapath, dirname, "annot.mrna.rds")),
+        readRDS(file.path(datapath, mrnadir, "annot.mrna.rds")),
         id %in% mrna_ids),
       pos = middle_point)
 
@@ -97,7 +98,7 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
     return(NULL)
 
   # Get expression data.
-  expr.mrna <- read_fast(file.path(datapath, dirname, paste0("expr.mrna.", fast)),
+  expr.mrna <- read_fast(file.path(datapath, mrnadir, paste0("expr.mrna.", fast)),
                          expr_id, rownames = TRUE, fast = fast)
 
   list(expr = expr.mrna, annot = annot.mrna, peaks = peaks.mrna)

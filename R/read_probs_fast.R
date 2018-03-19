@@ -1,20 +1,29 @@
 # Read genotype probability object from file
 read_probs_fast <- function(chr, datapath, allele = TRUE,
-                            fast = c("fst","feather"),
-                            dirname = "genoprob") {
+                            probdir = "genoprob") {
 
   ## Temporary kludge while directory names are changed.
-  genoprob_dir <- file.path(datapath, dirname)
+  genoprob_dir <- file.path(datapath, probdir)
   if(!dir.exists(genoprob_dir)) {
-    dirname <- "genoprob"
-    genoprob_dir <- file.path(datapath, dirname)
+    probdir <- "genoprob"
+    genoprob_dir <- file.path(datapath, probdir)
+    if(!dir.exists(genoprob_dir))
+      return(NULL)
   }
   
-  fast <- match.arg(fast)
-  
+  allele_rds <- ifelse(allele, "_aprobs.rds", "_probs.rds")
+  if(file.exists(probfile <- 
+    file.path(genoprob_dir, paste0("fst", allele_rds)))) {
+    fast <- "fst"
+  } else {
+    if(!file.exists(probfile <- 
+                    file.path(genoprob_dir, paste0("feather", allele_rds))))
+      return(NULL)
+    fast <- "feather"
+  }
+
   ## Read in feather_genotype object (small).
-  probs <- readRDS(file.path(genoprob_dir,
-                             paste0(fast, ifelse(allele, "_aprobs.rds", "_probs.rds"))))
+  probs <- readRDS(probfile)
 
   ## Modify feather directory to match current datapath.
   pr <- unclass(probs)
@@ -22,8 +31,11 @@ read_probs_fast <- function(chr, datapath, allele = TRUE,
   probs <- modify_object(probs, pr)
   
   # subset to desired chromosome(s)
-  subsetfn <- switch(fast,
-                     feather = qtl2feather::subset_feather_genoprob,
-                     fst     =     qtl2fst::subset_fst_genoprob)
-  subsetfn(probs, chr = chr)
+  subset_probs_fast(probs, chr = chr)
+}
+subset_probs_fast <- function(probs, chr=NULL, mar=NULL) {
+  subsetfn <- switch(class(probs)[1],
+                     feather_genoprob = qtl2feather::subset_feather_genoprob,
+                     fst_genoprob     =     qtl2fst::subset_fst_genoprob)
+  subsetfn(probs, chr = chr, mar = mar)
 }

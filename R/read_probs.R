@@ -7,6 +7,7 @@
 #' @param datapath name of folder with Derived Data
 #' @param allele read haplotype allele probabilities (if \code{TRUE}) or diplotype allele-pair probabilities (if \code{FALSE})
 #' @param method method of genoprob storage
+#' @param probdir genotype probability directory (default \code{"genoprob"})
 #'
 #' @return list with \code{probs} = large object of class \code{\link[qtl2geno]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
 #'
@@ -22,10 +23,11 @@
 #' @importFrom stringr str_replace
 #'
 read_probs <- function(chr=NULL, start_val=NULL, end_val=NULL, datapath,
-                       allele = TRUE, method = c("feather","fst","calc"), 
-                       dirname = "genoprob") {
+                       allele = TRUE, method, 
+                       probdir = "genoprob") {
 
-  method <- match.arg(method)
+  if(missing(method) || method != "calc")
+    method <- "fast"
 
   map <- readRDS(file.path(datapath, "pmap.rds"))
 
@@ -39,10 +41,8 @@ read_probs <- function(chr=NULL, start_val=NULL, end_val=NULL, datapath,
   map <- map[chr]
 
   probs <- switch(method,
-                  fst     =,
-                  feather = read_probs_fast(chr, datapath, allele, 
-                                               fast = method, dirname = dirname),
-                  calc    = read_probs_calc   (chr, datapath, allele))
+                  fast = read_probs_fast(chr, datapath, allele, probdir),
+                  calc = read_probs_calc(chr, datapath, allele, probdir))
 
   # Map may have extra markers. Trim.
   dnames <- dimnames(probs)$mar[chr]
@@ -67,8 +67,8 @@ read_probs <- function(chr=NULL, start_val=NULL, end_val=NULL, datapath,
                pr[[chr]] <- pr[[chr]][,,wh, drop = FALSE]
                probs <- modify_object(probs, pr)
              },
-             feather = {
-               probs <- qtl2feather::subset_feather_genoprob(probs, mar = wh)
+             fast = {
+               probs <- subset_probs_fast(probs, mar = wh)
              })
     }
   }

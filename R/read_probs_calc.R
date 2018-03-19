@@ -1,5 +1,5 @@
 # Read genotype probability object from file
-read_probs_calc <- function(chr, datapath, allele = TRUE) {
+read_probs_calc <- function(chr, datapath, allele = TRUE, probdir = "genoprob") {
 
   if(!allele & length(chr) > 1)
     stop("must supply at most one chr")
@@ -7,7 +7,7 @@ read_probs_calc <- function(chr, datapath, allele = TRUE) {
   ## Read in probs for selected chromosomes and cbind.
   prefix <- ifelse(allele, "aprobs_", "probs_")
   probs <- convert_probs(
-    readRDS(file.path(datapath, "calc",
+    readRDS(file.path(datapath, probdir,
                       paste0(prefix, chr[1], ".rds"))))
 
   if(!allele) {
@@ -25,7 +25,7 @@ read_probs_calc <- function(chr, datapath, allele = TRUE) {
     for(chri in chr[-1]) {
       probs <- cbind(probs,
                      convert_probs(
-                       readRDS(file.path(datapath, "calc",
+                       readRDS(file.path(datapath, probdir,
                                          paste0(prefix, chri, ".rds")))))
     }
   }

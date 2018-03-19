@@ -5,8 +5,7 @@
 \title{Read genotype probability object from file}
 \usage{
 read_probs(chr = NULL, start_val = NULL, end_val = NULL, datapath,
-  allele = TRUE, method = c("feather", "fst", "calc"),
-  dirname = "genoprob")
+  allele = TRUE, method, probdir = "genoprob")
 }
 \arguments{
 \item{chr}{vector of chromosome identifiers}
@@ -18,6 +17,8 @@ read_probs(chr = NULL, start_val = NULL, end_val = NULL, datapath,
 \item{allele}{read haplotype allele probabilities (if \code{TRUE}) or diplotype allele-pair probabilities (if \code{FALSE})}
 
 \item{method}{method of genoprob storage}
+
+\item{probdir}{genotype probability directory (default \code{"genoprob"})}
 }
 \value{
 list with \code{probs} = large object of class \code{\link[qtl2geno]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
