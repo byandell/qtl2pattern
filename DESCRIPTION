@@ -1,7 +1,7 @@
 Package: qtl2pattern
 Type: Package
-Title: Pattern support for R/qtl2
-Version: 0.6.3
+Title: Pattern Support for R/qtl2
+Version: 0.6.4
 Date: 2018-03-19
 Author: Brian S. Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>

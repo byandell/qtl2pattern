@@ -78,7 +78,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   covar <- covar[,covars, drop = FALSE]
   
   # Transform data if needed.
-  pheno_data <- qtl2pattern::pheno_trans(
+  pheno_data <- pheno_trans(
     pheno_data[, m, drop = FALSE],
     analyses$pheno, analyses$transf,
     analyses$offset, analyses$winsorize)

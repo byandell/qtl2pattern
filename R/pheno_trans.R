@@ -36,6 +36,8 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
   if(!is.null(transform)) {
     if(length(transform) == 1)
       transform <- rep_len(transform, length(phename))
+    else
+      transform <- transform[mphe]
     assertthat::assert_that(length(phename) == length(transform))
     
     ## Transform phenotype.
@@ -43,6 +45,8 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
     if(any(not.id)) {
       if(length(offset == 1))
         offset <- rep_len(offset, length(phename))
+      else
+        offset <- offset[mphe]
       assertthat::assert_that(length(phename) == length(offset))
       for(i in which(not.id)) {
         tmp <- phe[, phename[i]] + offset[i]
@@ -59,6 +63,8 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
       winsor <- ifelse(winsor, 0.02, 0)
     if(length(winsor == 1))
       winsor <- rep_len(winsor, length(phename))
+    else
+      winsor <- winsor[mphe]
     assertthat::assert_that(length(phename) == length(winsor))
     wh <- which(winsor > 0)
     if(length(wh)) {
