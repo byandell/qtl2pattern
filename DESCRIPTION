@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern Support for R/qtl2
-Version: 0.6.4
-Date: 2018-03-19
+Version: 0.6.5
+Date: 2018-03-20
 Author: Brian S. Yandell <byandell@wisc.edu>
 Maintainer: Brian S Yandell <byandell@wisc.edu>
 Description: Routines in R/qtl2 to study allele patterns.

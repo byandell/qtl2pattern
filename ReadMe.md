@@ -22,7 +22,7 @@ package dependencies: [yaml](https://cran.r-project.org/package=yaml),
 and [RcppEigen](https://github.com/RcppCore/RcppEigen).
 (Additional, secondary dependencies will also be installed)
 
-    install.packages(c("devtools", "yaml", "jsonlite", "data.table", "RcppEigen"))
+    install.packages(c("devtools", "yaml", "jsonlite", "data.table", "RcppEigen", "feather", "fst"))
 
 You will also need the following packages for qtl2ggplot:
 
@@ -31,7 +31,7 @@ You will also need the following packages for qtl2ggplot:
 Then, install R/qtl2 using `devtools::install_github()`.
 
     library(devtools)
-    install_github("rqtl/qtl2")
+    install_github(c("rqtl/qtl2", "rqtl/qtl2fst"))
 
 Once you have installed these, install qtl2pattern as
 
