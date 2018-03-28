@@ -1,6 +1,6 @@
 #' Pull mediator and SDP from mediate object
 #' 
-#' @param mediate_obj object from \code{\link{mediate1_test}}
+#' @param mediate_obj object from \code{\link[CausalMST]{mediation_test}}
 #' @param med_ls object from \code{link{pheno_region}}
 #' @param patterns data frame \code{summary} of \code{\link{tob_snps_all}} object
 #' @param med_name name of mediator to pull
