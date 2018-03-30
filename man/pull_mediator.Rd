@@ -7,7 +7,7 @@
 pull_mediator(mediate_obj, med_ls, patterns, med_name = med_names[1])
 }
 \arguments{
-\item{mediate_obj}{object from \code{\link{mediate1_test}}}
+\item{mediate_obj}{object from \code{\link[CausalMST]{mediation_test}}}
 
 \item{med_ls}{object from \code{link{pheno_region}}}
 
