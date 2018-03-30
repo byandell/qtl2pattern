@@ -70,9 +70,9 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
             dplyr::summarize(
               dplyr::group_by(peaks.mrna, gene_id),
               qtl_ct = n(),
-              QTL = paste0(qtl_chr, "@",
-                           round(qtl_pos), ":",
-                           round(lod), collapse = ","),
+              info = paste0(qtl_chr, "@",
+                            round(qtl_pos), ":",
+                            round(lod), collapse = ","),
               qtl_pos = ifelse(any(qtl_chr == chr_id &
                                    qtl_pos >= start_val &
                                    qtl_pos <= end_val),
