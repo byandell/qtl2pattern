@@ -17,7 +17,7 @@ pull_mediator <- function(mediate_obj, med_ls, patterns,
   id <- med_ls[[2]]$id[med_ls[[2]][[medID]] == med_name]
   
   sdps <- unique(dplyr::filter(patterns, pheno == pheno_name)$sdp)
-  pattern <- qtl2pattern::sdp_to_pattern(sdps, LETTERS[1:8])
+  pattern <- sdp_to_pattern(sdps, LETTERS[1:8])
   
   list(sdp = sdps[qtl2pattern::sdp_to_pattern(sdps, LETTERS[1:8]) == pattern][1],
        mediator = med_ls[[1]][, id, drop = FALSE])

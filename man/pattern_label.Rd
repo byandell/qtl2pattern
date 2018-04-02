@@ -2,16 +2,25 @@
 % Please edit documentation in R/pattern_label.R
 \name{pattern_label}
 \alias{pattern_label}
+\alias{pattern_sdp}
 \title{Turn genotype probabilities into labels}
 \usage{
-pattern_label(genos, sdp = NULL, allele = TRUE)
+pattern_label(genos, allele = TRUE)
+
+pattern_sdp(label, sdp = NULL, geno_names = sort(unique(label)))
 }
 \arguments{
-\item{sdp}{SNP distribution pattern for plot colors}
+\item{genos}{matrix of genotype probabilities at locus}
 
 \item{allele}{Driver has alleles if \code{TRUE}, otherwise allele pairs.}
 
-\item{genomat}{matrix of genotype probabilities at locus}
+\item{label}{character string from \code{\link{pattern_label}}}
+
+\item{sdp}{SNP distribution pattern for plot colors}
+
+\item{geno_names}{unique genotype names (alleles or allele pairs)}
+
+\item{sdp}{SNP distribution pattern for plot colors}
 }
 \description{
 Turn genotype probabilities into labels
