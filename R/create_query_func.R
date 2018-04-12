@@ -64,11 +64,11 @@ create_mrna_query_func <- function(dbfile,
              mrnadir = mrnadir_val) 
       NULL
   } else {
-    function(chr, start, stop,
+    function(chr = NULL, start = NULL, stop = NULL,
              local = TRUE,
              qtl = FALSE,
-             fast = fast,
-             mrnadir = mrnadir)
+             fast = fast_val,
+             mrnadir = mrnadir_val)
       read_mrna(chr, start, stop, dbfile, local, qtl, fast, mrnadir)
   }
 }
