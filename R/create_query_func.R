@@ -57,7 +57,7 @@ create_mrna_query_func <- function(dbfile,
                                    mrnadir_val = "RNAseq") {
   if(missing(dbfile) || is.null(dbfile)) {
     # No mRNA data.
-    function(chr, start, stop,
+    function(chr = NULL, start = NULL, stop = NULL,
              local = TRUE,
              qtl = FALSE,
              fast = fast_val,
