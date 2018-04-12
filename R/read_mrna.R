@@ -11,6 +11,10 @@
 #' @param fast type of fast database used ( \code{fst} or \code{feather})
 #' @param mrnadir name of directory with mRNA data
 #'
+#' @details Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
+#'     The `expr` and `peaks` elements are stored in either a `feather` or `fst` database,
+#'     while `peaks` is an `RDS` database. 
+#'     
 #' @return list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
@@ -27,8 +31,12 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                       local = TRUE, qtl = FALSE, 
                       fast = c("fst","feather"), mrnadir = "RNAseq") {
 
-  if(is.null(chr_id) || is.null(start_val) || is.null(end_val))
-    stop("must supply chr_id, start_val and end_val")
+  if(is.null(chr_id))
+    stop("must supply chr_id")
+  if(is.null(start_val))
+    start_val <- 0
+  if(is.null(end_val))
+    end_val <- Inf
   
   fast <- match.arg(fast)
   readfn <- switch(fast,

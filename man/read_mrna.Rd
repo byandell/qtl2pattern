@@ -30,6 +30,11 @@ list with \code{expr} = matrix of expression mRNA values in region and \code{ann
 \description{
 Uses feather to read mrna expression object and associated annotations.
 }
+\details{
+Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
+    The `expr` and `peaks` elements are stored in either a `feather` or `fst` database,
+    while `peaks` is an `RDS` database.
+}
 \examples{
 \dontrun{read_probs(chr, datapath)}
 
