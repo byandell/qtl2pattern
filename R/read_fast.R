@@ -29,6 +29,10 @@ read_fast <- function(datapath, columns = NULL, rownames = TRUE, fast = c("feath
   
   if(rownames) {
     rownames <- as.integer(rownames)
+    if(fast== "fst") {
+      # read_fst requires column name, not index.
+      rownames <- colnames(readfn(datapath, from = 1, to = 1))[1]
+    }
     # Row names (IDs) must be in first column of database (or use rownames as integer)
     # Row names not applied if any duplication.
     rowId <- unlist(readfn(datapath, rownames))
