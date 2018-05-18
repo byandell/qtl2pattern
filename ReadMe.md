@@ -22,7 +22,7 @@ package dependencies: [yaml](https://cran.r-project.org/package=yaml),
 and [RcppEigen](https://github.com/RcppCore/RcppEigen).
 (Additional, secondary dependencies will also be installed)
 
-    install.packages(c("devtools", "yaml", "jsonlite", "data.table", "RcppEigen", "feather", "fst"))
+    install.packages(c("devtools","yaml","jsonlite","data.table","RcppEigen","fst"))
 
 You will also need the following packages for qtl2ggplot:
 

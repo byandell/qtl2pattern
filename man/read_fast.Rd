@@ -4,8 +4,7 @@
 \alias{read_fast}
 \title{Read fast database with possible rownames}
 \usage{
-read_fast(datapath, columns = NULL, rownames = TRUE, fast = c("feather",
-  "fst"))
+read_fast(datapath, columns = NULL, rownames = TRUE)
 }
 \arguments{
 \item{datapath}{character string path to database}
@@ -13,14 +12,12 @@ read_fast(datapath, columns = NULL, rownames = TRUE, fast = c("feather",
 \item{columns}{names or indexes for columns to be extracted}
 
 \item{rownames}{use first column of rownames if \code{TRUE} (can supply column number)}
-
-\item{fast}{one of \code{"feather"} or \code{"fst"}}
 }
 \description{
-Read fast database with format \code{feather} or \code{fst}. Use first column
-of database as rownames if desired. R/qtl2 routines assume data frames have
+Read fast database with format \code{fst}. Use first column
+of database (must be named `ind`) as rownames if desired. R/qtl2 routines assume data frames have
 rownames to use to align individuals.
 }
 \seealso{
-\code{\link[fst]{read_fst}}, \code{\link[feather]{read_feather}}
+\code{\link[fst]{read_fst}}
 }

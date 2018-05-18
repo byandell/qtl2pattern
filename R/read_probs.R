@@ -18,7 +18,6 @@
 #' \dontrun{read_probs(chr, datapath)}
 #'
 #' @export
-#' @importFrom qtl2feather subset_feather_genoprob
 #' @importFrom qtl2fst subset_fst_genoprob
 #' @importFrom stringr str_replace
 #'

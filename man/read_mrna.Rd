@@ -5,8 +5,7 @@
 \title{Read mrna expression object from file}
 \usage{
 read_mrna(chr_id = NULL, start_val = NULL, end_val = NULL, datapath,
-  local = TRUE, qtl = FALSE, fast = c("fst", "feather"),
-  mrnadir = "RNAseq")
+  local = TRUE, qtl = FALSE, mrnadir = "RNAseq")
 }
 \arguments{
 \item{chr_id}{vector of chromosome identifiers}
@@ -20,19 +19,17 @@ otherwise include distal mRNA values that map to region}
 
 \item{qtl}{read only mRNA values with QTL peak in region if \code{TRUE}}
 
-\item{fast}{type of fast database used ( \code{fst} or \code{feather})}
-
 \item{mrnadir}{name of directory with mRNA data}
 }
 \value{
 list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
 }
 \description{
-Uses feather to read mrna expression object and associated annotations.
+Uses fst to read mrna expression object and associated annotations.
 }
 \details{
 Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
-    The `expr` and `peaks` elements are stored in either a `feather` or `fst` database,
+    The `expr` and `peaks` elements are stored in `fst` database,
     while `peaks` is an `RDS` database.
 }
 \examples{

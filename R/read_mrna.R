@@ -1,6 +1,6 @@
 #' Read mrna expression object from file
 #'
-#' Uses feather to read mrna expression object and associated annotations.
+#' Uses fst to read mrna expression object and associated annotations.
 #'
 #' @param chr_id vector of chromosome identifiers
 #' @param start_val,end_val start and end values in Mbp
@@ -8,11 +8,10 @@
 #' @param local read only mRNA values local to region if \code{TRUE};
 #' otherwise include distal mRNA values that map to region
 #' @param qtl read only mRNA values with QTL peak in region if \code{TRUE}
-#' @param fast type of fast database used ( \code{fst} or \code{feather})
 #' @param mrnadir name of directory with mRNA data
 #'
 #' @details Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
-#'     The `expr` and `peaks` elements are stored in either a `feather` or `fst` database,
+#'     The `expr` and `peaks` elements are stored in `fst` database,
 #'     while `peaks` is an `RDS` database. 
 #'     
 #' @return list with \code{expr} = matrix of expression mRNA values in region and \code{annot} = data frame of annotations for mRNA.
@@ -25,11 +24,11 @@
 #'
 #' @export
 #' @importFrom dplyr filter group_by inner_join mutate rename summarize ungroup
-#' @importFrom feather read_feather
+#' @importFrom fst read_fst
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                       local = TRUE, qtl = FALSE, 
-                      fast = c("fst","feather"), mrnadir = "RNAseq") {
+                      mrnadir = "RNAseq") {
 
   if(is.null(chr_id))
     stop("must supply chr_id")
@@ -38,13 +37,8 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
   if(is.null(end_val))
     end_val <- Inf
   
-  fast <- match.arg(fast)
-  readfn <- switch(fast,
-                   feather = feather::read_feather,
-                   fst     = fst::read_fst)
-
   # Identify mRNA located in region or with QTL peak in region.
-  peaks.mrna <- readfn(file.path(datapath, mrnadir, paste0("peaks.mrna.", fast)))
+  peaks.mrna <- fst::read_fst(file.path(datapath, mrnadir, "peaks.mrna.fst"))
   if(local) {
     peaks.mrna <- dplyr::filter(peaks.mrna,
                                 gene_chr == chr_id,
@@ -106,8 +100,8 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
     return(NULL)
 
   # Get expression data.
-  expr.mrna <- read_fast(file.path(datapath, mrnadir, paste0("expr.mrna.", fast)),
-                         expr_id, rownames = TRUE, fast = fast)
+  expr.mrna <- read_fast(file.path(datapath, mrnadir, "expr.mrna.fst"),
+                         expr_id, rownames = TRUE)
 
   list(expr = expr.mrna, annot = annot.mrna, peaks = peaks.mrna)
 }

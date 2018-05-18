@@ -4,7 +4,7 @@
 #' information and return a list with `probs` object and a `map` object.
 #'
 #' @param dbfile Name of database file
-#' @param method_val either \code{"fast"} or \code{"calc"} for type of genotype probabilities
+#' @param method_val either \code{"fst"} or \code{"calc"} for type of genotype probabilities
 #' @param probdir_val name of probability directory (default \code{"genoprob"})
 #'
 #' @return Function with six arguments, `chr`, `start`,
@@ -21,7 +21,7 @@
 #' @export
 #'
 create_probs_query_func <- function(dbfile,
-                                    method_val = "fast",
+                                    method_val = "fst",
                                     probdir_val = "genoprob") {
   function(chr = NULL, start = NULL, stop = NULL,
            allele = TRUE,
@@ -39,7 +39,6 @@ create_probs_query_func <- function(dbfile,
 #' and return a list with `probs` object and a `map` object.
 #'
 #' @param dbfile Name of database file
-#' @param fast_val either \code{"fst"} or \code{"feather"} for type of mRNA database
 #' @param mrnadir_val name of mRNA data directory (default \code{"RNAseq"})
 #'
 #' @return Function with seven arguments, `chr`, `start`,
@@ -53,22 +52,19 @@ create_probs_query_func <- function(dbfile,
 #'
 #' @export
 create_mrna_query_func <- function(dbfile,
-                                   fast_val = "feather",
                                    mrnadir_val = "RNAseq") {
   if(missing(dbfile) || is.null(dbfile)) {
     # No mRNA data.
     function(chr = NULL, start = NULL, stop = NULL,
              local = TRUE,
              qtl = FALSE,
-             fast = fast_val,
              mrnadir = mrnadir_val) 
       NULL
   } else {
     function(chr = NULL, start = NULL, stop = NULL,
              local = TRUE,
              qtl = FALSE,
-             fast = fast_val,
              mrnadir = mrnadir_val)
-      read_mrna(chr, start, stop, dbfile, local, qtl, fast, mrnadir)
+      read_mrna(chr, start, stop, dbfile, local, qtl, mrnadir)
   }
 }

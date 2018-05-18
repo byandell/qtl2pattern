@@ -4,13 +4,13 @@
 \alias{create_probs_query_func}
 \title{Create a function to query genotype probabilities}
 \usage{
-create_probs_query_func(dbfile, method_val = "fast",
+create_probs_query_func(dbfile, method_val = "fst",
   probdir_val = "genoprob")
 }
 \arguments{
 \item{dbfile}{Name of database file}
 
-\item{method_val}{either \code{"fast"} or \code{"calc"} for type of genotype probabilities}
+\item{method_val}{either \code{"fst"} or \code{"calc"} for type of genotype probabilities}
 
 \item{probdir_val}{name of probability directory (default \code{"genoprob"})}
 }

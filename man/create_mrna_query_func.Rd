@@ -4,12 +4,10 @@
 \alias{create_mrna_query_func}
 \title{Create a function to query mRNA data}
 \usage{
-create_mrna_query_func(dbfile, fast_val = "feather", mrnadir_val = "RNAseq")
+create_mrna_query_func(dbfile, mrnadir_val = "RNAseq")
 }
 \arguments{
 \item{dbfile}{Name of database file}
-
-\item{fast_val}{either \code{"fst"} or \code{"feather"} for type of mRNA database}
 
 \item{mrnadir_val}{name of mRNA data directory (default \code{"RNAseq"})}
 }
