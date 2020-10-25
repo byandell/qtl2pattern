@@ -5,8 +5,15 @@
 \alias{autoplot.listof_scan1coef}
 \title{Plot of object of class listof_scan1coeff}
 \usage{
-ggplot_listof_scan1coef(x, map, columns = NULL, col = NULL,
-  scan1_output = NULL, facet = "pattern", ...)
+ggplot_listof_scan1coef(
+  x,
+  map,
+  columns = NULL,
+  col = NULL,
+  scan1_output = NULL,
+  facet = "pattern",
+  ...
+)
 
 \method{autoplot}{listof_scan1coef}(x, ...)
 }

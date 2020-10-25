@@ -112,7 +112,7 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #' @method summary gene_exon
 #' @rdname gene_exon
 #' @export
-#' @importFrom dplyr arrange desc distinct filter group_by mutate select summarize ungroup
+#' @importFrom dplyr arrange desc distinct filter group_by mutate n select summarize ungroup
 summary.gene_exon <- function(gene_exon, gene_name=NULL,
                               top_snps_tbl = NULL,
                               extra = 0.005) {
@@ -135,7 +135,7 @@ summary.gene_exon <- function(gene_exon, gene_name=NULL,
             dplyr::filter(gene_exon, type != "gene"),
             start, stop, strand, .keep_all=TRUE),
           gene),
-        exons = n(),
+        exons = dplyr::n(),
         min.len = min(stop-start),
         max.len = max(stop-start),
         sum.len = sum(stop-start),

@@ -5,11 +5,20 @@
 \alias{autoplot.feature_tbl}
 \title{Staggered plot of genes in interval}
 \usage{
-ggplot_feature_tbl(x, rect_col = "grey70", strand_col = c(`-` = "#1b9e77",
-  `+` = "#d95f02"), type_col = c(gene = "black", pseudogene = "#1b9e77", other
-  = "#d95f02"), text_size = 3, xlim = NULL, snp_pos = top_snps_tbl$pos,
-  snp_lod = top_snps_tbl$lod, top_snps_tbl = NULL, snp_col = "grey70",
-  extend = 0.005, ...)
+ggplot_feature_tbl(
+  x,
+  rect_col = "grey70",
+  strand_col = c(`-` = "#1b9e77", `+` = "#d95f02"),
+  type_col = c(gene = "black", pseudogene = "#1b9e77", other = "#d95f02"),
+  text_size = 3,
+  xlim = NULL,
+  snp_pos = top_snps_tbl$pos,
+  snp_lod = top_snps_tbl$lod,
+  top_snps_tbl = NULL,
+  snp_col = "grey70",
+  extend = 0.005,
+  ...
+)
 
 \method{autoplot}{feature_tbl}(x, ...)
 }

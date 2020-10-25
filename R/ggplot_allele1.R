@@ -7,7 +7,6 @@
 #' @param map Genome map (required if \code{scan1_object} present).
 #' @param pos Genome position in Mbp (supercedes \code{scan1_object}).
 #' @param trim If \code{TRUE}, trim extreme alleles.
-#' @param frame If \code{TRUE}, enable frames for \code{\link[plotly]{ggplotly}}.
 #' @param legend.position Legend position (default is \code{"none"}).
 #' @param ... Other parameters ignored.
 #' 
@@ -17,7 +16,6 @@
 #' @importFrom dplyr filter group_by mutate ungroup
 #' 
 ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
-                         frame = FALSE,
                          legend.position = "none", ...) {
   
   if(is.null(pos)) {
@@ -31,36 +29,27 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
       stop("position must be within range of scans")
   }
   
-  if(!frame) {
-    tmpfn <- function(pos, pos_center) {
-      a <- abs(pos - pos_center)
-      a == min(a)
-    }
-    x <- dplyr::ungroup(
-      dplyr::filter(
-        dplyr::group_by(x, source),
-        tmpfn(pos, pos_center)))
+  tmpfn <- function(pos, pos_center) {
+    a <- abs(pos - pos_center)
+    a == min(a)
   }
-  
-  if(trim & !attr(x, "blups"))
+  x <- dplyr::ungroup(
+    dplyr::filter(
+      dplyr::group_by(x, source),
+      tmpfn(pos, pos_center)))
+
+  if(trim & is.null(attr(x, "blups")))
     x <- trim_quant(x)
   else
     x <- dplyr::mutate(x, trim = effect)
   
   x$x <- jitter(rep(1, nrow(x)))
   
-  if(frame) {
-    # Need devtools::install_github(“ropensci/plotly”)
-    p <- ggplot2::ggplot(x,
-           ggplot2::aes(x=x, y=trim, value=effect, col = probe, 
-                        frame = pos, ids = allele, type=source)) + 
-      ggplot2::geom_point(size = 3, shape = 1)
-  } else {
-    p <- ggplot2::ggplot(x,
-           ggplot2::aes(x=x, y=trim, value=effect, col = probe, 
-                        label=allele)) + 
-      ggplot2::geom_text(size=4)
-  }
+  p <- ggplot2::ggplot(x,
+         ggplot2::aes(x=x, y=trim, value=effect, col = probe, 
+                      label = allele)) + 
+    ggplot2::geom_text(size = 4)
+  
   p + ggplot2::facet_grid(~source, scales = "free") +
     ggplot2::ylab("allele means") +
     ggplot2::theme(axis.title.x = ggplot2::element_blank(),

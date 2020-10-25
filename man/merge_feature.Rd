@@ -5,11 +5,16 @@
 \alias{summary.merge_feature}
 \title{Merge SNP lod peaks with SNP feature information}
 \usage{
-merge_feature(top_snps_tbl, snpinfo, out_lmm_snps, drop = 1.5, dropchar = 0,
-  gene_exon = get_gene_exon_snp(top_snps_tbl))
+merge_feature(
+  top_snps_tbl,
+  snpinfo,
+  out_lmm_snps,
+  drop = 1.5,
+  dropchar = 0,
+  gene_exon = get_gene_exon_snp(top_snps_tbl)
+)
 
-\method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"),
-  ...)
+\method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"), ...)
 }
 \arguments{
 \item{top_snps_tbl}{tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2]{top_snps}}}
@@ -37,8 +42,6 @@ table summary
 }
 \description{
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
-
-Summary of merge_feature object
 }
 \examples{
 \dontrun{merge_feature(...)}

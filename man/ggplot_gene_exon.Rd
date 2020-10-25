@@ -5,8 +5,13 @@
 \alias{autoplot.gene_exon}
 \title{Plot of exons for a gene with SNPs}
 \usage{
-ggplot_gene_exon(gene_exon, top_snps_tbl = NULL, plot_now = TRUE,
-  genes = unique(gene_exon$gene), ...)
+ggplot_gene_exon(
+  gene_exon,
+  top_snps_tbl = NULL,
+  plot_now = TRUE,
+  genes = unique(gene_exon$gene),
+  ...
+)
 
 \method{autoplot}{gene_exon}(x, ...)
 }

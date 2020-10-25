@@ -5,8 +5,17 @@
 \alias{summary.scan_pattern}
 \title{Genome scan by pattern set}
 \usage{
-scan_pattern(probs1, phe, K = NULL, covar = NULL, map, patterns,
-  condense_patterns = TRUE, blups = FALSE, do_scans = TRUE)
+scan_pattern(
+  probs1,
+  phe,
+  K = NULL,
+  covar = NULL,
+  map,
+  patterns,
+  condense_patterns = TRUE,
+  blups = FALSE,
+  do_scans = TRUE
+)
 
 \method{summary}{scan_pattern}(object, map, ...)
 }

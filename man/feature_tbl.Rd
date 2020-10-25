@@ -27,8 +27,6 @@ tbl of feature summaries by type
 }
 \description{
 Show count min and max of features by type
-
-Subset of features
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

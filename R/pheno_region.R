@@ -9,7 +9,7 @@
 #' @param drivers number of drivers (1 or 2; default is 2)
 #' 
 #' @export
-#' @importFrom dplyr filter group_by inner_join left_join rename summarize ungroup
+#' @importFrom dplyr filter group_by inner_join left_join n rename summarize ungroup
 #' @importFrom qtl2 find_marker
 #' @importFrom stringr str_split
 #' 
@@ -45,7 +45,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
             dplyr::group_by(
               peaks, 
               pheno),
-            qtl_ct = n(),
+            qtl_ct = dplyr::n(),
             info = paste0(chr, "@",
                           round(pos), ":",
                           round(lod), collapse = ","))),

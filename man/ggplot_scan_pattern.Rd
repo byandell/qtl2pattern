@@ -5,9 +5,17 @@
 \alias{autoplot.scan_pattern}
 \title{Plot scan pattern}
 \usage{
-ggplot_scan_pattern(x, map, plot_type = c("lod", "coef", "coef_and_lod"),
-  patterns = x$patterns$founders, columns = 1:3, min_lod = 3,
-  lodcolumn = seq_along(patterns), facet = "pheno", ...)
+ggplot_scan_pattern(
+  x,
+  map,
+  plot_type = c("lod", "coef", "coef_and_lod"),
+  patterns = x$patterns$founders,
+  columns = 1:3,
+  min_lod = 3,
+  lodcolumn = seq_along(patterns),
+  facet = "pheno",
+  ...
+)
 
 \method{autoplot}{scan_pattern}(x, ...)
 }

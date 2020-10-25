@@ -4,8 +4,15 @@
 \alias{read_mrna}
 \title{Read mrna expression object from file}
 \usage{
-read_mrna(chr_id = NULL, start_val = NULL, end_val = NULL, datapath,
-  local = TRUE, qtl = FALSE, mrnadir = "RNAseq")
+read_mrna(
+  chr_id = NULL,
+  start_val = NULL,
+  end_val = NULL,
+  datapath,
+  local = TRUE,
+  qtl = FALSE,
+  mrnadir = "RNAseq"
+)
 }
 \arguments{
 \item{chr_id}{vector of chromosome identifiers}

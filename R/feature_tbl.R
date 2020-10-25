@@ -13,7 +13,7 @@
 #' @method summary feature_tbl
 #' @rdname feature_tbl
 #' @export
-#' @importFrom dplyr filter group_by summarize ungroup
+#' @importFrom dplyr filter group_by n summarize ungroup
 summary.feature_tbl <- function(object, major=TRUE) {
   if(!nrow(object))
     return(NULL)
@@ -24,7 +24,7 @@ summary.feature_tbl <- function(object, major=TRUE) {
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, type),
-      count = n(),
+      count = dplyr::n(),
       min_Mbp = min(start),
       max_Mbp = max(stop)))
 }

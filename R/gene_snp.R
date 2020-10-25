@@ -53,12 +53,12 @@ get_gene_snp <- function(snp_tbl, feature_tbl,
 #' @method summary gene_snp
 #' @rdname gene_snp
 #' @export
-#' @importFrom dplyr group_by summarize ungroup
+#' @importFrom dplyr group_by n summarize ungroup
 summary.gene_snp <- function(object, ...) {
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, gene, start, stop), 
-      snp_count = n(),
+      snp_count = dplyr::n(),
       min_lod = min(lod),
       max_lod = max(lod)))
 }

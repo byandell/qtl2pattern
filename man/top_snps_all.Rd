@@ -6,14 +6,11 @@
 \alias{subset.top_snps_all}
 \title{Top SNPs for all phenotypes scanned}
 \usage{
-top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
-  haplos)
+top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE, haplos)
 
-\method{summary}{top_snps_all}(object, sum_type = c("range", "peak", "best"),
-  ...)
+\method{summary}{top_snps_all}(object, sum_type = c("range", "peak", "best"), ...)
 
-\method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos),
-  pheno = NULL, ...)
+\method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos), pheno = NULL, ...)
 }
 \arguments{
 \item{scan1_output}{output of linear mixed model for \code{phename} (see \code{\link[qtl2]{scan1}})}
@@ -46,15 +43,13 @@ top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
 
 \item{sum_type}{type of summary (one of "range","peak","best")}
 
-\item{...}{other arguments not used}
+\item{...}{additional parameters ignored}
 
 \item{x}{tbl of feature information from \code{\link{get_feature_tbl}}}
 
 \item{start_val, stop_val}{start and stop positions for subset}
 
 \item{pheno}{phenotype name(s) for subset}
-
-\item{...}{additional parameters ignored}
 }
 \value{
 table of top_snps at maximum lod for \code{pattern}
@@ -65,10 +60,6 @@ subset of \code{x}
 }
 \description{
 Separate fine mapping scans by allele pattern.
-
-Summary of top SNP object across phenotypes
-
-Subset of features
 }
 \examples{
 \dontrun{summary(object)}

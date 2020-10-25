@@ -19,8 +19,6 @@ pattern_sdp(label, sdp = NULL, geno_names = sort(unique(label)))
 \item{sdp}{SNP distribution pattern for plot colors}
 
 \item{geno_names}{unique genotype names (alleles or allele pairs)}
-
-\item{sdp}{SNP distribution pattern for plot colors}
 }
 \description{
 Turn genotype probabilities into labels

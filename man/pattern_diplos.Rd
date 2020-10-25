@@ -10,17 +10,13 @@ pattern_diplos(sdp, haplos, diplos, cont = NULL)
 pattern_haplos(sdp, haplos)
 }
 \arguments{
-\item{sdp}{vector of straind distribution patterns from \code{\link{topsnp_pattern}}}
+\item{sdp}{vector of sdp from \code{\link{topsnp_pattern}}}
 
 \item{haplos}{vector of haplotype names}
 
 \item{diplos}{vector of diplotype names}
 
 \item{cont}{vector of types of contrasts (\code{NULL} or from \code{c("add","dom","b6r","b6d")})}
-
-\item{sdp}{vector of sdp from \code{\link{topsnp_pattern}}}
-
-\item{haplos}{vector of haplotype names}
 }
 \value{
 matrix of diplotype patterns

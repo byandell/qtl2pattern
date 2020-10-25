@@ -4,8 +4,15 @@
 \alias{get.gene.locations}
 \title{Helper function to set gene locations on plot.}
 \usage{
-get.gene.locations(locs, xlim, text_size = 3, str_rect = c("iW", "i"),
-  n_rows = 10, plot_width = 6, ...)
+get.gene.locations(
+  locs,
+  xlim,
+  text_size = 3,
+  str_rect = c("iW", "i"),
+  n_rows = 10,
+  plot_width = 6,
+  ...
+)
 }
 \arguments{
 \item{locs}{tbl of gene information}

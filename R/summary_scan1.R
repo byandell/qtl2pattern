@@ -63,7 +63,7 @@
 #' summary(out, map)
 #'
 #' @export
-#' @importFrom dplyr arrange desc group_by mutate select summarize tbl_df ungroup
+#' @importFrom dplyr arrange desc group_by mutate n select summarize tbl_df ungroup
 #' @importFrom tidyr gather
 #'
 summary_scan1 <- function(object, map, snpinfo=NULL,
@@ -141,8 +141,8 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                  dplyr::ungroup(
                    dplyr::summarize(
                      dplyr::group_by(object,pheno,sdp),
-                     count=n(),
-                    pct=round(100 * n() / nrow(object), 2),
+                     count=dplyr::n(),
+                    pct=round(100 * dplyr::n() / nrow(object), 2),
                     min_lod=min(lod),
                     max_lod=max(lod),
                     max_snp=snp_id[which.max(lod)],

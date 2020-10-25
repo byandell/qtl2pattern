@@ -5,9 +5,17 @@
 \alias{summary.scan1}
 \title{Summary of scan1 object}
 \usage{
-summary_scan1(object, map, snpinfo = NULL,
-  lodcolumn = seq_len(ncol(object)), chr = names(map),
-  sum_type = c("common", "best"), drop = 1.5, show_all_snps = TRUE, ...)
+summary_scan1(
+  object,
+  map,
+  snpinfo = NULL,
+  lodcolumn = seq_len(ncol(object)),
+  chr = names(map),
+  sum_type = c("common", "best"),
+  drop = 1.5,
+  show_all_snps = TRUE,
+  ...
+)
 
 \method{summary}{scan1}(object, ...)
 }

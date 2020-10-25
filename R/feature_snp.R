@@ -78,13 +78,13 @@ get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
 #' @method summary feature_snp
 #' @rdname feature_snp
 #' @export
-#' @importFrom dplyr group_by summarize ungroup
+#' @importFrom dplyr group_by n summarize ungroup
 #' 
 summary.feature_snp <- function(object, ...) {
   dplyr::ungroup(
     dplyr::summarize(
       dplyr::group_by(object, type), 
-      count = n(),
+      count = dplyr::n(),
       minbp = min(start),
       maxbp = max(stop)))
 }

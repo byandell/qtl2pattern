@@ -5,11 +5,28 @@
 \alias{expr_region}
 \title{Create list with phenotypes in region}
 \usage{
-pheno_region(chr_id, start_val, end_val, covar, map, peaks, analyses,
-  pheno_data, drivers = 2)
+pheno_region(
+  chr_id,
+  start_val,
+  end_val,
+  covar,
+  map,
+  peaks,
+  analyses,
+  pheno_data,
+  drivers = 2
+)
 
-expr_region(chr_id, start_val, end_val, covar, map, project_dir, drivers = 2,
-  query_mrna = create_mrna_query_func(project_dir))
+expr_region(
+  chr_id,
+  start_val,
+  end_val,
+  covar,
+  map,
+  project_dir,
+  drivers = 2,
+  query_mrna = create_mrna_query_func(project_dir)
+)
 }
 \arguments{
 \item{chr_id, start_val, end_val}{chromosome and start and end value}

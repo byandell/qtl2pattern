@@ -123,11 +123,12 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                  dplyr::ungroup(
                    dplyr::summarize(
                      dplyr::group_by(object, sdp, pheno),
-                     pct = round(100 * n() / nrow(object), 2),
+                     pct = dplyr::n(),
                      min_lod = min(lod),
                      max_lod = max(lod),
                      max_pos = pos[which.max(lod)][1],
                      max_snp = snp_id[which.max(lod)][1])),
+                 pct = round(100 * pct / nrow(object), 2),
                  pattern = sdp_to_pattern(sdp, haplos)),
                dplyr::desc(max_lod)),
              pattern, max_lod, max_pos, pheno, pct, min_lod,

@@ -4,8 +4,15 @@
 \alias{read_probs}
 \title{Read genotype probability object from file}
 \usage{
-read_probs(chr = NULL, start_val = NULL, end_val = NULL, datapath,
-  allele = TRUE, method, probdir = "genoprob")
+read_probs(
+  chr = NULL,
+  start_val = NULL,
+  end_val = NULL,
+  datapath,
+  allele = TRUE,
+  method,
+  probdir = "genoprob"
+)
 }
 \arguments{
 \item{chr}{vector of chromosome identifiers}

@@ -4,8 +4,11 @@
 \alias{get_gene_snp}
 \title{Match genes with SNPs}
 \usage{
-get_gene_snp(snp_tbl, feature_tbl, feature_snp = get_feature_snp(snp_tbl,
-  feature_tbl, 0))
+get_gene_snp(
+  snp_tbl,
+  feature_tbl,
+  feature_snp = get_feature_snp(snp_tbl, feature_tbl, 0)
+)
 }
 \arguments{
 \item{snp_tbl}{tbl of SNPs from \code{assoc.map}}

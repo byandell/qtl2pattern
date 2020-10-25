@@ -4,8 +4,7 @@
 \alias{create_probs_query_func}
 \title{Create a function to query genotype probabilities}
 \usage{
-create_probs_query_func(dbfile, method_val = "fst",
-  probdir_val = "genoprob")
+create_probs_query_func(dbfile, method_val = "fst", probdir_val = "genoprob")
 }
 \arguments{
 \item{dbfile}{Name of database file}

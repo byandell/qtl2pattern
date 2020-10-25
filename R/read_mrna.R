@@ -23,7 +23,7 @@
 #' \dontrun{read_probs(chr, datapath)}
 #'
 #' @export
-#' @importFrom dplyr filter group_by inner_join mutate rename summarize ungroup
+#' @importFrom dplyr filter group_by inner_join mutate n rename summarize ungroup
 #' @importFrom fst read_fst
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
@@ -71,7 +71,7 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
           dplyr::ungroup(
             dplyr::summarize(
               dplyr::group_by(peaks.mrna, gene_id),
-              qtl_ct = n(),
+              qtl_ct = dplyr::n(),
               info = paste0(qtl_chr, "@",
                             round(qtl_pos), ":",
                             round(lod), collapse = ","),

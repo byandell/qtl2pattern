@@ -13,8 +13,14 @@
 \usage{
 listof_scan1coef(probs, phe, K = NULL, covar = NULL, blups = FALSE)
 
-summary_listof_scan1coef(object, scan1_object, map,
-  coef_names = dimnames(object[[1]])[[2]], center = TRUE, ...)
+summary_listof_scan1coef(
+  object,
+  scan1_object,
+  map,
+  coef_names = dimnames(object[[1]])[[2]],
+  center = TRUE,
+  ...
+)
 
 \method{summary}{listof_scan1coef}(object, ...)
 
@@ -50,19 +56,11 @@ subset_listof_scan1coef(x, elements, ...)
 
 \item{center}{center coefficients if \code{TRUE}}
 
-\item{...}{arguments for \code{\link[qtl2ggplot]{ggplot_coef}}}
+\item{...}{ignored}
 
 \item{x}{object of class \code{listof_scan1coeff}}
 
 \item{elements}{indexes or names of list elements in x}
-
-\item{object}{object of class \code{listof_scan1coeff}}
-
-\item{scan1_object}{object from \code{scan1}}
-
-\item{...}{arguments for \code{\link[qtl2ggplot]{ggplot_coef}}}
-
-\item{...}{ignored}
 }
 \value{
 object of class \code{listof_scan1coeff}

@@ -4,9 +4,15 @@
 \alias{get_snpprobs}
 \title{Get SNP genotype probabilities in window around peak}
 \usage{
-get_snpprobs(chr_id = NULL, peak_Mbp = NULL, window_Mbp = NULL, phename,
-  probs_obj, probs_map, snpinfo = query_variants(chr_id, peak_Mbp -
-  window_Mbp, peak_Mbp + window_Mbp))
+get_snpprobs(
+  chr_id = NULL,
+  peak_Mbp = NULL,
+  window_Mbp = NULL,
+  phename,
+  probs_obj,
+  probs_map,
+  snpinfo = query_variants(chr_id, peak_Mbp - window_Mbp, peak_Mbp + window_Mbp)
+)
 }
 \arguments{
 \item{chr_id}{chromosome identifier}

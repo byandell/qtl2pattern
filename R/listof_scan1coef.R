@@ -43,7 +43,7 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
 #'
 #' @param coef_names names of effect coefficients (default is all coefficient names)
 #' @param center center coefficients if \code{TRUE}
-#' @param ... arguments for \code{\link[qtl2ggplot]{ggplot_coef}}
+#' @param ... arguments for \code{\link[qtl2]{plot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
@@ -95,7 +95,7 @@ summary.listof_scan1coef <- function(object, ...)
 #'
 #' @param object object of class \code{listof_scan1coeff}
 #' @param scan1_object object from \code{scan1}
-#' @param ... arguments for \code{\link[qtl2ggplot]{ggplot_coef}}
+#' @param ... arguments for \code{\link[qtl2]{plot_coef}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities

@@ -84,6 +84,14 @@ unlink(tmpfile)
 
 ```{r}
 snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+if(!match("sdp", names(snpinfo))) {
+  snpinfo <- dplyr::mutate(
+    snpinfo,
+    sdp = qtl2::calc_sdp(
+      dplyr::select(
+        snpinfo,
+        AJ:WSB)))
+}
 ```
 
 Convert to snp probabilities
@@ -138,13 +146,32 @@ summary(scan_pat, DOex$pmap)
 Plot the 8-allele, 36-diplotype and two scan pattern LOD scans. 
 
 ```{r}
+plot_scans <- function(scans, map, lodcolumn) {
+  scan_names <- colnames(scans)
+  plot(scans, DOex$pmap,
+     lodcolumn = lodcolumn[1], ylim = range(scans))
+  legend(par("usr")[1], par("usr")[3], scan_names, col = seq_along(scan_names))
+  for(i in lodcolumn[-1])
+    plot(scans, DOex$pmap,
+      lodcolumn = i, add = TRUE, col = i)
+}
+```
+
+
+```{r}
 scans <- scan_pr
 # change the pheno names to be distinct
 dimnames(scans)[[2]] <- paste0(dimnames(scans)[[2]], "_36")
 scans <- cbind(scan_apr, scans, scan_pat$scan)
+plot_scans(scans, DOex$pmap,
+     lodcolumn = seq(ncol(scans)))
+```
+
+```{r}
 autoplot(scans, DOex$pmap,
      lodcolumn = seq(ncol(scans)))
 ```
+
 
 ```{r}
 summary(scans, DOex$pmap)
@@ -246,12 +273,6 @@ alleles <- allele1(probD = pr,
 
 ```{r}
 autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
-```
-
-The following sort of works, but only some of the points are showing. I am working with Casper Sievert, [plotly](https://github.com/ropensci/plotly) developer on animation improvements.
-
-```{r}
-plotly::ggplotly(autoplot(alleles, scan_apr, DOex$pmap, frame = TRUE), tooltip = "ids")
 ```
 
 ```{r}

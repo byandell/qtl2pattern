@@ -4,8 +4,10 @@
 \alias{snpprob_collapse}
 \title{Collapse genoprob according to pattern}
 \usage{
-snpprob_collapse(snpprobs, action = c("additive", "add+dom", "non-add",
-  "recessive", "dominant"))
+snpprob_collapse(
+  snpprobs,
+  action = c("additive", "add+dom", "non-add", "recessive", "dominant")
+)
 }
 \arguments{
 \item{action}{SNP gene action type}
