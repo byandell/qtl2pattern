@@ -1,13 +1,14 @@
 #' Plot of exons for a gene with SNPs
 #'
-#' Uses \code{\link{gene_plot}} to plot genes, exons, mRNA with SNPs.
+#' Uses \code{\link{get_gene_exon}} to plot genes, exons, mRNA with SNPs.
 #'
-#' @param exon_tbl tbl of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}
+#' @param gene_exon table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param plot_now plot now if TRUE
-#' @param ... arguments passed along to \code{\link{gene_plot}}
+#' @param genes Names of genes in object \code{get_gene_exon}.
+#' @param ... arguments passed along to \code{\link{get_gene_exon}}
 #'
-#' @return list of ggplots (see \code{\link{gene_plot}})
+#' @return list of ggplots (see \code{\link{get_gene_exon}})
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords hplot
@@ -16,6 +17,7 @@
 #' 
 #' @importFrom dplyr group_by summarize ungroup
 #' @importFrom ggplot2 ggtitle
+#' @importFrom rlang .data
 #' 
 ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
                            genes = unique(gene_exon$gene), ...) {
@@ -24,14 +26,14 @@ ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
   if(!is.null(top_snps_tbl)) {
     top_snps_tbl <- dplyr::ungroup(
       dplyr::summarize(
-        dplyr::group_by(top_snps_tbl, snp_id, pos),
-        lod=max(lod)))
+        dplyr::group_by(top_snps_tbl, .data$snp_id, .data$pos),
+        lod = max(.data$lod)))
   }
   for(genei in genes) {
     p[[genei]] <-
       ggplot_feature_tbl(
         dplyr::mutate(
-          dplyr::filter(gene_exon, gene==genei),
+          dplyr::filter(gene_exon, .data$gene == genei),
           gene = NA),
         top_snps_tbl = top_snps_tbl,
         str_rect="",
@@ -44,6 +46,7 @@ ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
   }
   invisible(p)
 }
+#' @param x Object of class \code{gene_exon}.
 #' @method autoplot gene_exon
 #' @export
 #' @export autoplot.gene_exon

@@ -26,12 +26,14 @@
 #'
 #' @param drop include all SNPs within \code{drop} of max LOD (default 1.5)
 #' @param show_all_snps show all SNPs if \code{TRUE}
+#' @param haplos optional argument identify codes for haplotypes
 #'
 #' @return table of top_snps at maximum lod for \code{pattern}
 #'
 #' @export
-#' @importFrom dplyr filter group_by inner_join select ungroup
-#' @importFrom tidyr gather
+#' @importFrom dplyr everything filter group_by inner_join select ungroup
+#' @importFrom tidyr pivot_longer
+#' @importFrom rlang .data
 #'
 top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
                           haplos)
@@ -53,24 +55,26 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
     lod_df <- as.data.frame(subset(scan1_output, map, chr = chr))
     lod_df$index <- unique(snpinfo$index)
     lod_df$snp_id <- rownames(lod_df)
-    lod_df <- tidyr::gather(lod_df, pheno, lod, -snp_id, -index)
+    lod_df <- tidyr::pivot_longer(
+      dplyr::select(lod_df, .data$snp_id, .data$index, dplyr::everything()),
+      -(1:2), names_to = "pheno", values_to = "lod")
     maxlod <- max(lod_df$lod, na.rm = TRUE) - drop
     lod_df <- dplyr::ungroup(
       dplyr::filter(
-        dplyr::group_by(lod_df, pheno),
-        lod >= min(max(lod, na.rm = TRUE), maxlod)
+        dplyr::group_by(lod_df, .data$pheno),
+        .data$lod >= min(max(.data$lod, na.rm = TRUE), maxlod)
       )
     )
 #    lod_df <- dplyr::filter(lod_df, lod > max(lod, na.rm = TRUE) - drop)
 
     if (show_all_snps) {
       snpinfo <- dplyr::inner_join(snpinfo,
-                                   dplyr::select(lod_df, -snp_id),
+                                   dplyr::select(lod_df, -.data$snp_id),
                                    by = "index")
     }
     else {
       snpinfo <- dplyr::inner_join(snpinfo,
-                                   dplyr::select(lod_df, -index),
+                                   dplyr::select(lod_df, -.data$index),
                                    by = "snp_id")
     }
     attr(snpinfo, "haplos") <- haplos
@@ -105,14 +109,14 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
          best = { ## Top SNPs across all phenotypes.
            out <- 
              dplyr::arrange(
-               dplyr::select(object, -index,-sdp),
-               dplyr::desc(lod))
+               dplyr::select(object, -.data$index, -.data$sdp),
+               dplyr::desc(.data$lod))
            if(!is.null(out$consequence)) {
              out <- 
                dplyr::mutate(out,
-                 consequence = abbreviate(consequence, 15))
+                 consequence = abbreviate(.data$consequence, 15))
            }
-           dplyr::select(out, snp_id, type, chr, pos, lod, pheno,
+           dplyr::select(out, .data$snp_id, .data$type, .data$chr, .data$pos, .data$lod, .data$pheno,
                          dplyr::everything())
          },
          range = {
@@ -122,16 +126,16 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                dplyr::mutate(
                  dplyr::ungroup(
                    dplyr::summarize(
-                     dplyr::group_by(object, sdp, pheno),
+                     dplyr::group_by(object, .data$sdp, .data$pheno),
                      pct = dplyr::n(),
-                     min_lod = min(lod),
-                     max_lod = max(lod),
-                     max_pos = pos[which.max(lod)][1],
-                     max_snp = snp_id[which.max(lod)][1])),
-                 pct = round(100 * pct / nrow(object), 2),
-                 pattern = sdp_to_pattern(sdp, haplos)),
-               dplyr::desc(max_lod)),
-             pattern, max_lod, max_pos, pheno, pct, min_lod,
+                     min_lod = min(.data$lod),
+                     max_lod = max(.data$lod),
+                     max_pos = .data$pos[which.max(.data$lod)][1],
+                     max_snp = .data$snp_id[which.max(.data$lod)][1])),
+                 pct = round(100 * .data$pct / nrow(object), 2),
+                 pattern = sdp_to_pattern(.data$sdp, haplos)),
+               dplyr::desc(.data$max_lod)),
+             .data$pattern, .data$max_lod, .data$max_pos, .data$pheno, .data$pct, .data$min_lod,
              dplyr::everything())
          },
          peak = {
@@ -142,21 +146,21 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                    dplyr::summarize(
                      dplyr::group_by(
                        dplyr::filter(
-                         dplyr::group_by(object, chr, sdp),
-                         lod == max(lod)),
-                       chr, sdp, index, lod),
-                     min_Mbp = min(pos),
-                     max_Mbp = max(pos),
-                     phenos = paste(unique(pheno), collapse=","))),
-                 pattern = sdp_to_pattern(sdp, haplos)),
-               dplyr::desc(lod)),
-             pattern, lod, phenos, min_Mbp, max_Mbp,
+                         dplyr::group_by(object, .data$chr, .data$sdp),
+                         .data$lod == max(.data$lod)),
+                       .data$chr, .data$sdp, .data$index, .data$lod),
+                     min_Mbp = min(.data$pos),
+                     max_Mbp = max(.data$pos),
+                     phenos = paste(unique(.data$pheno), collapse=","))),
+                 pattern = sdp_to_pattern(.data$sdp, haplos)),
+               dplyr::desc(.data$lod)),
+             .data$pattern, .data$lod, .data$phenos, .data$min_Mbp, .data$max_Mbp,
              dplyr::everything())
          })
 }
 #' Subset of features
 #'
-#' @param x tbl of feature information from \code{\link{get_feature_tbl}}
+#' @param x tbl of feature information from \code{\link{get_feature_snp}}
 #' @param start_val,stop_val start and stop positions for subset
 #' @param pheno phenotype name(s) for subset
 #' @param ... additional parameters ignored
@@ -174,11 +178,11 @@ subset.top_snps_all <- function(x, start_val=0, stop_val=max(x$pos),
                                 pheno = NULL, ...) {
   haplos <- attr(x, "haplos")
   x <- dplyr::filter(x,
-                     pos >= start_val,
-                     pos <= stop_val)
+                     .data$pos >= start_val,
+                     .data$pos <= stop_val)
   pheno_val <- pheno # need to be different from column name in x
   if(!is.null(pheno_val))
-    x <-dplyr::filter(x, pheno %in% pheno_val)
+    x <-dplyr::filter(x, .data$pheno %in% pheno_val)
   attr(x, "haplos") <- haplos
   class(x) <- unique(c("top_snps_tbl", class(x)))
   x

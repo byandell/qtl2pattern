@@ -16,7 +16,7 @@
 #' @details Note that this function assumes that \code{probdir_val} has a file with the
 #'     physical map with positions in Mbp and other files with genotype probabilities.
 #'     See \code{\link{read_probs}} for details on how probabilities are read.
-#'     See \code{\link[qtl2]{create_variants_query_func}} for original idea.
+#'     See \code{\link[qtl2]{create_variant_query_func}} for original idea.
 #'
 #' @export
 #'
@@ -48,7 +48,7 @@ create_probs_query_func <- function(dbfile,
 #' @details Note that this function assumes positions are in Mbp.
 #'     There are required columns for each element, to be detailed in time.
 #'     See \code{\link{read_mrna}} for details on how mRNA data are read.
-#'     See \code{\link[qtl2]{create_variants_query_func}} for original idea.
+#'     See \code{\link[qtl2]{create_variant_query_func}} for original idea.
 #'
 #' @export
 create_mrna_query_func <- function(dbfile,

@@ -28,5 +28,5 @@ information and return a list with `probs` object and a `map` object.
 Note that this function assumes that \code{probdir_val} has a file with the
     physical map with positions in Mbp and other files with genotype probabilities.
     See \code{\link{read_probs}} for details on how probabilities are read.
-    See \code{\link[qtl2]{create_variants_query_func}} for original idea.
+    See \code{\link[qtl2]{create_variant_query_func}} for original idea.
 }

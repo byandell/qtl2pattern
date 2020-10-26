@@ -17,6 +17,7 @@ ggplot_feature_tbl(
   top_snps_tbl = NULL,
   snp_col = "grey70",
   extend = 0.005,
+  keep,
   ...
 )
 
@@ -44,6 +45,8 @@ ggplot_feature_tbl(
 \item{snp_col}{color of SNP vertical lines (default "grey70")}
 
 \item{extend}{extend region for SNPs in bp (default 0.005)}
+
+\item{keep}{identifiers for rows to keep}
 
 \item{...}{additional arguments (not used)}
 }

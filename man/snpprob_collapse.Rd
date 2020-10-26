@@ -10,9 +10,9 @@ snpprob_collapse(
 )
 }
 \arguments{
-\item{action}{SNP gene action type}
+\item{snpprobs}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
-\item{probs1}{object of class \code{\link[qtl2]{calc_genoprob}}}
+\item{action}{SNP gene action type}
 }
 \value{
 object of class \code{\link[qtl2]{calc_genoprob}}

@@ -26,9 +26,11 @@ get.gene.locations(
 \item{n_rows}{desired number of rows (default 10)}
 
 \item{plot_width}{width of default plot window (in inches)}
+
+\item{...}{additional parameters (not used)}
 }
 \value{
-list object used by \code{\link{gene_plot}}
+list object used by \code{\link{ggplot_feature_tbl}}
 }
 \description{
 Figure out gene locations to make room for gene names.

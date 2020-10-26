@@ -12,19 +12,15 @@
 #' @param blups Create BLUPs if \code{TRUE}
 #' @param ... additional parameters
 #' 
-#' @param scanH Object of class \code{\link[qtl2]{scan1}} with allele scan.
-#' @param coefH Object of class \code{\link[qtl2]{scan1coef}}.
-#' @param coefD Object of class \code{\link[qtl2]{scan1coef}} with allele pair coefficients.
-#' @param scan_pat Object of class \code{\link{scan_pattern}}.
-#' 
 #' @return Table with allele effects across sources.
 #' 
 #' @export
 #' 
-#' @importFrom tidyr gather
-#' @importFrom dplyr bind_rows filter mutate
+#' @importFrom tidyr pivot_longer
+#' @importFrom dplyr bind_rows filter mutate select
 #' @importFrom stringr str_count str_detect str_split
 #' @importFrom qtl2 genoprob_to_alleleprob scan1 scan1blup scan1coef
+#' @importFrom rlang .data
 #' 
 allele1 <- function(probD, phe_df=NULL, cov_mx=NULL, map=NULL, K_chr=NULL, patterns=NULL, 
                     alt=NULL, blups = FALSE, ...) {
@@ -54,12 +50,12 @@ allele1_internal <- function(
   # Get patterns for pheno.
   if(!is.null(scan_pat)) {
     patterns <- dplyr::rename(scan_pat$patterns,
-                              pattern = founders)
+                              pattern = .data$founders)
   } else {
     if(is.null(patterns))
       stop("need either patterns or scan_pat")
     patterns <- dplyr::filter(patterns,
-                              pheno == pheno_name)
+                              .data$pheno == pheno_name)
     scan_pat <- scan_pattern(probD, phe_df, K_chr, cov_mx,
                              map, patterns, blups = blups)
   }
@@ -82,37 +78,40 @@ allele1_internal <- function(
     x
   }
 
-  scan_pats <- tidyr::gather(
-    dplyr::bind_rows(
-      lapply(scan_pat$coef, mar_df, scan_pat$coef), 
-      .id = "source"),
-    allele, effect, -mar, -source)
+  scan_pats <- tidyr::pivot_longer(
+    dplyr::select(
+      dplyr::bind_rows(
+        lapply(scan_pat$coef, mar_df, scan_pat$coef), 
+        .id = "source"),
+      -.data$intercept),
+    .data$ref:.data$alt, names_to = "allele", values_to = "effect")
+  
   # Identify covariates
   scan_pats <- dplyr::mutate(
     scan_pats,
-    covar = !(allele %in% c("alt","ref","het"))
+    covar = !(.data$allele %in% c("alt","ref","het"))
   )
   if(drop_covar) {
     scan_pats <- dplyr::filter(
       scan_pats,
-      !covar)
+      !.data$covar)
   }
   
   # Combine alleles and allele pairs using codes inferred from probH and probD.
   alleles <- dplyr::bind_rows(
-    haplotype = tidyr::gather(
+    haplotype = tidyr::pivot_longer(
       mar_df(coefH, probH),
-      allele, effect, -mar),
-    diplotype = tidyr::gather(
-        mar_df(coefD, probD), 
-        allele, effect, -mar),
+      -.data$mar, names_to = "allele", values_to = "effect"),
+    diplotype = tidyr::pivot_longer(
+      mar_df(coefD, probD), 
+      -.data$mar, names_to = "allele", values_to = "effect"),
     .id = "source")
   # Bind alleles with scan patterns (ref/het/alt)
   alleles <- dplyr::bind_rows(alleles, scan_pats)
   # Make sure covar has no missing values for alleles.
   alleles <- dplyr::mutate(
     alleles,
-    covar = ifelse(is.na(covar), FALSE, covar))
+    covar = ifelse(is.na(.data$covar), FALSE, .data$covar))
   
   map <- map[[1]]
   mar <- names(map)
@@ -125,11 +124,11 @@ allele1_internal <- function(
   # ref = 0, het = 1, alt = 2; covariates = 5.
   tmpfn <- function(x) stringr::str_detect(x, ":")
   alleles <- dplyr::mutate(alleles,
-                           probe = stringr::str_count(allele, alt),
-                           probe = ifelse(tmpfn(source) & (allele == "het"), 1, probe),
-                           probe = ifelse(tmpfn(source) & (allele == "alt"), 2, probe),
-                           probe = ifelse(covar, 5, probe),
-                           probe = factor(probe))
+                           probe = stringr::str_count(.data$allele, alt),
+                           probe = ifelse(tmpfn(.data$source) & (.data$allele == "het"), 1, .data$probe),
+                           probe = ifelse(tmpfn(.data$source) & (.data$allele == "alt"), 2, .data$probe),
+                           probe = ifelse(.data$covar, 5, .data$probe),
+                           probe = factor(.data$probe))
   attr(alleles, "probe") <- alt
   attr(alleles, "blups") <- blups
   class(alleles) <- c("allele1", class(alleles))
@@ -156,11 +155,11 @@ summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) 
   }
   dplyr::ungroup(
     dplyr::summarize(
-      dplyr::group_by(object, source),
-      min = min(effect[tmpfn(pos, pos_center)]),
-      lo_25 = quantile(effect[tmpfn(pos, pos_center)], 0.25),
-      median = median(effect[tmpfn(pos, pos_center)]),
-      hi_75 = quantile(effect[tmpfn(pos, pos_center)], 0.75),
-      max = max(effect[tmpfn(pos, pos_center)]),
+      dplyr::group_by(object, .data$source),
+      min = min(.data$effect[tmpfn(.data$pos, pos_center)]),
+      lo_25 = quantile(.data$effect[tmpfn(.data$pos, pos_center)], 0.25),
+      median = median(.data$effect[tmpfn(.data$pos, pos_center)]),
+      hi_75 = quantile(.data$effect[tmpfn(.data$pos, pos_center)], 0.75),
+      max = max(.data$effect[tmpfn(.data$pos, pos_center)]),
       pos = pos_center))
 }

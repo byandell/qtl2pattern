@@ -2,13 +2,17 @@
 #' 
 #' @param phe_mx matrix of phenotypes
 #' @param cov_df data frame of covariates
+#' @param probs_obj object with genotype probabilities
 #' @param kinship kinship matrix or list of kinship matrices
 #' @param analyses_df data frame of analyses information
+#' @param ... additional arguments passed on
 #' 
 #' @export
 #' 
 #' @importFrom qtl2 scan1
 #' @importFrom dplyr select
+#' @importFrom stats model.matrix
+#' @importFrom rlang .data
 #'
 scan1_covar <- function(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...) {
   # This is set up for different types of models (e.g. "binary"),
@@ -34,6 +38,7 @@ scan1_covar <- function(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...) {
   modify_object(scans, scans[,order(-apply(scans,2,max)), drop=FALSE])
 }
 #' @export
+#' @importFrom stats formula model.matrix
 #' @rdname scan1_covar
 which_covar <- function(analyses_df) {
   ## Covariate indicators follow winsorize column.
@@ -42,18 +47,20 @@ which_covar <- function(analyses_df) {
   ## Keep only covariate indicators with at least one TRUE value.
   analyses_df[, names(is_covar)[is_covar], drop=FALSE]
 }
+#' @param addcovar Data frame of additive covariate.
 #' @export
 #' @rdname scan1_covar
 covar_df_mx <- function(addcovar) {
   if(is.null(addcovar))
     return(NULL)
   if(is.data.frame(addcovar)) {
-    f <- formula(paste("~", paste(names(addcovar), collapse = "+")))
-    addcovar <- model.matrix(f, addcovar)[,-1, drop = FALSE]
+    f <- stats::formula(paste("~", paste(names(addcovar), collapse = "+")))
+    addcovar <- stats::model.matrix(f, addcovar)[,-1, drop = FALSE]
   }
   wh_sex(addcovar)
 }
 
+#' @param wh Index for which row of \code{analyses_df} to use.
 #' @export
 #' @rdname scan1_covar
 wh_covar <- function(analyses_df, wh, cov_df) {
@@ -65,6 +72,7 @@ wh_covar <- function(analyses_df, wh, cov_df) {
              stringsAsFactors = FALSE)
 }
 
+#' @param sex_type Logical flag to subset by sex if \code{"F"} or \code{"M"}.
 #' @export
 #' @rdname scan1_covar
 sexcovar <- function(addcovar, sex_type) {
@@ -76,7 +84,7 @@ sexcovar <- function(addcovar, sex_type) {
          "F" = addcovar <- addcovar[addcovar$sex == "F",, drop = FALSE],
          "M" = addcovar <- addcovar[addcovar$sex == "M",, drop = FALSE])
   if(sex_type %in% c("F","M")) {
-    addcovar <- dplyr::select(addcovar, -sex)
+    addcovar <- dplyr::select(addcovar, -.data$sex)
     if(ncol(addcovar) == 0)
       addcovar <- NULL
   }
@@ -163,7 +171,7 @@ scansex <- function(genoprobs, pheno, kinship, addcovar = NULL,
       if("sex" %in% colnames(addcovar)) {
         switch(sex_type,
                "I" = {
-                 intcovar <- model.matrix(~ sex, addcovar)[, -1, drop = FALSE]
+                 intcovar <- stats::model.matrix(~ sex, addcovar)[, -1, drop = FALSE]
                  },
                "F","M" = {
                  addcovar <- sexcovar(addcovar, sex_type)

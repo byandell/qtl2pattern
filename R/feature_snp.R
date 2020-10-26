@@ -17,10 +17,11 @@
 #' @export
 #' @importFrom dplyr arrange bind_rows distinct filter group_by inner_join 
 #' mutate select summarize ungroup
+#' @importFrom rlang .data
 #'
 get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
   feature_tbl <- dplyr::filter(feature_tbl, 
-                               type %in% c("exon","gene","pseudogene","pseudogenic_exon"))
+                               .data$type %in% c("exon","gene","pseudogene","pseudogenic_exon"))
   if(!nrow(feature_tbl))
     return(NULL)
 
@@ -29,11 +30,11 @@ get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
   genes <- dplyr::mutate(
     dplyr::ungroup(
       dplyr::summarize(
-        dplyr::group_by(feature_tbl, Dbxref), 
-        min_bp = min(start) - extend,
-        max_bp = max(stop) + extend)),
+        dplyr::group_by(feature_tbl, .data$Dbxref), 
+        min_bp = min(.data$start) - extend,
+        max_bp = max(.data$stop) + extend)),
     # Catch any missing values for Dbxref
-    Dbxref = ifelse(is.na(Dbxref), "NA", Dbxref))
+    Dbxref = ifelse(is.na(.data$Dbxref), "NA", .data$Dbxref))
   if(!nrow(genes))
     return(NULL)
   
@@ -52,11 +53,11 @@ get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
           dplyr::inner_join(
             dplyr::distinct(
               feature_tbl,
-              start, stop, strand, type, .keep_all=TRUE),
+              .data$start, .data$stop, .data$strand, .data$type, .keep_all=TRUE),
             tmp, by = "Dbxref"),
-          SNP = snp_id), 
-        -snp_id),
-      Name, type)
+          SNP = .data$snp_id), 
+        -.data$snp_id),
+      .data$Name, .data$type)
 
   if(!nrow(out))
     return(NULL)
@@ -83,9 +84,9 @@ get_feature_snp <- function(snp_tbl, feature_tbl, extend=0.005) {
 summary.feature_snp <- function(object, ...) {
   dplyr::ungroup(
     dplyr::summarize(
-      dplyr::group_by(object, type), 
+      dplyr::group_by(object, .data$type), 
       count = dplyr::n(),
-      minbp = min(start),
-      maxbp = max(stop)))
+      minbp = min(.data$start),
+      maxbp = max(.data$stop)))
 }
 

@@ -9,12 +9,13 @@
 #' 
 #' @export
 #' @importFrom dplyr filter
+#' @importFrom rlang .data
 #' 
 get_genes <- function(chr_id, start, stop,
                       gene_tbl = query_genes(chr_id, start, stop)) {
   out <- dplyr::filter(
     gene_tbl,
-    !is.na(Name))
+    !is.na(.data$Name))
   class(out) <- c("feature_tbl", class(out))
   out
 }

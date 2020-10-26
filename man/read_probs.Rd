@@ -17,7 +17,7 @@ read_probs(
 \arguments{
 \item{chr}{vector of chromosome identifiers}
 
-\item{start_val, }{end_val start and end values in Mbp}
+\item{start_val, end_val}{start and end values in Mbp}
 
 \item{datapath}{name of folder with Derived Data}
 
@@ -28,7 +28,7 @@ read_probs(
 \item{probdir}{genotype probability directory (default \code{"genoprob"})}
 }
 \value{
-list with \code{probs} = large object of class \code{\link[qtl2geno]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
+list with \code{probs} = large object of class \code{\link[qtl2]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
 }
 \description{
 Read object from file stored according to method.

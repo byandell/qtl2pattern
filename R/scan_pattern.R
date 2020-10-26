@@ -28,6 +28,7 @@
 #' @export
 #' @importFrom dplyr group_by summarize ungroup
 #' @importFrom stringr str_split
+#' @importFrom rlang .data
 #'
 scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          map, patterns,
@@ -53,15 +54,15 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
     dplyr::summarize(
       dplyr::group_by(
         dplyr::filter(patterns,
-                      pheno %in% pheno_names),
-        sdp, max_snp, max_pos, pheno),
-      founders = sdp_to_pattern(sdp, haplos),
-      contrast = paste(contrast, collapse=","),
-      max_lod = max(max_lod)))
+                      .data$pheno %in% pheno_names),
+        .data$sdp, .data$max_snp, .data$max_pos, .data$pheno),
+      founders = sdp_to_pattern(.data$sdp, haplos),
+      contrast = paste(.data$contrast, collapse=","),
+      max_lod = max(.data$max_lod)))
   
   if(!condense_patterns & !all(patterns$contrast == "")) {
     dplyr::mutate(patterns,
-                  founders = paste(founders, contrast, sep = "_"))
+                  founders = paste(.data$founders, .data$contrast, sep = "_"))
   }
   pattern_three <- pattern_diplos(patterns$sdp, haplos, diplos)
   npat <- nrow(patterns)
@@ -113,7 +114,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
     patterns$max_pos <- apply(lod, 2,
                               function(x) map[[1]][which.max(x)])
     patterns <- dplyr::arrange(patterns,
-                               dplyr::desc(max_lod))
+                               dplyr::desc(.data$max_lod))
   }
 
   ## Make sure we have attributes for scans and coefs
@@ -140,7 +141,7 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   out
 }
 #' @param object object of class \code{\link{scan_pattern}}
-#'
+#' @param ... additional parameters passed on to other methods
 #' @export
 #' @method summary scan_pattern
 #' @rdname scan_pattern

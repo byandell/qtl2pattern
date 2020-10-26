@@ -39,6 +39,8 @@ scan_pattern(
 \item{do_scans}{Do scans if \code{TRUE}.}
 
 \item{object}{object of class \code{\link{scan_pattern}}}
+
+\item{...}{additional parameters passed on to other methods}
 }
 \value{
 List containing:

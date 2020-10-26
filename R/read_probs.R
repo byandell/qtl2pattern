@@ -3,13 +3,13 @@
 #' Read object from file stored according to method.
 #'
 #' @param chr vector of chromosome identifiers
-#' @param start_val, end_val start and end values in Mbp
+#' @param start_val,end_val start and end values in Mbp
 #' @param datapath name of folder with Derived Data
 #' @param allele read haplotype allele probabilities (if \code{TRUE}) or diplotype allele-pair probabilities (if \code{FALSE})
 #' @param method method of genoprob storage
 #' @param probdir genotype probability directory (default \code{"genoprob"})
 #'
-#' @return list with \code{probs} = large object of class \code{\link[qtl2geno]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
+#' @return list with \code{probs} = large object of class \code{\link[qtl2]{calc_genoprob}} and \code{map} = physical map for selected \code{chr}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities

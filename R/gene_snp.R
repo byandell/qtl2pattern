@@ -16,6 +16,8 @@
 #'
 #' @export
 #' @importFrom dplyr distinct filter mutate select
+#' @importFrom rlang .data
+#' 
 get_gene_snp <- function(snp_tbl, feature_tbl,
                          feature_snp =
                            get_feature_snp(snp_tbl, feature_tbl, 0)) {
@@ -30,11 +32,11 @@ get_gene_snp <- function(snp_tbl, feature_tbl,
       dplyr::mutate(
         dplyr::distinct(
           dplyr::filter(feature_snp, 
-                        type=="gene" & !is.na(Name)), 
-          SNP, start, stop, strand, .keep_all=TRUE), 
-        gene=Name),
-      SNP, pos, lod, gene, start, stop, strand),
-    in_gene = (start<=pos & pos<=stop))
+                        .data$type == "gene" & !is.na(.data$Name)), 
+          .data$SNP, .data$start, .data$stop, .data$strand, .keep_all=TRUE), 
+        gene = .data$Name),
+      .data$SNP, .data$pos, .data$lod, .data$gene, .data$start, .data$stop, .data$strand),
+    in_gene = (.data$start <= .data$pos & .data$pos <= .data$stop))
   
   class(out) <- c("gene_snp", class(out))
   out
@@ -57,8 +59,8 @@ get_gene_snp <- function(snp_tbl, feature_tbl,
 summary.gene_snp <- function(object, ...) {
   dplyr::ungroup(
     dplyr::summarize(
-      dplyr::group_by(object, gene, start, stop), 
+      dplyr::group_by(object, .data$gene, .data$start, .data$stop), 
       snp_count = dplyr::n(),
-      min_lod = min(lod),
-      max_lod = max(lod)))
+      min_lod = min(.data$lod),
+      max_lod = max(.data$lod)))
 }

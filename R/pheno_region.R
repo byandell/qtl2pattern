@@ -12,6 +12,7 @@
 #' @importFrom dplyr filter group_by inner_join left_join n rename summarize ungroup
 #' @importFrom qtl2 find_marker
 #' @importFrom stringr str_split
+#' @importFrom rlang .data
 #' 
 pheno_region <- function(chr_id, start_val, end_val, covar, map, 
                          peaks, analyses, pheno_data,
@@ -25,7 +26,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
                               function(x) ifelse(is.na(x), FALSE, x))
   
   # Reduce to peaks that match analyses.
-  peaks <- dplyr::filter(peaks, pheno %in% analyses$pheno)
+  peaks <- dplyr::filter(peaks, .data$pheno %in% analyses$pheno)
   
   # Match below by pheno and other optional columns.
   bycols <- c("pheno", "longname", "output", "pheno_group", "pheno_type")
@@ -44,21 +45,21 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
           dplyr::summarize(
             dplyr::group_by(
               peaks, 
-              pheno),
+              .data$pheno),
             qtl_ct = dplyr::n(),
-            info = paste0(chr, "@",
-                          round(pos), ":",
-                          round(lod), collapse = ","))),
+            info = paste0(.data$chr, "@",
+                          round(.data$pos), ":",
+                          round(.data$lod), collapse = ","))),
         by = "pheno"),
-      id = pheno,
-      biotype = pheno_type)
+      id = .data$pheno,
+      biotype = .data$pheno_type)
   
   # Reduce to phenotypes with peaks in region.
   annot <- dplyr::filter(
     annot, 
-    chr == chr_id,
-    pos >= start_val,
-    pos <= end_val)
+    .data$chr == chr_id,
+    .data$pos >= start_val,
+    .data$pos <= end_val)
   
   # This limits to traits that reside locally. Only make sense for expression data.
   annot$local <- FALSE

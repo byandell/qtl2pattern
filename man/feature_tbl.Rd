@@ -5,7 +5,7 @@
 \alias{subset.feature_tbl}
 \title{Summary of features}
 \usage{
-\method{summary}{feature_tbl}(object, major = TRUE)
+\method{summary}{feature_tbl}(object, major = TRUE, ...)
 
 \method{subset}{feature_tbl}(x, start_val = 0, stop_val = max(x$stop), ...)
 }
@@ -14,11 +14,11 @@
 
 \item{major}{if \code{TRUE} (default), only summarize genes and exons}
 
-\item{x}{tbl of feature information from \code{\link{get_feature_tbl}}}
+\item{...}{additional parameters ignored}
+
+\item{x}{tbl of feature information from \code{\link{get_feature_snp}}}
 
 \item{start_val, stop_val}{start and stop positions for subset}
-
-\item{...}{additional parameters ignored}
 }
 \value{
 tbl of feature summaries by type

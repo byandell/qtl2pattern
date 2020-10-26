@@ -1,6 +1,6 @@
 #' Collapse genoprob according to pattern
 #'
-#' @param probs1 object of class \code{\link[qtl2]{calc_genoprob}}
+#' @param snpprobs object of class \code{\link[qtl2]{calc_genoprob}}
 #' @param action SNP gene action type
 #'
 #' @return object of class \code{\link[qtl2]{calc_genoprob}}

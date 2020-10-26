@@ -34,14 +34,6 @@ allele1(
 \item{blups}{Create BLUPs if \code{TRUE}}
 
 \item{...}{additional parameters}
-
-\item{scanH}{Object of class \code{\link[qtl2]{scan1}} with allele scan.}
-
-\item{coefH}{Object of class \code{\link[qtl2]{scan1coef}}.}
-
-\item{coefD}{Object of class \code{\link[qtl2]{scan1coef}} with allele pair coefficients.}
-
-\item{scan_pat}{Object of class \code{\link{scan_pattern}}.}
 }
 \value{
 Table with allele effects across sources.

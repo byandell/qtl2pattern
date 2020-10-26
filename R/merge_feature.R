@@ -2,7 +2,7 @@
 #'
 #' Merge all SNPs in small region with LOD peaks across multiple phenotype.
 #'
-#' @param top_snps_tbl tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2]{top_snps}}
+#' @param top_snps_tbl tbl from \code{\link{top_snps_all}} or \code{\link[qtl2]{top_snps}}
 #' @param snpinfo SNP information table
 #' @param out_lmm_snps tbl from \code{\link[qtl2]{scan1}} on SNPs
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
@@ -19,6 +19,7 @@
 #'
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
+#' @importFrom rlang .data
 #' @importFrom qtl2 top_snps
 #'
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
@@ -29,9 +30,9 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
   ## Add lod by phename to top_snps_tbl
   top_snps_tbl <- dplyr::arrange(
     dplyr::select(
-      dplyr::distinct(top_snps_tbl, snp_id, .keep_all=TRUE),
-      -pheno),
-    pos)
+      dplyr::distinct(top_snps_tbl, .data$snp_id, .keep_all=TRUE),
+      -.data$pheno),
+    .data$pos)
 
   ## Add columns for exons.
   tmp <- top_snps_tbl$pos
@@ -49,17 +50,17 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
     tmp2 <- dplyr::distinct(
       dplyr::filter(
         qtl2::top_snps(
-          subset(out_lmm_snps, lodcolumn=match(i, phename)),
+          subset(out_lmm_snps, lodcolumn = match(i, phename)),
           snpinfo,
           drop=drop),
-        snp_id %in% near_snp_id),
-      index, .keep_all=TRUE)
+        .data$snp_id %in% near_snp_id),
+      .data$index, .keep_all=TRUE)
     top_snps_tbl[[i]] <- tmp2$lod[match(top_snps_tbl$index, tmp2$index)]
   }
   out <- dplyr::select(
     dplyr::mutate(top_snps_tbl,
-                  snp_type = abbreviate(consequence,15)),
-    -lod)
+                  snp_type = abbreviate(.data$consequence,15)),
+    -.data$lod)
   
   # haplos
   haplos <- snpinfo_to_haplos(snpinfo)

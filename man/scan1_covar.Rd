@@ -23,9 +23,19 @@ sexcovar(addcovar, sex_type)
 
 \item{cov_df}{data frame of covariates}
 
+\item{probs_obj}{object with genotype probabilities}
+
 \item{kinship}{kinship matrix or list of kinship matrices}
 
 \item{analyses_df}{data frame of analyses information}
+
+\item{...}{additional arguments passed on}
+
+\item{addcovar}{Data frame of additive covariate.}
+
+\item{wh}{Index for which row of \code{analyses_df} to use.}
+
+\item{sex_type}{Logical flag to subset by sex if \code{"F"} or \code{"M"}.}
 }
 \description{
 Scan1 for multiple traits with possibly different covariates, and some helper routines.

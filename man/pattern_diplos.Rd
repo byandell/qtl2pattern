@@ -10,7 +10,7 @@ pattern_diplos(sdp, haplos, diplos, cont = NULL)
 pattern_haplos(sdp, haplos)
 }
 \arguments{
-\item{sdp}{vector of sdp from \code{\link{topsnp_pattern}}}
+\item{sdp}{vector of sdp from \code{\link{top_snps_all}}}
 
 \item{haplos}{vector of haplotype names}
 

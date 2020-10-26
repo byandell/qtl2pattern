@@ -18,6 +18,7 @@
 #' @importFrom dplyr bind_cols filter
 #' @importFrom tidyr gather
 #' @importFrom ggplot2 aes geom_path geom_vline ggplot ggtitle
+#' @importFrom rlang .data
 #' 
 ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod"),
                               patterns = x$patterns$founders,
@@ -37,7 +38,7 @@ ggplot_scan_pattern_internal <- function(x, map, plot_type,
                                          colors = NULL, ...) {
   
   x$patterns <- dplyr::filter(x$patterns,
-                              max_lod >= min_lod)
+                              .data$max_lod >= min_lod)
   
   m <- x$patterns$founders %in% patterns
   patterns <- x$patterns$founders[m]

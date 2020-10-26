@@ -12,16 +12,20 @@ Depends:
 Imports:
     dplyr,
     tidyr,
+    purrr,
     stringr,
     ggplot2,
+    qtl2ggplot,
     assertthat,
     RColorBrewer,
     qtl2,
     qtl2fst,
-    fst
+    fst,
+    rlang,
+    stats,
+    graphics
 Suggests:
-    knitr, rmarkdown,
-    qtl2ggplot, qtl2fst
+    knitr, rmarkdown
 VignetteBuilder: knitr
 License: GPL-3
 URL: http://github.com/byandell/qtl2pattern

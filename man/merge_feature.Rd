@@ -17,7 +17,7 @@ merge_feature(
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"), ...)
 }
 \arguments{
-\item{top_snps_tbl}{tbl from \code{\link{get_top_snps_tbl}} or \code{\link[qtl2]{top_snps}}}
+\item{top_snps_tbl}{tbl from \code{\link{top_snps_all}} or \code{\link[qtl2]{top_snps}}}
 
 \item{snpinfo}{SNP information table}
 

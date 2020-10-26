@@ -45,7 +45,7 @@ subset_listof_scan1coef(x, elements, ...)
 
 \item{blups}{Create BLUPs if \code{TRUE}}
 
-\item{object}{object of class \code{listof_scan1coeff}}
+\item{object}{object of class \code{listof_scan1coef}}
 
 \item{scan1_object}{object from \code{scan1}}
 
@@ -58,21 +58,21 @@ subset_listof_scan1coef(x, elements, ...)
 
 \item{...}{ignored}
 
-\item{x}{object of class \code{listof_scan1coeff}}
+\item{x}{object of class \code{listof_scan1coef}}
 
 \item{elements}{indexes or names of list elements in x}
 }
 \value{
-object of class \code{listof_scan1coeff}
+object of class \code{listof_scan1coef}
 }
 \description{
 Create a list of scan1coef objects using \code{\link[qtl2]{scan1coef}}.
 
-Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+Summary of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 
-Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+Summary of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 
-Subset of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+Subset of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 }
 \examples{
 \dontrun{listof_scan1coef(probs, phe)}

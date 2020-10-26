@@ -15,6 +15,7 @@
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param snp_col color of SNP vertical lines (default "grey70")
 #' @param extend extend region for SNPs in bp (default 0.005)
+#' @param keep identifiers for rows to keep
 #' @param ... additional arguments (not used)
 #'
 #' @return data frame of gene information (invisible)
@@ -29,6 +30,7 @@
 #' @importFrom ggplot2 aes element_blank geom_rect geom_text geom_vline
 #' ggplot scale_color_gradient theme xlab ylab
 #' @importFrom dplyr arrange filter
+#' @importFrom rlang .data
 #' 
 ggplot_feature_tbl <- function(x,
                              rect_col = "grey70",
@@ -41,6 +43,7 @@ ggplot_feature_tbl <- function(x,
                              top_snps_tbl = NULL,
                              snp_col = "grey70",
                              extend = 0.005,
+                             keep,
                              ...) {
   # If we have no genes, just plot an empty frame and return.
   if(is.null(x) || length(x) == 0) {
@@ -48,7 +51,7 @@ ggplot_feature_tbl <- function(x,
     return()
   } # if(is.null(x) || nrow(x) == 0)
   
-  x <- dplyr::arrange(x, desc(type),strand,start)
+  x <- dplyr::arrange(x, desc(.data$type), .data$strand, .data$start)
   
   # Expand rect_col and text_col; add Name.
   if(is.null(rect_col))
@@ -76,7 +79,7 @@ ggplot_feature_tbl <- function(x,
   if(is.null(xlim))
     xlim <- c(min(x$start), max(x$stop))
   else {
-    x <- dplyr::filter(x, stop >= xlim[1] & start <= xlim[2])
+    x <- dplyr::filter(x, .data$stop >= xlim[1] & .data$start <= xlim[2])
     # If we have no genes to plot, just return.
     if(nrow(x) == 0) {
       warning("no genes in interval")
@@ -121,7 +124,7 @@ ggplot_feature_tbl <- function(x,
           tmp <- data.frame(pos = snp_pos[keep],
                             lod = snp_col[keep])
           p <- p + ggplot2::geom_vline(data = tmp,
-                                  ggplot2::aes(xintercept = pos, col = lod),
+                                  ggplot2::aes(xintercept = .data$pos, col = .data$lod),
                                   linetype = "dashed") +
             ggplot2::scale_color_gradient(low = "grey90", high = "grey10")
         }
@@ -134,10 +137,10 @@ ggplot_feature_tbl <- function(x,
   }
   p <- p +
     ggplot2::geom_rect(
-      mapping = ggplot2::aes(xmin = start,
-                             xmax = stop,
-                             ymin = bottom,
-                             ymax = bottom - 1 + offset),
+      mapping = ggplot2::aes(xmin = .data$start,
+                             xmax = .data$stop,
+                             ymin = .data$bottom,
+                             ymax = .data$bottom - 1 + offset),
       fill = rect_col,
       color = rect_edge) +
     ggplot2::xlab(paste("Chr", x$chr[1], "(Mb)")) +
@@ -152,9 +155,9 @@ ggplot_feature_tbl <- function(x,
     if(!all(x$Name=="")) {
       p <- p +
         ggplot2::geom_text(
-          mapping = ggplot2::aes(x = (stop + nudge),
-                                 y = bottom - 0.5 + offset,
-                                 label = Name,
+          mapping = ggplot2::aes(x = (.data$stop + nudge),
+                                 y = .data$bottom - 0.5 + offset,
+                                 label = .data$Name,
                                  hjust = 0,
                                  vjust = 0.5),
           size = text_size,
@@ -183,8 +186,9 @@ autoplot.feature_tbl <- function(x, ...)
 #' @param str_rect character spacing on left and right of rectangles (default c("iW","i"))
 #' @param n_rows desired number of rows (default 10)
 #' @param plot_width width of default plot window (in inches)
+#' @param ... additional parameters (not used)
 #'
-#' @return list object used by \code{\link{gene_plot}}
+#' @return list object used by \code{\link{ggplot_feature_tbl}}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #'    Daniel Gatti, \email{Dan.Gatti@@jax.org}
@@ -202,7 +206,7 @@ get.gene.locations = function(locs, xlim, text_size=3,
   ## This is in mm. Really want it in xlim coordinates.
   ## Should perhaps depend on text size.
   str_width <- function(chars, text_fudge = 4) {
-    strwidth(chars, "inches") * diff(xlim) * text_size /
+    graphics::strwidth(chars, "inches") * diff(xlim) * text_size /
       (text_fudge * plot_width)
   }
   str_rect <- rep(str_rect, length.out=2)

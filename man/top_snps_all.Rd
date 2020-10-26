@@ -39,13 +39,15 @@ top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE, haplos)
 
 \item{show_all_snps}{show all SNPs if \code{TRUE}}
 
+\item{haplos}{optional argument identify codes for haplotypes}
+
 \item{object}{object of class \code{top_snps_tbl}}
 
 \item{sum_type}{type of summary (one of "range","peak","best")}
 
 \item{...}{additional parameters ignored}
 
-\item{x}{tbl of feature information from \code{\link{get_feature_tbl}}}
+\item{x}{tbl of feature information from \code{\link{get_feature_snp}}}
 
 \item{start_val, stop_val}{start and stop positions for subset}
 

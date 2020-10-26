@@ -25,6 +25,7 @@
 #' @export
 #' @importFrom dplyr filter group_by inner_join mutate n rename summarize ungroup
 #' @importFrom fst read_fst
+#' @importFrom rlang .data
 #'
 read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
                       local = TRUE, qtl = FALSE, 
@@ -41,17 +42,17 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
   peaks.mrna <- fst::read_fst(file.path(datapath, mrnadir, "peaks.mrna.fst"))
   if(local) {
     peaks.mrna <- dplyr::filter(peaks.mrna,
-                                gene_chr == chr_id,
-                                pmax(gene_start, gene_end) >= start_val,
-                                pmin(gene_start, gene_end) <= end_val)
+                                .data$gene_chr == chr_id,
+                                pmax(.data$gene_start, .data$gene_end) >= start_val,
+                                pmin(.data$gene_start, .data$gene_end) <= end_val)
   } else {
     peaks.mrna <- dplyr::filter(peaks.mrna,
-                                ((gene_chr == chr_id &
-                                    pmax(gene_start, gene_end) >= start_val &
-                                    pmin(gene_start, gene_end) <= end_val) |
-                                   (qtl_chr == chr_id &
-                                      qtl_pos >= start_val &
-                                      qtl_pos <= end_val)))
+                                ((.data$gene_chr == chr_id &
+                                    pmax(.data$gene_start, .data$gene_end) >= start_val &
+                                    pmin(.data$gene_start, .data$gene_end) <= end_val) |
+                                   (.data$qtl_chr == chr_id &
+                                      .data$qtl_pos >= start_val &
+                                      .data$qtl_pos <= end_val)))
   }
   mrna_ids <- unique(peaks.mrna$gene_id)
 
@@ -60,8 +61,8 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
     dplyr::rename(
       dplyr::filter(
         readRDS(file.path(datapath, mrnadir, "annot.mrna.rds")),
-        id %in% mrna_ids),
-      pos = middle_point)
+        .data$id %in% mrna_ids),
+      pos = .data$middle_point)
 
   annot.mrna <-
     dplyr::mutate(
@@ -70,29 +71,29 @@ read_mrna <- function(chr_id=NULL, start_val=NULL, end_val=NULL, datapath,
         dplyr::rename(
           dplyr::ungroup(
             dplyr::summarize(
-              dplyr::group_by(peaks.mrna, gene_id),
+              dplyr::group_by(peaks.mrna, .data$gene_id),
               qtl_ct = dplyr::n(),
-              info = paste0(qtl_chr, "@",
-                            round(qtl_pos), ":",
-                            round(lod), collapse = ","),
-              qtl_pos = ifelse(any(qtl_chr == chr_id &
-                                   qtl_pos >= start_val &
-                                   qtl_pos <= end_val),
-                               qtl_pos[qtl_chr == chr_id], NA),
-              lod = ifelse(is.na(qtl_pos),
-                           NA, lod))),
-          id = gene_id),
+              info = paste0(.data$qtl_chr, "@",
+                            round(.data$qtl_pos), ":",
+                            round(.data$lod), collapse = ","),
+              qtl_pos = ifelse(any(.data$qtl_chr == chr_id &
+                                     .data$qtl_pos >= start_val &
+                                     .data$qtl_pos <= end_val),
+                               .data$qtl_pos[.data$qtl_chr == chr_id], NA),
+              lod = ifelse(is.na(.data$qtl_pos),
+                           NA, .data$lod))),
+          id = .data$gene_id),
         by = "id"),
-      local = !is.na(qtl_pos) &
-        chr == chr_id &
-        pmax(start,end) >= start_val &
-        pmin(start,end) <= end_val)
+      local = !is.na(.data$qtl_pos) &
+        .data$chr == chr_id &
+        pmax(.data$start, .data$end) >= start_val &
+        pmin(.data$start, .data$end) <= end_val)
 
   if(qtl) {
-    annot.mrna <- dplyr::filter(annot.mrna, !is.na(qtl_pos))
+    annot.mrna <- dplyr::filter(annot.mrna, !is.na(.data$qtl_pos))
     # Reduce to mRNA having peak in region.
     expr_id <- annot.mrna$id
-    peaks.mrna <- dplyr::filter(peaks.mrna, gene_id %in% expr_id)
+    peaks.mrna <- dplyr::filter(peaks.mrna, .data$gene_id %in% expr_id)
   } else {
     expr_id <- annot.mrna$id
   }

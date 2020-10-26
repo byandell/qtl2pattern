@@ -297,12 +297,6 @@ Highlight only top SDP patterns in SNPs.
 autoplot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
 ```
 
-Here is interactive version. Particularly useful when there are mutliple SV Types (`INS, DEL, InDel, ...`).
-
-```{r}
-plotly::ggplotly(autoplot(out_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2))
-```
-
 ```{r}
 autoplot(coefs, scan1_output = scan_apr, DOex$pmap)
 ```

@@ -19,6 +19,7 @@
 #'
 #' @importFrom purrr map transpose
 #' @importFrom dplyr bind_cols bind_rows distinct everything filter one_of select
+#' @importFrom rlang .data
 #'
 hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
   # Set up list by chr of postions and peaks.
@@ -35,7 +36,7 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
   }
 
   peaks <- dplyr::filter(peaks,
-                         lod >= minLOD)
+                         .data$lod >= minLOD)
   if(!nrow(peaks))
     return(NULL)
   out_chr <- purrr::transpose(list(pos = chr_pos,
@@ -54,7 +55,7 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
       return(NULL)
     # count peaks by group. But should check to make sure group has unique name.
     # and if pheno_group = pheno_type, then only need one?
-    groups <- dplyr::distinct(peaks, pheno_group, pheno_type)
+    groups <- dplyr::distinct(peaks, .data$pheno_group, .data$pheno_type)
     groups <- split(groups$pheno_type, groups$pheno_group)
     grps <- data.frame(
       purrr::map(groups,

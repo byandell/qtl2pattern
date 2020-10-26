@@ -24,5 +24,5 @@ and return a list with `probs` object and a `map` object.
 Note that this function assumes positions are in Mbp.
     There are required columns for each element, to be detailed in time.
     See \code{\link{read_mrna}} for details on how mRNA data are read.
-    See \code{\link[qtl2]{create_variants_query_func}} for original idea.
+    See \code{\link[qtl2]{create_variant_query_func}} for original idea.
 }

@@ -14,13 +14,15 @@
 #' @importFrom ggplot2 aes element_blank 
 #' facet_grid geom_text ggplot scale_x_continuous theme
 #' @importFrom dplyr filter group_by mutate ungroup
+#' @importFrom stats median quantile
+#' @importFrom rlang .data
 #' 
 ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
                          legend.position = "none", ...) {
   
   if(is.null(pos)) {
     if(is.null(scan1_object))
-      pos_center <- median(x$pos)
+      pos_center <- stats::median(x$pos)
     else
       pos_center <- summary(scan1_object, map)$pos[1]
   } else {
@@ -41,13 +43,13 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
   if(trim & is.null(attr(x, "blups")))
     x <- trim_quant(x)
   else
-    x <- dplyr::mutate(x, trim = effect)
+    x <- dplyr::mutate(x, trim = .data$effect)
   
   x$x <- jitter(rep(1, nrow(x)))
   
   p <- ggplot2::ggplot(x,
-         ggplot2::aes(x=x, y=trim, value=effect, col = probe, 
-                      label = allele)) + 
+         ggplot2::aes(x = .data$x, y = .data$trim, value = .data$effect, col = .data$probe, 
+                      label = .data$allele)) + 
     ggplot2::geom_text(size = 4)
   
   p + ggplot2::facet_grid(~source, scales = "free") +
@@ -66,7 +68,7 @@ autoplot.allele1 <- function(x, ...)
   ggplot_allele1(x, ...)
 
 trim_quant <- function(object, beyond = 3) {
-  quant <- quantile(object$effect, c(.25,.75))
+  quant <- stats::quantile(object$effect, c(.25,.75))
   range <- quant + c(-1,1) * beyond * diff(quant)
   object$trim <- pmin(pmax(object$effect, range[1]), range[2])
   object

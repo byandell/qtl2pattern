@@ -16,14 +16,16 @@
 #' @export
 #' @rdname gene_exon
 #' @importFrom dplyr arrange desc distinct everything mutate select
+#' @importFrom rlang .data
+#' 
 get_gene_exon_snp <- function(top_snps_tbl,
                               feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])) {
   ## Only need distinct snp_id.
   top_snps_tbl <- dplyr::arrange(
     dplyr::select(
-      dplyr::distinct(top_snps_tbl, snp_id, .keep_all=TRUE),
-      -pheno),
-    pos)
+      dplyr::distinct(top_snps_tbl, .data$snp_id, .keep_all=TRUE),
+      -.data$pheno),
+    .data$pos)
 
   if(is.null(top_snps_tbl))
     return(NULL)
@@ -37,17 +39,20 @@ get_gene_exon_snp <- function(top_snps_tbl,
   gene_snp <- get_gene_snp(
     dplyr::select(
       top_snps_tbl, 
-      snp_id,pos,lod),
+      .data$snp_id, .data$pos, .data$lod),
     feature_tbl)
   get_gene_exon(feature_tbl, gene_snp)
 }
+
+query_genes <- function(...) {}
+query_variants <- function(...) {}
 
 #' Get exons for set of genes
 #'
 #' Match up exon start,stop,strand with genes.
 #'
 #' @param feature_tbl tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
-#' @param gene_snp tbl of genes with SNPs IDs from \code{\link{match_feature_snp}}
+#' @param gene_snp tbl of genes with SNPs IDs from \code{\link{get_feature_snp}}
 #'
 #' @return tbl of exon and gene features
 #'
@@ -66,7 +71,7 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
     return(NULL)
   
   ## Need to get unique genes -- duplication with SNPs.
-  gene_snp <- dplyr::distinct(gene_snp, gene, .keep_all=TRUE)
+  gene_snp <- dplyr::distinct(gene_snp, .data$gene, .keep_all=TRUE)
   
   if(!nrow(gene_snp)) {
     return(NULL)
@@ -79,17 +84,17 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
     ## get genei and exons spanning genei
     exons[[genei]] <- dplyr::filter(
       dplyr::filter(feature_tbl,
-                    type %in% c("exon","gene"),
-                    start >= gene_snp$start[exoni],
-                    stop <= gene_snp$stop[exoni]),
-      (!is.na(Name) & Name==genei) | type=="exon")
+                    .data$type %in% c("exon","gene"),
+                    .data$start >= gene_snp$start[exoni],
+                    .data$stop <= gene_snp$stop[exoni]),
+      (!is.na(.data$Name) & .data$Name == genei) | .data$type == "exon")
     strandi <- gene_snp$strand[exoni]
     if(strandi != "." & !is.na(strandi))
-      exons[[genei]] <- dplyr::filter(exons[[genei]], strand==strandi)
+      exons[[genei]] <- dplyr::filter(exons[[genei]], .data$strand == strandi)
   }
   out <- dplyr::distinct(
-    dplyr::bind_rows(exons, .id="gene"),
-    start, stop, strand, .keep_all=TRUE)
+    dplyr::bind_rows(exons, .id = "gene"),
+    .data$start, .data$stop, .data$strand, .keep_all=TRUE)
   class(out) <- c("gene_exon", class(out))
 
   out
@@ -99,7 +104,8 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #'
 #' Returns table of gene and its exons.
 #'
-#' @param gene_exon tbl of feature information from \code{\link{get_gene_exon}}
+#' @param object Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon}}
+#' @param ... additional parameters passed on to methods
 #' @param gene_name name of gene as character string
 #' @param top_snps_tbl table of top SNPs in region from \code{\link[qtl2]{top_snps}}
 #' @param extra extra region beyond gene for SNPs (in Mbp)
@@ -113,9 +119,10 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #' @rdname gene_exon
 #' @export
 #' @importFrom dplyr arrange desc distinct filter group_by mutate n select summarize ungroup
-summary.gene_exon <- function(gene_exon, gene_name=NULL,
+#' 
+summary.gene_exon <- function(object, gene_name=NULL,
                               top_snps_tbl = NULL,
-                              extra = 0.005) {
+                              extra = 0.005, ...) {
   ## Want to add columns for each phenotype
   ## with number of SNPs within extra of each gene.
   ## How to do this cleverly?
@@ -123,33 +130,33 @@ summary.gene_exon <- function(gene_exon, gene_name=NULL,
     out <- dplyr::distinct(
       dplyr::arrange(
         dplyr::select(
-          dplyr::filter(gene_exon, gene==gene_name),
-          gene, source, type, start, stop, strand),
-        dplyr::desc(type)),
-      start, stop, strand, .keep_all=TRUE)
+          dplyr::filter(object, .data$gene == gene_name),
+          .data$gene, .data$source, .data$type, .data$start, .data$stop, .data$strand),
+        dplyr::desc(.data$type)),
+      .data$start, .data$stop, .data$strand, .keep_all=TRUE)
   } else {
     out <- dplyr::ungroup(
       dplyr::summarize(
         dplyr::group_by(
           dplyr::distinct(
-            dplyr::filter(gene_exon, type != "gene"),
-            start, stop, strand, .keep_all=TRUE),
-          gene),
+            dplyr::filter(object, .data$type != "gene"),
+            .data$start, .data$stop, .data$strand, .keep_all=TRUE),
+          .data$gene),
         exons = dplyr::n(),
-        min.len = min(stop-start),
-        max.len = max(stop-start),
-        sum.len = sum(stop-start),
-        min_Mbp = min(start),
-        max_Mbp = max(stop),
-        strand = strand[1]))
+        min.len = min(.data$stop - .data$start),
+        max.len = max(.data$stop - .data$start),
+        sum.len = sum(.data$stop - .data$start),
+        min_Mbp = min(.data$start),
+        max_Mbp = max(.data$stop),
+        strand = .data$strand[1]))
     out <- dplyr::select(
       out,
-      gene, exons, strand, min_Mbp, max_Mbp, dplyr::everything())
+      .data$gene, .data$exons, .data$strand, .data$min_Mbp, .data$max_Mbp, dplyr::everything())
     
     if(!is.null(top_snps_tbl)) {
       ## Goal: add columns to out for each pheno in top_snps_tbl.
       ## Column should have number of SNPs within extra of gene.
-      top_snps_tbl <- dplyr::select(top_snps_tbl, pheno, pos, lod)
+      top_snps_tbl <- dplyr::select(top_snps_tbl, .data$pheno, .data$pos, .data$lod)
       pheno_names <- sort(unique(top_snps_tbl$pheno))
       outlim <- out[,c("min_Mbp","max_Mbp")]
       outlim[,1] <- outlim[,1] - extra
@@ -164,23 +171,27 @@ summary.gene_exon <- function(gene_exon, gene_name=NULL,
                   else
                     NA
                 },
-                dplyr::filter(top_snps_tbl, pheno == pheno_val))
+                dplyr::filter(top_snps_tbl, .data$pheno == pheno_val))
       }
       tmp <- out[pheno_names]
       out$max_lod <- apply(tmp, 1, max)
       out <- dplyr::arrange(
         dplyr::select(
           out,
-          gene, max_lod, dplyr::everything()),
-        dplyr::desc(max_lod))
+          .data$gene, .data$max_lod, dplyr::everything()),
+        dplyr::desc(.data$max_lod))
     }
   }
   out
 }
+#' @param x Object of class \code{gene_exon}.
+#' @param gene_val Name of gene from object \code{x}.
+#' @param ... additional parameters passed on to methods
+#' 
 #' @rdname gene_exon
 #' @export
 subset.gene_exon <- function(x, gene_val, ...) {
-  x <- dplyr::filter(x, gene %in% gene_val)
+  x <- dplyr::filter(x, .data$gene %in% gene_val)
   class(x) <- c("gene_exon", class(x))
   x
 }

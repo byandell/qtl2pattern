@@ -8,7 +8,7 @@
 #' @param covar matrix of covariates
 #' @param blups Create BLUPs if \code{TRUE}
 #'
-#' @return object of class \code{listof_scan1coeff}
+#' @return object of class \code{listof_scan1coef}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
@@ -31,11 +31,11 @@ listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
   eff
 }
 
-#' Summary of object of class listof_scan1coeff
+#' Summary of object of class listof_scan1coef
 #'
-#' Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+#' Summary of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 #'
-#' @param object object of class \code{listof_scan1coeff}
+#' @param object object of class \code{listof_scan1coef}
 #' @param scan1_object object from \code{scan1}
 #'
 #' @param map A list of vectors of marker positions, as produced by
@@ -89,11 +89,11 @@ summary_listof_scan1coef <-
 summary.listof_scan1coef <- function(object, ...)
   summary_listof_scan1coef(object, ...)
 
-#' Summary of object of class listof_scan1coeff
+#' Summary of object of class listof_scan1coef
 #'
-#' Summary of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+#' Summary of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 #'
-#' @param object object of class \code{listof_scan1coeff}
+#' @param object object of class \code{listof_scan1coef}
 #' @param scan1_object object from \code{scan1}
 #' @param ... arguments for \code{\link[qtl2]{plot_coef}}
 #'
@@ -119,11 +119,11 @@ summary_scan1coef <-
 summary.scan1coef <- function(object, ...)
   summary_scan1coef(object, ...)
 
-#' Subset of object of class listof_scan1coeff
+#' Subset of object of class listof_scan1coef
 #'
-#' Subset of object of class \code{\link{listof_scan1coeff}}, which is a list of objects of class \code{scan1coef}.
+#' Subset of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 #'
-#' @param x object of class \code{listof_scan1coeff}
+#' @param x object of class \code{listof_scan1coef}
 #' @param elements indexes or names of list elements in x
 #' @param ... ignored
 #'

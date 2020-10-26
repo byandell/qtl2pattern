@@ -16,19 +16,23 @@ ggplot_gene_exon(
 \method{autoplot}{gene_exon}(x, ...)
 }
 \arguments{
+\item{gene_exon}{table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
+
 \item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
 \item{plot_now}{plot now if TRUE}
 
-\item{...}{arguments passed along to \code{\link{gene_plot}}}
+\item{genes}{Names of genes in object \code{get_gene_exon}.}
 
-\item{exon_tbl}{tbl of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
+\item{...}{arguments passed along to \code{\link{get_gene_exon}}}
+
+\item{x}{Object of class \code{gene_exon}.}
 }
 \value{
-list of ggplots (see \code{\link{gene_plot}})
+list of ggplots (see \code{\link{get_gene_exon}})
 }
 \description{
-Uses \code{\link{gene_plot}} to plot genes, exons, mRNA with SNPs.
+Uses \code{\link{get_gene_exon}} to plot genes, exons, mRNA with SNPs.
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

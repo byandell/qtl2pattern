@@ -64,7 +64,7 @@
 #'
 #' @export
 #' @importFrom dplyr arrange desc group_by mutate n select summarize tbl_df ungroup
-#' @importFrom tidyr gather
+#' @importFrom tidyr pivot_longer
 #'
 summary_scan1 <- function(object, map, snpinfo=NULL,
                           lodcolumn=seq_len(ncol(object)),
@@ -77,8 +77,8 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
       map <- map[chr]
     
     # scan1 LOD summary
-    thechr <- factor(qtl2:::map2chr(map), names(map))
-    thepos <- qtl2:::map2pos(map)
+    thechr <- factor(map2chr(map), names(map))
+    thepos <- map2pos(map)
     lod <- unclass(object)
     sign <- (lod >= 0) * 2 - 1
     coln <- colnames(lod)
@@ -111,12 +111,12 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
       dplyr::ungroup(
         dplyr::summarize(
           dplyr::group_by(
-            tidyr::gather(lod, pheno, lod, -chr, -pos, -mnames),
-            pheno, chr),
-          marker = mnames[which.max(lod)],
-          pos = pos[which.max(lod)],
-          lod = max(lod))),
-      chr)
+            tidyr::pivot_longer(lod, -(chr:mnames), names_to = "pheno", values_to = "lod"),
+            .data$pheno, .data$chr),
+          marker = .data$mnames[which.max(.data$lod)],
+          pos = .data$pos[which.max(.data$lod)],
+          lod = max(.data$lod))),
+      .data$chr)
   } else {
     # snpinfo summary
     ## top_snps() Adapted to multiple phenotypes.
@@ -133,22 +133,22 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                return(NULL)
              dplyr::arrange(
                dplyr::mutate(object,
-                             pattern = sdp_to_pattern(sdp, haplos)),
-               dplyr::desc(lod))},
+                             pattern = sdp_to_pattern(.data$sdp, haplos)),
+               dplyr::desc(.data$lod))},
            common = { ## Find most common patterns by pheno.
              dplyr::arrange(
                dplyr::mutate(
                  dplyr::ungroup(
                    dplyr::summarize(
-                     dplyr::group_by(object,pheno,sdp),
-                     count=dplyr::n(),
-                    pct=round(100 * dplyr::n() / nrow(object), 2),
-                    min_lod=min(lod),
-                    max_lod=max(lod),
-                    max_snp=snp_id[which.max(lod)],
-                    max_pos=pos[which.max(lod)])),
-                 pattern = sdp_to_pattern(sdp, haplos)),
-               dplyr::desc(max_lod))
+                     dplyr::group_by(object, .data$pheno, .data$sdp),
+                     count = dplyr::n(),
+                    pct = round(100 * dplyr::n() / nrow(object), 2),
+                    min_lod = min(.data$lod),
+                    max_lod = max(.data$lod),
+                    max_snp = .data$snp_id[which.max(.data$lod)],
+                    max_pos = .data$pos[which.max(.data$lod)])),
+                 pattern = sdp_to_pattern(.data$sdp, haplos)),
+               dplyr::desc(.data$max_lod))
            })
   }
 }

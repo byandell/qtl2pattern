@@ -14,7 +14,7 @@ get_gene_exon_snp(
 
 get_gene_exon(feature_tbl, gene_snp)
 
-\method{summary}{gene_exon}(gene_exon, gene_name = NULL, top_snps_tbl = NULL, extra = 0.005)
+\method{summary}{gene_exon}(object, gene_name = NULL, top_snps_tbl = NULL, extra = 0.005, ...)
 
 \method{subset}{gene_exon}(x, gene_val, ...)
 }
@@ -23,13 +23,19 @@ get_gene_exon(feature_tbl, gene_snp)
 
 \item{feature_tbl}{tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
 
-\item{gene_snp}{tbl of genes with SNPs IDs from \code{\link{match_feature_snp}}}
+\item{gene_snp}{tbl of genes with SNPs IDs from \code{\link{get_feature_snp}}}
 
-\item{gene_exon}{tbl of feature information from \code{\link{get_gene_exon}}}
+\item{object}{Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon}}}
 
 \item{gene_name}{name of gene as character string}
 
 \item{extra}{extra region beyond gene for SNPs (in Mbp)}
+
+\item{...}{additional parameters passed on to methods}
+
+\item{x}{Object of class \code{gene_exon}.}
+
+\item{gene_val}{Name of gene from object \code{x}.}
 }
 \value{
 tbl of exon and gene features
