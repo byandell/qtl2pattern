@@ -15,7 +15,6 @@
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param snp_col color of SNP vertical lines (default "grey70")
 #' @param extend extend region for SNPs in bp (default 0.005)
-#' @param keep identifiers for rows to keep
 #' @param ... additional arguments (not used)
 #'
 #' @return data frame of gene information (invisible)
@@ -43,7 +42,6 @@ ggplot_feature_tbl <- function(x,
                              top_snps_tbl = NULL,
                              snp_col = "grey70",
                              extend = 0.005,
-                             keep,
                              ...) {
   # If we have no genes, just plot an empty frame and return.
   if(is.null(x) || length(x) == 0) {
@@ -110,7 +108,7 @@ ggplot_feature_tbl <- function(x,
     ggplot2::theme(axis.text.y = ggplot2::element_blank(),
                    axis.ticks.y = ggplot2::element_blank(),
                    axis.title.y = ggplot2::element_blank())
-  snp_vline <- function(p, snp_pos, snp_lod, keep, xlim, extend) {
+  snp_vline <- function(p, snp_pos, snp_lod, xlim, extend) {
     if(is.numeric(snp_pos) & !is.null(snp_lod)) {
         keep <- snp_pos >= xlim[1] - extend &
         snp_pos <= xlim[2] + extend
@@ -133,7 +131,7 @@ ggplot_feature_tbl <- function(x,
     p
   }
   if(!is.null(snp_pos) & nrow(x) > 1) {
-    p <- snp_vline(p, snp_pos, snp_lod, keep, xlim, extend)
+    p <- snp_vline(p, snp_pos, snp_lod, xlim, extend)
   }
   p <- p +
     ggplot2::geom_rect(
@@ -147,7 +145,7 @@ ggplot_feature_tbl <- function(x,
     ggplot2::ylab("")
   if(!is.null(snp_pos) & nrow(x) == 1) {
     ## If only one Gene, then put SNP dashes in front of rectangles to show overlap.
-    p <- snp_vline(p, snp_pos, snp_lod, keep, xlim, extend)
+    p <- snp_vline(p, snp_pos, snp_lod, xlim, extend)
   }
   if(!is.null(type_col)) {
     ## Want to remove entries with no Name.
