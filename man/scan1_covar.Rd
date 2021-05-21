@@ -37,6 +37,9 @@ sexcovar(addcovar, sex_type)
 
 \item{sex_type}{Logical flag to subset by sex if \code{"F"} or \code{"M"}.}
 }
+\value{
+object of class \code{\link[qtl2]{scan1}}.
+}
 \description{
 Scan1 for multiple traits with possibly different covariates, and some helper routines.
 }

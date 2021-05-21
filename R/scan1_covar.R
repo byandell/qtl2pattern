@@ -7,6 +7,8 @@
 #' @param analyses_df data frame of analyses information
 #' @param ... additional arguments passed on
 #' 
+#' @return object of class \code{\link[qtl2]{scan1}}.
+#' 
 #' @export
 #' 
 #' @importFrom qtl2 scan1

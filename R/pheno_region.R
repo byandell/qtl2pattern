@@ -8,6 +8,8 @@
 #' @param pheno_data matrix of phenotype data
 #' @param drivers number of drivers (1 or 2; default is 2)
 #' 
+#' @return list containing \code{pheno}, \code{annot} and \code{covar}.
+#' 
 #' @export
 #' @importFrom dplyr filter group_by inner_join left_join n rename summarize ungroup
 #' @importFrom qtl2 find_marker

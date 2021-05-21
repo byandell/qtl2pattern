@@ -7,6 +7,8 @@
 #' @param stop  stop position in Mbp
 #' @param gene_tbl table of genes from user supplied \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}
 #' 
+#' @return object of class \code{\link{feature_tbl}}.
+#' 
 #' @export
 #' @importFrom dplyr filter
 #' @importFrom rlang .data

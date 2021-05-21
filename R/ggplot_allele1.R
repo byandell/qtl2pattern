@@ -10,6 +10,8 @@
 #' @param legend.position Legend position (default is \code{"none"}).
 #' @param ... Other parameters ignored.
 #' 
+#' @return object of class \code{\link[ggplot2]{ggplot}}
+#' 
 #' @export
 #' @importFrom ggplot2 aes element_blank 
 #' facet_grid geom_text ggplot scale_x_continuous theme

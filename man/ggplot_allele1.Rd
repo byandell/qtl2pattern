@@ -32,6 +32,9 @@ ggplot_allele1(
 
 \item{...}{Other parameters ignored.}
 }
+\value{
+object of class \code{\link[ggplot2]{ggplot}}
+}
 \description{
 Plot alleles for haplotype, diplotype and top patterns and genome position.
 }

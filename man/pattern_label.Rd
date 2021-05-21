@@ -20,6 +20,9 @@ pattern_sdp(label, sdp = NULL, geno_names = sort(unique(label)))
 
 \item{geno_names}{unique genotype names (alleles or allele pairs)}
 }
+\value{
+character vector of genotype names.
+}
 \description{
 Turn genotype probabilities into labels
 }

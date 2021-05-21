@@ -39,6 +39,9 @@ ggplot_scan_pattern(
 
 \item{...}{additional parameters}
 }
+\value{
+object of class \code{\link[ggplot2]{ggplot}}
+}
 \description{
 Plot scan pattern
 }

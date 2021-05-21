@@ -13,6 +13,9 @@ read_fast(datapath, columns = NULL, rownames = TRUE)
 
 \item{rownames}{use first column of rownames if \code{TRUE} (can supply column number)}
 }
+\value{
+extracted data frame with appropriate rows and columns.
+}
 \description{
 Read fast database with format \code{fst}. Use first column
 of database (must be named `ind`) as rownames if desired. R/qtl2 routines assume data frames have

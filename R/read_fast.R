@@ -8,6 +8,8 @@
 #' @param columns names or indexes for columns to be extracted
 #' @param rownames use first column of rownames if \code{TRUE} (can supply column number)
 #' 
+#' @return extracted data frame with appropriate rows and columns.
+#' 
 #' @export
 #' @importFrom fst read_fst
 #' @seealso \code{\link[fst]{read_fst}}

@@ -47,6 +47,9 @@ expr_region(
 
 \item{query_mrna}{query routine for mRNA data (see \code{\link{create_mrna_query_func}})}
 }
+\value{
+list containing \code{pheno}, \code{annot} and \code{covar}.
+}
 \description{
 Create list with phenotypes in region
 

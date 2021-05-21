@@ -38,6 +38,9 @@ score column; if multiple, only the first is used.}
 
 \item{pattern}{Use phenotype names as pattern.}
 }
+\value{
+object of class \code{\link[ggplot2]{ggplot}}
+}
 \description{
 Plot object of class \code{listof_scan1coeff}, which is a list of objects of class \code{scan1coef}.
 }

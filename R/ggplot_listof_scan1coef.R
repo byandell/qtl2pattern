@@ -23,6 +23,8 @@
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords hplot
+#' 
+#' @return object of class \code{\link[ggplot2]{ggplot}}
 #'
 #' @export
 #' @importFrom dplyr bind_rows

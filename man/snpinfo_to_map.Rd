@@ -27,6 +27,9 @@ snpinfo_to_map(snpinfo)
     in the \code{genoprobs}
 }}
 }
+\value{
+map as list of vectors of marker positions.
+}
 \description{
 Convert SNP info to map
 }

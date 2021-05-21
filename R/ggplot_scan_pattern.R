@@ -13,6 +13,8 @@
 #' @param facet Plot facets if multiple phenotypes and patterns provided (default = \code{"pheno"}).
 #' @param ... additional parameters
 #'
+#' @return object of class \code{\link[ggplot2]{ggplot}}
+#' 
 #' @export
 #' 
 #' @importFrom dplyr bind_cols filter

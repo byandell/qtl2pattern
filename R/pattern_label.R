@@ -4,6 +4,8 @@
 #' @param sdp SNP distribution pattern for plot colors
 #' @param allele Driver has alleles if \code{TRUE}, otherwise allele pairs.
 #' 
+#' @return character vector of genotype names.
+#' 
 #' @export
 pattern_label <- function(genos, allele = TRUE) {
   geno_names <- colnames(genos)

@@ -20,6 +20,8 @@
 #'     in the \code{genoprobs}
 #' }
 #'
+#' @return map as list of vectors of marker positions.
+#' 
 #' @export
 #' 
 snpinfo_to_map <-
