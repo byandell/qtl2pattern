@@ -1,9 +1,9 @@
 Package: qtl2pattern
 Type: Package
-Title: Pattern Support for R/qtl2
-Version: 1.0.2
-Date: 2021-05-21
-Authors@R: c(person("Brian S Yandell", "Author",
+Title: Pattern Support for 'qtl2' Package
+Version: 1.0.3
+Date: 2021-05-31
+Authors@R: c(person("Brian S Yandell",
                 role = c("aut", "cre"),
                 email = "brian.yandell@wisc.edu"))
 Description: Routines in 'qtl2' to study allele patterns.
@@ -28,7 +28,6 @@ Suggests:
     knitr, rmarkdown
 VignetteBuilder: knitr
 License: GPL-3
-URL: http://github.com/byandell/qtl2pattern
+URL: https://github.com/byandell/qtl2pattern
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.1

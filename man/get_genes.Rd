@@ -16,7 +16,7 @@ get_genes(chr_id, start, stop, gene_tbl = query_genes(chr_id, start, stop))
 \item{gene_tbl}{table of genes from user supplied \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 }
 \value{
-object of class \code{\link{feature_tbl}}.
+object of class \code{feature_tbl}.
 }
 \description{
 Get gene using \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}.
