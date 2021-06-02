@@ -21,7 +21,14 @@ vector of letter patterns
 Convert strain distribution pattern (sdp) to letter pattern.
 }
 \examples{
-\dontrun{sdp_to_pattern(snp, haplos)}
+example(DOex)
+# Extract strain distribution pattern.
+sdp <- snpinfo$sdp
+# Find out how many alleles.
+nallele <- ceiling(log2(max(sdp)))
+out <- sdp_to_pattern(sdp, LETTERS[seq_len(nallele)])
+# Show most frequent patterns. 
+head(rev(sort(table(out))))
 
 }
 \author{

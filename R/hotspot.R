@@ -13,7 +13,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{hotspot <- function(map, peaks, peak_window, minLOD)}
+#' \donttest{hotspot(map, peaks, peak_window, minLOD)}
 #'
 #' @export
 #'

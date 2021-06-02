@@ -15,7 +15,11 @@
 #' @keywords hplot
 #'
 #' @examples
-#' \dontrun{merge_feature(...)}
+#' example(top_snps_all)
+#' scan_apr <- qtl2::scan1(apr, DOex$pheno)
+#' out <- merge_feature(top_snps_tbl, snpinfo, scan_apr)
+#' # Object out will be null since there is no gene information.
+#' summary(out)
 #'
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
@@ -26,14 +30,17 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
                           gene_exon = get_gene_exon_snp(top_snps_tbl)) {
   phename <- dimnames(out_lmm_snps)[[2]]
-
+  
+  if(is.null(gene_exon))
+    return(NULL)
+  
   ## Add lod by phename to top_snps_tbl
   top_snps_tbl <- dplyr::arrange(
     dplyr::select(
       dplyr::distinct(top_snps_tbl, .data$snp_id, .keep_all=TRUE),
       -.data$pheno),
     .data$pos)
-
+  
   ## Add columns for exons.
   tmp <- top_snps_tbl$pos
   ins <- outer(gene_exon$start, tmp, "<=") &

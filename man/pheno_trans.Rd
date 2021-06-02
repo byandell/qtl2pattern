@@ -24,7 +24,10 @@ data frame of phenotypes
 Get phenotypes using data frame of phenopypes filtered by \code{analyses_tbl}
 }
 \examples{
-\dontrun{get_pheno(phe, analyses_tbl)}
+example(DOex)
+out <- pheno_trans(DOex$pheno, "OF_immobile_pct", "sqrt")
+summary(DOex$pheno)
+summary(out)
 
 }
 \author{

@@ -14,7 +14,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{listof_scan1coef(probs, phe)}
+#' \donttest{listof_scan1coef(probs, phe)}
 #'
 #' @export
 #' @importFrom qtl2 scan1coef scan1blup

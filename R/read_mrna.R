@@ -20,7 +20,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{read_probs(chr, datapath)}
+#' \donttest{read_probs(chr, datapath)}
 #'
 #' @export
 #' @importFrom dplyr filter group_by inner_join mutate n rename summarize ungroup

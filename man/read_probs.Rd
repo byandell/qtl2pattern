@@ -34,7 +34,7 @@ list with \code{probs} = large object of class \code{\link[qtl2]{calc_genoprob}}
 Read object from file stored according to method.
 }
 \examples{
-\dontrun{read_probs(chr, datapath)}
+\donttest{read_probs(chr, datapath)}
 
 }
 \author{

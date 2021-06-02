@@ -20,7 +20,7 @@ tbl of features covering SNPs
 Find features that overlap with SNPs
 }
 \examples{
-\dontrun{get_feature_snp(snp_tbl, feature_tbl)}
+\donttest{get_feature_snp(snp_tbl, feature_tbl)}
 
 }
 \author{

@@ -36,7 +36,7 @@ list with \code{snpprobs} and \code{snpinfo}
 Get SNP information from SQLite database within \code{window_Mbp} of \code{peak_Mbp} on \code{chri_id}
 }
 \examples{
-\dontrun{get_snpprobs(chr_id, peak_Mbp, window_Mbp, scan_obj, probs_obj, datapath)}
+\donttest{get_snpprobs(chr_id, peak_Mbp, window_Mbp, scan_obj, probs_obj, datapath)}
 
 }
 \author{

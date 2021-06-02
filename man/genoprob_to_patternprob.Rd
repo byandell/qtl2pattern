@@ -18,7 +18,7 @@ object of class \code{\link[qtl2]{calc_genoprob}}
 Collapse genoprob according to pattern
 }
 \examples{
-\dontrun{genoprob_to_patternprob(probs1, pattern_sets)}
+\donttest{genoprob_to_patternprob(probs1, pattern_sets)}
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

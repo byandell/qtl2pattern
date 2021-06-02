@@ -22,7 +22,7 @@ object of class hotspot as list of \code{\link[qtl2]{scan1}} and \code{map} obje
 Count hotspots by pheno_group and pheno_type.
 }
 \examples{
-\dontrun{hotspot <- function(map, peaks, peak_window, minLOD)}
+\donttest{hotspot(map, peaks, peak_window, minLOD)}
 
 }
 \author{

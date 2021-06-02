@@ -9,7 +9,10 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{snpprob_collapse(snpprobs, snpsets)}
+#' example(DOex)
+#' dim(snppr[[1]])
+#' dim(snpprob_collapse(snppr, "additive")[[1]])
+#' 
 #' @export
 snpprob_collapse <- function(snpprobs,
                              action = c("additive","add+dom","non-add",

@@ -11,7 +11,10 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_gene_exon_snp(top_snps_tbl)}
+#' example(top_snps_all)
+#' out <- get_gene_exon_snp(top_snps_tbl)
+#' # Object out will be null since there is no gene information.
+#' summary(out)
 #'
 #' @export
 #' @rdname gene_exon
@@ -20,6 +23,7 @@
 #' 
 get_gene_exon_snp <- function(top_snps_tbl,
                               feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])) {
+
   ## Only need distinct snp_id.
   top_snps_tbl <- dplyr::arrange(
     dplyr::select(
@@ -36,6 +40,10 @@ get_gene_exon_snp <- function(top_snps_tbl,
   if(length(chr_id) != 1)
     stop("need exactly 1 chromosome in top_snps_tbl")
   range_Mbp <- range(top_snps_tbl$pos) + c(-1,1) * 0.005
+  
+  if(is.null(feature_tbl)) # Can happen if query_genes not supplied.
+    return(NULL)
+  
   gene_snp <- get_gene_snp(
     dplyr::select(
       top_snps_tbl, 
@@ -58,9 +66,6 @@ query_variants <- function(...) {}
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
-#'
-#' @examples
-#' \dontrun{get_gene_exon(feature_snp)}
 #'
 #' @export
 #' @rdname gene_exon

@@ -24,7 +24,7 @@ tbl of genes covering SNPs
 Find features that overlap with SNPs
 }
 \examples{
-\dontrun{get_gene_snp(snp_tbl, feature_tbl)}
+\donttest{get_gene_snp(snp_tbl, feature_tbl)}
 
 }
 \author{

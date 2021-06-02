@@ -75,7 +75,7 @@ Summary of object of class \code{\link{listof_scan1coef}}, which is a list of ob
 Subset of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 }
 \examples{
-\dontrun{listof_scan1coef(probs, phe)}
+\donttest{listof_scan1coef(probs, phe)}
 
 }
 \author{

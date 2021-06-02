@@ -21,7 +21,10 @@ object of class \code{\link[qtl2]{calc_genoprob}}
 Collapse genoprob according to pattern
 }
 \examples{
-\dontrun{snpprob_collapse(snpprobs, snpsets)}
+example(DOex)
+dim(snppr[[1]])
+dim(snpprob_collapse(snppr, "additive")[[1]])
+
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

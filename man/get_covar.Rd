@@ -18,7 +18,7 @@ matrix of covariates
 Get covariates using \code{analyses_tbl} filtered by \code{phename_output}.
 }
 \examples{
-\dontrun{get_covar(covar, datapath)}
+\donttest{get_covar(covar, datapath)}
 
 }
 \author{

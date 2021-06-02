@@ -64,7 +64,10 @@ subset of \code{x}
 Separate fine mapping scans by allele pattern.
 }
 \examples{
-\dontrun{summary(object)}
+example(DOex)
+scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
+top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+summary(top_snps_tbl)
 
 }
 \author{

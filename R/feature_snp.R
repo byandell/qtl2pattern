@@ -12,7 +12,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_feature_snp(snp_tbl, feature_tbl)}
+#' \donttest{get_feature_snp(snp_tbl, feature_tbl)}
 #'
 #' @export
 #' @importFrom dplyr arrange bind_rows distinct filter group_by inner_join 

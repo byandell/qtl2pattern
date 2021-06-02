@@ -79,8 +79,7 @@ wh_covar <- function(analyses_df, wh, cov_df) {
 #' @rdname scan1_covar
 sexcovar <- function(addcovar, sex_type) {
   if(!all(sort(unique(addcovar$sex)) %in% c("M","F")) & sex_type %in% c("M","F")) {
-    cat("cannot handle levels of sex not M and F", file = stderr())
-    return(NULL)          
+    stop("cannot handle levels of sex not M and F")
   }
   switch(sex_type,
          "F" = addcovar <- addcovar[addcovar$sex == "F",, drop = FALSE],

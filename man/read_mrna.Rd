@@ -40,7 +40,7 @@ Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
     while `peaks` is an `RDS` database.
 }
 \examples{
-\dontrun{read_probs(chr, datapath)}
+\donttest{read_probs(chr, datapath)}
 
 }
 \author{

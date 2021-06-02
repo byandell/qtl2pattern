@@ -40,6 +40,7 @@ ggplot_gene_exon <- function(gene_exon, top_snps_tbl=NULL, plot_now=TRUE,
         ...) +
       ggplot2::ggtitle(genei)
   }
+  #*** NONSTANDARD ***
   if(plot_now & length(p)) {
     for(genei in genes)
       print(p[[genei]])

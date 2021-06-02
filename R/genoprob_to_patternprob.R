@@ -9,7 +9,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{genoprob_to_patternprob(probs1, pattern_sets)}
+#' \donttest{genoprob_to_patternprob(probs1, pattern_sets)}
 #' @export
 genoprob_to_patternprob <- function(probs1, sdp) {
   

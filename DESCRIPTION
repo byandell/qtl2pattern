@@ -6,7 +6,12 @@ Date: 2021-05-31
 Authors@R: c(person("Brian S Yandell",
                 role = c("aut", "cre"),
                 email = "brian.yandell@wisc.edu"))
-Description: Routines in 'qtl2' to study allele patterns.
+Description: Routines in 'qtl2' to study allele patterns in quantitative trait loci (QTL)
+    mapping over a chromosome.
+    Useful in crosses with more than two alleles to identify how sets of alleles,
+    genetically different strands at the same locus, have different response levels.
+    Plots show profiles over a chromosome.
+    Can handle multiple traits together.
 Depends:
     R (>= 3.1.0)
 Imports:

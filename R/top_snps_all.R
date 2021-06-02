@@ -30,6 +30,12 @@
 #'
 #' @return table of top_snps at maximum lod for \code{pattern}
 #'
+#' @examples
+#' example(DOex)
+#' scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
+#' top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+#' summary(top_snps_tbl)
+#'
 #' @export
 #' @importFrom dplyr everything filter group_by inner_join select ungroup
 #' @importFrom tidyr pivot_longer
@@ -92,9 +98,6 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
-#'
-#' @examples
-#' \dontrun{summary(object)}
 #'
 #' @method summary top_snps_all
 #' @rdname top_snps_all

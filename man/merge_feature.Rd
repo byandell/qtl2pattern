@@ -44,7 +44,11 @@ table summary
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
 }
 \examples{
-\dontrun{merge_feature(...)}
+example(top_snps_all)
+scan_apr <- qtl2::scan1(apr, DOex$pheno)
+out <- merge_feature(top_snps_tbl, snpinfo, scan_apr)
+# Object out will be null since there is no gene information.
+summary(out)
 
 }
 \author{

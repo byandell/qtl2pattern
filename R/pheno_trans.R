@@ -14,7 +14,10 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_pheno(phe, analyses_tbl)}
+#' example(DOex)
+#' out <- pheno_trans(DOex$pheno, "OF_immobile_pct", "sqrt")
+#' summary(DOex$pheno)
+#' summary(out)
 #'
 #' @export
 #' @importFrom assertthat assert_that is.number

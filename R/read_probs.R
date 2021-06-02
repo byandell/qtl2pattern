@@ -15,7 +15,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{read_probs(chr, datapath)}
+#' \donttest{read_probs(chr, datapath)}
 #'
 #' @export
 #' @importFrom qtl2fst subset_fst_genoprob

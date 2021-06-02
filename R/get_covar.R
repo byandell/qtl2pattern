@@ -11,7 +11,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_covar(covar, datapath)}
+#' \donttest{get_covar(covar, datapath)}
 #'
 #' @export
 get_covar <- function(covar, analyses_tbl) {

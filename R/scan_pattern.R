@@ -23,7 +23,12 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{scan_pattern(probs, phe, K, covar, patterns, haplos, diplos)}
+#' example(DOex)
+#' scan_snppr <- scan1(snppr, DOex$pheno)
+#' top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+#' patterns <- dplyr::arrange(summary(top_snps_tbl), dplyr::desc(max_lod))
+#' scan_pat <- scan_pattern(pr, DOex$pheno, map = DOex$pmap, patterns = patterns)
+#' summary(scan_pat, DOex$pmap)
 #'
 #' @export
 #' @importFrom dplyr group_by summarize ungroup

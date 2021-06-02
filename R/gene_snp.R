@@ -12,7 +12,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_gene_snp(snp_tbl, feature_tbl)}
+#' \donttest{get_gene_snp(snp_tbl, feature_tbl)}
 #'
 #' @export
 #' @importFrom dplyr distinct filter mutate select

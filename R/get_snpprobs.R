@@ -16,7 +16,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \dontrun{get_snpprobs(chr_id, peak_Mbp, window_Mbp, scan_obj, probs_obj, datapath)}
+#' \donttest{get_snpprobs(chr_id, peak_Mbp, window_Mbp, scan_obj, probs_obj, datapath)}
 #'
 #' @export
 #'
@@ -33,12 +33,8 @@ get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
 
   if(window_Mbp == 0) {
     window_Mbp <- 3
-    cat(file=stderr(),
-        "\nNo window_Mbp provided -- set to 3\n")
   }
   if(peak_Mbp == 0) {
-    cat(file=stderr(),
-        "\nNo peak_Mbp provided -- set to midpoint\n")
     peak_Mbp <- mean(range(probs_map[[1]]))
   }
 

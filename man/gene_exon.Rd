@@ -52,9 +52,10 @@ Match up exon start,stop,strand with genes.
 Returns table of gene and its exons.
 }
 \examples{
-\dontrun{get_gene_exon_snp(top_snps_tbl)}
-
-\dontrun{get_gene_exon(feature_snp)}
+example(top_snps_all)
+out <- get_gene_exon_snp(top_snps_tbl)
+# Object out will be null since there is no gene information.
+summary(out)
 
 }
 \author{
