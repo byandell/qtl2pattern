@@ -6,6 +6,9 @@
 \usage{
 DOex()
 }
+\value{
+This has side actions of creating variables.
+}
 \description{
 This is diversity outbred example data from 'qtl2data'.
 }
@@ -19,7 +22,7 @@ DOex <- subset(DOex, chr = "2")
 # Calculate genotype and allele probabilities
 pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
 
-# Download SNP info for DOex from web and read as RDS.
+# Download SNP info for DOex from web via RDS.
 tmpfile <- tempfile()
 download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
 snpinfo <- readRDS(tmpfile)
@@ -30,5 +33,10 @@ snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
 snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
 snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
 
+# Download Gene info for DOex from web via RDS
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+genes <- readRDS(tmpfile)
+unlink(tmpfile)
 
 }
