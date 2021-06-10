@@ -11,7 +11,18 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \donttest{get_covar(covar, datapath)}
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' 
+#' # Select Sex and Cohort columns of covariates
+#' analyses_tbl <- data.frame(Sex = TRUE, Cohort = TRUE)
+#' # Pull covariates
+#' covar <- get_covar(DOex$covar, analyses_tbl)
+#' tidyr::pivot_wider(
+#'   dplyr::count(covar, Sex, Cohort),
+#'   names_from = "Sex", values_from = "n")
 #'
 #' @export
 get_covar <- function(covar, analyses_tbl) {

@@ -11,7 +11,14 @@
 \alias{[.listof_scan1coef}
 \title{List of scan1coef objects}
 \usage{
-listof_scan1coef(probs, phe, K = NULL, covar = NULL, blups = FALSE)
+listof_scan1coef(
+  probs,
+  phe,
+  K = NULL,
+  covar = NULL,
+  blups = FALSE,
+  center = FALSE
+)
 
 summary_listof_scan1coef(
   object,
@@ -45,6 +52,8 @@ subset_listof_scan1coef(x, elements, ...)
 
 \item{blups}{Create BLUPs if \code{TRUE}}
 
+\item{center}{center coefficients if \code{TRUE}}
+
 \item{object}{object of class \code{listof_scan1coef}}
 
 \item{scan1_object}{object from \code{scan1}}
@@ -53,8 +62,6 @@ subset_listof_scan1coef(x, elements, ...)
 \code{\link[qtl2]{insert_pseudomarkers}}.}
 
 \item{coef_names}{names of effect coefficients (default is all coefficient names)}
-
-\item{center}{center coefficients if \code{TRUE}}
 
 \item{...}{ignored}
 
@@ -75,7 +82,24 @@ Summary of object of class \code{\link{listof_scan1coef}}, which is a list of ob
 Subset of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 }
 \examples{
-\donttest{listof_scan1coef(probs, phe)}
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+
+# Read DOex example cross from 'qtl2data'
+DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+DOex <- subset(DOex, chr = "2")
+
+# Calculate genotype and allele probabilities
+pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+apr <- qtl2::genoprob_to_alleleprob(pr)
+
+# Run scan1coef or scan1blup on all phenotypes, returning a list of \code{\link[qtl2]{scan1coef}} objects
+out <- listof_scan1coef(apr, DOex$pheno)
+
+# Summary of coefficients at scan peak
+scan_pr <- qtl2::scan1(pr, DOex$pheno, center = TRUE)
+summary(out, scan_pr, DOex$pmap)
+
+plot(out[[1]], DOex$pmap, columns = LETTERS[1:8])
 
 }
 \author{

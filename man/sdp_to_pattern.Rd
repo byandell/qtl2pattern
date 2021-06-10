@@ -21,7 +21,15 @@ vector of letter patterns
 Convert strain distribution pattern (sdp) to letter pattern.
 }
 \examples{
-example(DOex)
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+
+# Download SNP info for DOex from web and read as RDS.
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
+snpinfo <- readRDS(tmpfile)
+unlink(tmpfile)
+snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+
 # Extract strain distribution pattern.
 sdp <- snpinfo$sdp
 # Find out how many alleles.

@@ -7,6 +7,7 @@
 #' @param K list of length 1 with kinship matrix
 #' @param covar matrix of covariates
 #' @param blups Create BLUPs if \code{TRUE}
+#' @param center Make intercept constant if \code{TRUE}
 #'
 #' @return object of class \code{listof_scan1coef}
 #'
@@ -14,19 +15,47 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \donttest{listof_scan1coef(probs, phe)}
-#'
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' DOex <- subset(DOex, chr = "2")
+#' 
+#' # Calculate genotype and allele probabilities
+#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' apr <- qtl2::genoprob_to_alleleprob(pr)
+#' 
+#' # Run scan1coef or scan1blup on all phenotypes, returning a list of \code{\link[qtl2]{scan1coef}} objects
+#' out <- listof_scan1coef(apr, DOex$pheno)
+#' 
+#' # Summary of coefficients at scan peak
+#' scan_pr <- qtl2::scan1(pr, DOex$pheno, center = TRUE)
+#' summary(out, scan_pr, DOex$pmap)
+#' 
+#' plot(out[[1]], DOex$pmap, columns = LETTERS[1:8])
+#' 
 #' @export
 #' @importFrom qtl2 scan1coef scan1blup
 #' 
-listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE) {
+listof_scan1coef <- function(probs, phe, K=NULL, covar=NULL, blups = FALSE,
+                             center = FALSE) {
   eff <- list()
   phename <- dimnames(phe)[[2]]
   scan1fn <- ifelse(blups, 
-                    qtl2::scan1blup, 
-                    qtl2::scan1coef)
-  for(pheno in phename)
-    eff[[pheno]] <- scan1fn(probs, phe[, pheno, drop=FALSE], K, covar)
+                  qtl2::scan1blup,
+                  qtl2::scan1coef)
+
+  for(pheno in phename) {
+    out <- scan1fn(probs, phe[, pheno, drop=FALSE], K, covar)
+    if(center) {
+      intcol <- match("intercept", colnames(out))
+      mall <- mean(out[, intcol], na.rm = TRUE)
+      nall <- ncol(out) - 1
+      out[, -intcol] <- apply(out[,-intcol], 2, function(x, y) x - mall + y, out[,intcol])
+      out[, intcol] <- mall
+    }
+    eff[[pheno]] <- out
+  }
   class(eff) <- c("listof_scan1coef", class(eff))
   eff
 }

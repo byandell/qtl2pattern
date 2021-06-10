@@ -14,7 +14,11 @@
 #' @keywords utilities
 #'
 #' @examples
-#' example(DOex)
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' 
 #' out <- pheno_trans(DOex$pheno, "OF_immobile_pct", "sqrt")
 #' summary(DOex$pheno)
 #' summary(out)

@@ -1,4 +1,4 @@
-#' Plot scan pattern
+#' Plot scan pattern usign ggplot2
 #' 
 #' @param x object of class \code{\link{scan_pattern}}
 #' 

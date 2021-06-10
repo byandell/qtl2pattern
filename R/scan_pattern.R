@@ -23,11 +23,37 @@
 #' @keywords utilities
 #'
 #' @examples
-#' example(DOex)
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' DOex <- subset(DOex, chr = "2")
+#' 
+#' # Calculate genotype and allele probabilities
+#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' 
+#' # Download SNP info for DOex from web and read as RDS.
+#' tmpfile <- tempfile()
+#' download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
+#' snpinfo <- readRDS(tmpfile)
+#' unlink(tmpfile)
+#' snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+#' 
+#' # Convert to SNP probabilities
+#' snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
+#' snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
+#' 
+#' # Scan SNPs
 #' scan_snppr <- scan1(snppr, DOex$pheno)
 #' top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+#' 
+#' # Summarize to find top patterns
 #' patterns <- dplyr::arrange(summary(top_snps_tbl), dplyr::desc(max_lod))
+#' 
+#' # Scan using patterns.
 #' scan_pat <- scan_pattern(pr, DOex$pheno, map = DOex$pmap, patterns = patterns)
+#' 
+#' # Summary of scan pattern.
 #' summary(scan_pat, DOex$pmap)
 #'
 #' @export

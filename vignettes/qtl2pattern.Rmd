@@ -13,18 +13,16 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
-This continues and example developed in library `qtl2ggplot` using tools found in `qtl2pattern`.
+This continues an example developed in library `qtl2ggplot` using data
+from [qtl2data](https://github.com/rqtl/qtl2data) and tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
 
 ```{r}
-library(qtl2)
-library(qtl2ggplot)
 library(qtl2pattern)
-library(ggplot2)
 ```
 
 ```{r}
 DOex <-
-  read_cross2(
+  qtl2::read_cross2(
     file.path(
       "https://raw.githubusercontent.com/rqtl",
       "qtl2data/master/DOex",
@@ -43,14 +41,32 @@ DOex$pheno[,"asin"] <- DOex$pheno[,"asin"] *
 Subset to chr 2.
 
 ```{r}
-DOex <- DOex[,"2"]
+DOex <- subset(DOex, chr = "2")
 ```
 
-Calculate genotype probabilities and convert to allele probabilities
+Calculate genotype probabilities.
 
 ```{r}
-pr <- calc_genoprob(DOex, error_prob=0.002)
-apr <- genoprob_to_alleleprob(pr)
+pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+```
+
+If you want all chromosomes, consider download from [qtl2data](https://github.com/rqtl/qtl2data).
+
+```{r eval=FALSE}
+tmpfile <- tempfile()
+file <- paste0("https://raw.githubusercontent.com/rqtl/",
+               "qtl2data/master/DOex/DOex_genoprobs.rds")
+download.file(file, tmpfile)
+pr <- readRDS(tmpfile)
+unlink(tmpfile)
+# Subset to chr 2.
+pr <- subset(pr, chr = "2")
+```
+
+Calculate allele probabilities from genotype probabilities.
+
+```{r}
+apr <- qtl2::genoprob_to_alleleprob(pr)
 ```
 
 Download snp info from web and read as RDS.
@@ -72,8 +88,8 @@ snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
 Convert to snp probabilities
 
 ```{r}
-snpinfo <- index_snps(DOex$pmap, snpinfo)
-snppr <- genoprob_to_snpprob(apr, snpinfo)
+snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
+snppr <- qtl2::genoprob_to_snpprob(apr, snpinfo)
 ```
 
 ## Genome Scan
@@ -82,11 +98,11 @@ Package `qtl2pattern` has `summary` methods for `scan1` and `scan1coef`.
 Not sure these are really needed. The `R/qtl2` routine `find_peaks` takes care of some but not all of this functionality.
 
 ```{r}
-scan_apr <- scan1(apr, DOex$pheno)
+scan_apr <- qtl2::scan1(apr, DOex$pheno)
 ```
 
 ```{r}
-find_peaks(scan_apr, DOex$pmap)
+qtl2::find_peaks(scan_apr, DOex$pmap)
 ```
 
 ```{r}
@@ -94,7 +110,7 @@ summary(scan_apr, DOex$pmap)
 ```
 
 ```{r}
-coefs <- scan1coef(apr, DOex$pheno)
+coefs <- qtl2::scan1coef(apr, DOex$pheno)
 ```
 
 ```{r}
@@ -106,7 +122,7 @@ summary(coefs, scan_apr, DOex$pmap)
 Perform SNP association analysis (here, ignoring residual kinship)
 
 ```{r}
-scan_snppr <- scan1(snppr, DOex$pheno)
+scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 ```
 
 ```{r}
@@ -145,18 +161,25 @@ summary(scan_pat, DOex$pmap)
 
 Modify plot_scan_pattern to facet on multiple phenotypes.
 
-```{r}
-autoplot(scan_pat, DOex$pmap) +
-  geom_vline(xintercept = c(96.5,98.5))
+** There seems to be some problem with scan_pattern with multiple traits.
+
+```{r eval=FALSE}
+plot(scan_pat, DOex$pmap)
+abline(v = c(96.5,98.5))
+```
+
+```{r eval = FALSE}
+plot(scan_pat, DOex$pmap, "coef", ylim=c(-100,100))
+abline(v = c(96.5,98.5))
 ```
 
 ```{r}
-autoplot(scan_pat, DOex$pmap, "coef", ylim=c(-100,100)) +
-  geom_vline(xintercept = c(96.5,98.5))
+ggplot2::autoplot(scan_pat, DOex$pmap, "coef", ylim=c(-100,100)) +
+  ggplot2::geom_vline(xintercept = c(96.5,98.5))
 ```
 
 ```{r}
-autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim=c(-100,100))
+ggplot2::autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim=c(-100,100))
 ```
 
 Here we show the traditional QTL effects and LOD scan next to the newer scan pattern effects and LOD scans for comparison. The traditional LOD has 7 model degrees of freedom (df), while the scan pattern contrast LODs each have 2 model df. The LOD curves drop off somewhat more steeply for the scan pattern contrasts, and the peak is almost as high (`r round(max(scan_pat$scan, DOex$pmap)[,3], 1)` vs. `r round(max(scan_apr, DOex$pmap)[,3], 1)`).
@@ -174,9 +197,9 @@ The scan pattern contrasts appear at first to be confusing and contradictory, wi
 These findings are thus complementary, and they agree with the traditional QTL effects plot showing `NZO` = `powder blue` and `CAST` = `green` alleles being much lower than the other 6 alleles.
 
 ```{r}
-autoplot(coefs, DOex$pmap, scan1_output = scan_apr)
+ggplot2::autoplot(coefs, DOex$pmap, scan1_output = scan_apr)
 ```
 
 ```{r}
-autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim = c(-100,100))
+ggplot2::autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim = c(-100,100))
 ```

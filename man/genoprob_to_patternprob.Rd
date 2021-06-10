@@ -4,12 +4,14 @@
 \alias{genoprob_to_patternprob}
 \title{Collapse genoprob according to pattern}
 \usage{
-genoprob_to_patternprob(probs1, sdp)
+genoprob_to_patternprob(probs1, sdp, alleles = FALSE)
 }
 \arguments{
 \item{probs1}{object of class \code{\link[qtl2]{calc_genoprob}}}
 
 \item{sdp}{SNP distribution pattern}
+
+\item{alleles}{use allele string if \code{TRUE}}
 }
 \value{
 object of class \code{\link[qtl2]{calc_genoprob}}
@@ -18,7 +20,21 @@ object of class \code{\link[qtl2]{calc_genoprob}}
 Collapse genoprob according to pattern
 }
 \examples{
-\donttest{genoprob_to_patternprob(probs1, pattern_sets)}
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+
+# Read DOex example cross from 'qtl2data'
+DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+DOex <- subset(DOex, chr = "2")
+
+# Calculate genotype and allele probabilities
+pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+
+# Convert genotype probabilities to pattern probabilities for pattern 1.
+pattern_pr <- genoprob_to_patternprob(pr, 7, TRUE)
+
+str(pr)
+str(pattern_pr)
+
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
