@@ -3,7 +3,7 @@
 \name{ggplot_scan_pattern}
 \alias{ggplot_scan_pattern}
 \alias{autoplot.scan_pattern}
-\title{Plot scan pattern}
+\title{Plot scan pattern usign ggplot2}
 \usage{
 ggplot_scan_pattern(
   x,
@@ -43,5 +43,5 @@ ggplot_scan_pattern(
 object of class \code{\link[ggplot2]{ggplot}}
 }
 \description{
-Plot scan pattern
+Plot scan pattern usign ggplot2
 }
