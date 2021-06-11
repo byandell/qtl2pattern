@@ -9,6 +9,27 @@
 #' @param drivers number of drivers (1 or 2; default is 2)
 #' 
 #' @return list containing \code{pheno}, \code{annot} and \code{covar}.
+#'
+#' @examples
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' DOex <- subset(DOex, chr = "2")
+#' 
+#' # Calculate genotype and allele probabilities
+#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' 
+#' # Summary of coefficients at scan peak
+#' scan_pr <- qtl2::scan1(pr, DOex$pheno)
+#' peaks <- summary(scan_pr, DOex$pmap)
+#' 
+#' # Select Sex and Cohort columns of covariates
+#' analyses_tbl <- data.frame(pheno = "OF_immobile_pct", Sex = TRUE, Cohort = TRUE)
+#' 
+#' # Get phenos in region.
+#' out <- pheno_region("2", 90, 100, DOex$covar, DOex$pmap, peaks, analyses_tbl, DOex$pheno)
+#' str(out)
 #' 
 #' @export
 #' @importFrom dplyr filter group_by inner_join left_join n rename summarize ungroup
@@ -30,7 +51,7 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
   # Reduce to peaks that match analyses.
   peaks <- dplyr::filter(peaks, .data$pheno %in% analyses$pheno)
   
-  # Match below by pheno and other optional columns.
+  # Match below by pheno and other optional columns. Used in 'qtl2shiny'.
   bycols <- c("pheno", "longname", "output", "pheno_group", "pheno_type")
   m <- match(bycols, names(peaks))
   bycols <- bycols[!is.na(m)]
@@ -53,8 +74,14 @@ pheno_region <- function(chr_id, start_val, end_val, covar, map,
                           round(.data$pos), ":",
                           round(.data$lod), collapse = ","))),
         by = "pheno"),
-      id = .data$pheno,
+      id = .data$pheno)
+
+  # Used in 'qtl2shiny'.
+  if("pheno_type" %in% names(annot)) {
+    annot <- dplyr::rename(
+      annot,
       biotype = .data$pheno_type)
+  }
   
   # Reduce to phenotypes with peaks in region.
   annot <- dplyr::filter(

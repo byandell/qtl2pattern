@@ -26,10 +26,10 @@
 #' apr <- qtl2::genoprob_to_alleleprob(pr)
 #' 
 #' # Run scan1coef or scan1blup on all phenotypes, returning a list of \code{\link[qtl2]{scan1coef}} objects
-#' out <- listof_scan1coef(apr, DOex$pheno)
+#' out <- listof_scan1coef(apr, DOex$pheno, center = TRUE)
 #' 
 #' # Summary of coefficients at scan peak
-#' scan_pr <- qtl2::scan1(pr, DOex$pheno, center = TRUE)
+#' scan_pr <- qtl2::scan1(pr, DOex$pheno)
 #' summary(out, scan_pr, DOex$pmap)
 #' 
 #' plot(out[[1]], DOex$pmap, columns = LETTERS[1:8])

@@ -26,11 +26,11 @@ Get phenotypes using data frame of phenopypes filtered by \code{analyses_tbl}
 \examples{
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
-# Read DOex example cross from 'qtl2data'
-DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+# Read DOex example pheno from 'qtl2data'
+pheno <- read.csv(file.path(dirpath, "DOex_pheno.csv"))
 
-out <- pheno_trans(DOex$pheno, "OF_immobile_pct", "sqrt")
-summary(DOex$pheno)
+out <- pheno_trans(pheno, "OF_immobile_pct", "sqrt")
+summary(pheno)
 summary(out)
 
 }
