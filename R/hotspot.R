@@ -13,7 +13,27 @@
 #' @keywords utilities
 #'
 #' @examples
-#' \donttest{hotspot(map, peaks, peak_window, minLOD)}
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' DOex <- subset(DOex, chr = "2")
+#' 
+#' # Calculate genotype and allele probabilities
+#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' 
+#' # Summary of coefficients at scan peak
+#' scan_pr <- qtl2::scan1(pr, DOex$pheno)
+#' peaks <- summary(scan_pr, DOex$pmap)
+#' 
+#' hotspot(DOex$pmap, peaks)
+#' 
+#' # Select Sex and Cohort columns of covariates
+#' analyses_tbl <- data.frame(pheno = "OF_immobile_pct", Sex = TRUE, Cohort = TRUE)
+#' 
+#' # Get hotspot (only one phenotype here).
+#' out <- hotspot(DOex$pmap, peaks)
+#' summary(out)
 #'
 #' @export
 #'
@@ -46,6 +66,12 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
     if(is.null(peaks))
       return(NULL)
     # count peaks at position by type
+    if(!("pheno_type" %in% names(peaks))) {
+      peaks$pheno_type <- "type"
+    }
+    if(!("pheno_group" %in% names(peaks))) {
+      peaks$pheno_group <- "group"
+    }
     peaks_by_type <- split(peaks, peaks$pheno_type)
     out <- data.frame(purrr::map(peaks_by_type,
                                  outer_window,
@@ -105,6 +131,10 @@ hotspot <- function(map, peaks, peak_window = 1, minLOD = 5.5) {
   out <- list(scan = out_peaks, map = chr_pos)
   class(out) <- c("hotspot", "list")
   out
+}
+#' @export
+summary.hotspot <- function(object, ...) {
+  summary(object$scan, object$map, ...)
 }
 #' @export
 subset.hotspot <- function(x, chr = NULL, nonzero = NULL, ...) {
