@@ -92,7 +92,8 @@ DOex <- subset(DOex, chr = "2")
 pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
 apr <- qtl2::genoprob_to_alleleprob(pr)
 
-# Run scan1coef or scan1blup on all phenotypes, returning a list of \code{\link[qtl2]{scan1coef}} objects
+# Run scan1coef or scan1blup on all phenotypes,
+# returning a list of \code{\link[qtl2]{scan1coef}} objects
 out <- listof_scan1coef(apr, DOex$pheno, center = TRUE)
 
 # Summary of coefficients at scan peak

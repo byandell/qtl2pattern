@@ -30,3 +30,48 @@ Note that this function assumes that \code{probdir_val} has a file with the
     See \code{\link{read_probs}} for details on how probabilities are read.
     See \code{\link[qtl2]{create_variant_query_func}} for original idea.
 }
+\examples{
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+
+create_qv <- function(dirpath) {
+  # Download SNP info for DOex from web via RDS.
+  # snpinfo is referenced internally in the created function.
+  
+  tmpfile <- tempfile()
+  download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
+  snpinfo <- readRDS(tmpfile)
+  unlink(tmpfile)
+  snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+  
+  function(chr, start, end) {
+    if(chr != "2") return(NULL)
+    if(start < 96.5) start <- 96.5
+    if(end > 98.5) end <- 98.5
+    if(start >= end) return(NULL)
+    dplyr::filter(snpinfo, .data$pos >= start, .data$pos <= end)
+  }
+}
+query_variants <- create_qv(dirpath)
+
+create_qg <- function(dirpath) {
+  # Download Gene info for DOex from web via RDS
+  # gene_tbl is referenced internally in the created function.
+  
+  tmpfile <- tempfile()
+  download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+  gene_tbl <- readRDS(tmpfile)
+  unlink(tmpfile)
+  
+  function(chr, start, end) {
+    if(chr != "2") return(NULL)
+    if(start < 96.5) start <- 96.5
+    if(end > 98.5) end <- 98.5
+    if(start >= end) return(NULL)
+    dplyr::filter(gene_tbl, .data$stop >= start, .data$start <= end)
+  }
+}
+query_genes <- create_qg(dirpath)
+
+# Examples for probs and mrna require either FST or RDS storage of data.
+
+}

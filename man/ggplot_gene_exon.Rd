@@ -24,15 +24,15 @@ ggplot_gene_exon(
 
 \item{genes}{Names of genes in object \code{get_gene_exon}.}
 
-\item{...}{arguments passed along to \code{\link{get_gene_exon}}}
+\item{...}{arguments passed along to \code{\link{get_gene_exon_snp}}}
 
 \item{x}{Object of class \code{gene_exon}.}
 }
 \value{
-list of ggplots (see \code{\link{get_gene_exon}})
+list of ggplots (see \code{\link{get_gene_exon_snp}})
 }
 \description{
-Uses \code{\link{get_gene_exon}} to plot genes, exons, mRNA with SNPs.
+Uses \code{\link{get_gene_exon_snp}} to plot genes, exons, mRNA with SNPs.
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

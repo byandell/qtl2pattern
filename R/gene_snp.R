@@ -1,9 +1,9 @@
 #' Match genes with SNPs
 #'
-#' Find features that overlap with SNPs
+#' Internal routine to find features that overlap with SNPs
 #'
-#' @param snp_tbl tbl of SNPs from \code{assoc.map}
-#' @param feature_tbl tbl of feature information from \code{query_variants}; see package \code{\link[qtl2]{create_variant_query_func}}
+#' @param snp_tbl tbl of SNPs from \code{query_variants}; see package \code{\link[qtl2]{create_variant_query_func}}
+#' @param feature_tbl tbl of feature information from \code{query_genes}; see package \code{\link[qtl2]{create_gene_query_func}}
 #' @param feature_snp tbl of feature information from \code{\link{get_feature_snp}}
 #'
 #' @return tbl of genes covering SNPs
@@ -11,10 +11,6 @@
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @examples
-#' \donttest{get_gene_snp(snp_tbl, feature_tbl)}
-#'
-#' @export
 #' @importFrom dplyr distinct filter mutate select
 #' @importFrom rlang .data
 #' 

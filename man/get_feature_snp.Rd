@@ -19,10 +19,6 @@ tbl of features covering SNPs
 \description{
 Find features that overlap with SNPs
 }
-\examples{
-\donttest{get_feature_snp(snp_tbl, feature_tbl)}
-
-}
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }

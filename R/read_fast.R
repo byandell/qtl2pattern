@@ -10,7 +10,6 @@
 #' 
 #' @return extracted data frame with appropriate rows and columns.
 #' 
-#' @export
 #' @importFrom fst read_fst
 #' @seealso \code{\link[fst]{read_fst}}
 #' 

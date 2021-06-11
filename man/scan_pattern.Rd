@@ -77,7 +77,7 @@ snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
 snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
 
 # Scan SNPs
-scan_snppr <- scan1(snppr, DOex$pheno)
+scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
 
 # Summarize to find top patterns

@@ -24,9 +24,10 @@
 #' unlink(tmpfile)
 #' 
 #' @return This has side actions of creating variables.
-#'
+#' @importFrom utils example
+#' 
 DOex <- function() {
-  example("DOex")
+  utils::example("DOex")
 }
 
 

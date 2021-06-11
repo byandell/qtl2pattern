@@ -16,10 +16,15 @@
 #'
 #' @examples
 #' example(top_snps_all)
-#' scan_apr <- qtl2::scan1(apr, DOex$pheno)
-#' out <- merge_feature(top_snps_tbl, snpinfo, scan_apr)
-#' # Object out will be null since there is no gene information.
-#' summary(out)
+#' 
+#' # Download Gene info for DOex from web via RDS
+#' tmpfile <- tempfile()
+#' download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+#' gene_tbl <- readRDS(tmpfile)
+#' unlink(tmpfile)
+#' 
+#' out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+#' summary(out, "pattern")
 #'
 #' @export
 #' @importFrom dplyr arrange distinct filter mutate select
@@ -63,6 +68,9 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
         .data$snp_id %in% near_snp_id),
       .data$index, .keep_all=TRUE)
     top_snps_tbl[[i]] <- tmp2$lod[match(top_snps_tbl$index, tmp2$index)]
+  }
+  if(!("consequence" %in% names(top_snps_tbl))) {
+    top_snps_tbl$consequence <- "unknown"
   }
   out <- dplyr::select(
     dplyr::mutate(top_snps_tbl,

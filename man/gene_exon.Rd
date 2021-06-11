@@ -2,7 +2,6 @@
 % Please edit documentation in R/gene_exon.R
 \name{get_gene_exon_snp}
 \alias{get_gene_exon_snp}
-\alias{get_gene_exon}
 \alias{summary.gene_exon}
 \alias{subset.gene_exon}
 \title{Get exons for set of genes}
@@ -12,8 +11,6 @@ get_gene_exon_snp(
   feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])
 )
 
-get_gene_exon(feature_tbl, gene_snp)
-
 \method{summary}{gene_exon}(object, gene_name = NULL, top_snps_tbl = NULL, extra = 0.005, ...)
 
 \method{subset}{gene_exon}(x, gene_val, ...)
@@ -21,11 +18,9 @@ get_gene_exon(feature_tbl, gene_snp)
 \arguments{
 \item{top_snps_tbl}{table of top SNPs in region from \code{\link[qtl2]{top_snps}}}
 
-\item{feature_tbl}{tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
+\item{feature_tbl}{table of features from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 
-\item{gene_snp}{tbl of genes with SNPs IDs from \code{\link{get_feature_snp}}}
-
-\item{object}{Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon}}}
+\item{object}{Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon_snp}}}
 
 \item{gene_name}{name of gene as character string}
 
@@ -40,29 +35,28 @@ get_gene_exon(feature_tbl, gene_snp)
 \value{
 tbl of exon and gene features
 
-tbl of exon and gene features
-
 tbl of summary
 }
 \description{
 Match up exon start,stop,strand with genes. Use \code{query_genes} to find features; see \code{\link[qtl2]{create_gene_query_func}}.
 
-Match up exon start,stop,strand with genes.
-
 Returns table of gene and its exons.
 }
 \examples{
 example(top_snps_all)
-out <- get_gene_exon_snp(top_snps_tbl)
-# Object out will be null since there is no gene information.
-summary(out)
+
+# Download Gene info for DOex from web via RDS
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+gene_tbl <- readRDS(tmpfile)
+unlink(tmpfile)
+
+# Get Gene exon information.
+out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
+summary(out, gene = out$gene[1])
 
 }
 \author{
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }
 \keyword{utilities}

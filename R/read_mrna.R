@@ -19,10 +19,6 @@
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @examples
-#' \donttest{read_probs(chr, datapath)}
-#'
-#' @export
 #' @importFrom dplyr filter group_by inner_join mutate n rename summarize ungroup
 #' @importFrom fst read_fst
 #' @importFrom rlang .data

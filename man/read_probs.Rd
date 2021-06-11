@@ -33,10 +33,6 @@ list with \code{probs} = large object of class \code{\link[qtl2]{calc_genoprob}}
 \description{
 Read object from file stored according to method.
 }
-\examples{
-\donttest{read_probs(chr, datapath)}
-
-}
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }

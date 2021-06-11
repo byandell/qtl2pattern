@@ -45,10 +45,15 @@ Merge all SNPs in small region with LOD peaks across multiple phenotype.
 }
 \examples{
 example(top_snps_all)
-scan_apr <- qtl2::scan1(apr, DOex$pheno)
-out <- merge_feature(top_snps_tbl, snpinfo, scan_apr)
-# Object out will be null since there is no gene information.
-summary(out)
+
+# Download Gene info for DOex from web via RDS
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+gene_tbl <- readRDS(tmpfile)
+unlink(tmpfile)
+
+out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+summary(out, "pattern")
 
 }
 \author{

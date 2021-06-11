@@ -12,13 +12,20 @@
 #'
 #' @examples
 #' example(top_snps_all)
-#' out <- get_gene_exon_snp(top_snps_tbl)
-#' # Object out will be null since there is no gene information.
-#' summary(out)
+#' 
+#' # Download Gene info for DOex from web via RDS
+#' tmpfile <- tempfile()
+#' download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
+#' gene_tbl <- readRDS(tmpfile)
+#' unlink(tmpfile)
+#' 
+#' # Get Gene exon information.
+#' out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
+#' summary(out, gene = out$gene[1])
 #'
 #' @export
 #' @rdname gene_exon
-#' @importFrom dplyr arrange desc distinct everything mutate select
+#' @importFrom dplyr arrange bind_rows desc distinct everything filter mutate select
 #' @importFrom rlang .data
 #' 
 get_gene_exon_snp <- function(top_snps_tbl,
@@ -49,29 +56,7 @@ get_gene_exon_snp <- function(top_snps_tbl,
       top_snps_tbl, 
       .data$snp_id, .data$pos, .data$lod),
     feature_tbl)
-  get_gene_exon(feature_tbl, gene_snp)
-}
 
-query_genes <- function(...) {}
-query_variants <- function(...) {}
-
-#' Get exons for set of genes
-#'
-#' Match up exon start,stop,strand with genes.
-#'
-#' @param feature_tbl tbl of features from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
-#' @param gene_snp tbl of genes with SNPs IDs from \code{\link{get_feature_snp}}
-#'
-#' @return tbl of exon and gene features
-#'
-#' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
-#' @keywords utilities
-#'
-#' @export
-#' @rdname gene_exon
-#' @importFrom dplyr bind_rows distinct filter
-get_gene_exon <- function(feature_tbl, gene_snp) {
-  
   if(is.null(gene_snp))
     return(NULL)
   
@@ -109,7 +94,7 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #'
 #' Returns table of gene and its exons.
 #'
-#' @param object Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon}}
+#' @param object Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon_snp}}
 #' @param ... additional parameters passed on to methods
 #' @param gene_name name of gene as character string
 #' @param top_snps_tbl table of top SNPs in region from \code{\link[qtl2]{top_snps}}
@@ -117,7 +102,6 @@ get_gene_exon <- function(feature_tbl, gene_snp) {
 #'
 #' @return tbl of summary
 #'
-#' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
 #' @method summary gene_exon
@@ -200,3 +184,4 @@ subset.gene_exon <- function(x, gene_val, ...) {
   class(x) <- c("gene_exon", class(x))
   x
 }
+

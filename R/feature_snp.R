@@ -11,10 +11,6 @@
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @examples
-#' \donttest{get_feature_snp(snp_tbl, feature_tbl)}
-#'
-#' @export
 #' @importFrom dplyr arrange bind_rows distinct filter group_by inner_join 
 #' mutate select summarize ungroup
 #' @importFrom rlang .data

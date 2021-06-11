@@ -39,10 +39,6 @@ Reads `expr`, `peaks` and `annot` information on mRNA and combines into a list.
     The `expr` and `peaks` elements are stored in `fst` database,
     while `peaks` is an `RDS` database.
 }
-\examples{
-\donttest{read_probs(chr, datapath)}
-
-}
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }

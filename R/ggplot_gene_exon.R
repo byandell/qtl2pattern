@@ -1,14 +1,14 @@
 #' Plot of exons for a gene with SNPs
 #'
-#' Uses \code{\link{get_gene_exon}} to plot genes, exons, mRNA with SNPs.
+#' Uses \code{\link{get_gene_exon_snp}} to plot genes, exons, mRNA with SNPs.
 #'
 #' @param gene_exon table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}
 #' @param top_snps_tbl table from \code{\link[qtl2]{top_snps}}
 #' @param plot_now plot now if TRUE
 #' @param genes Names of genes in object \code{get_gene_exon}.
-#' @param ... arguments passed along to \code{\link{get_gene_exon}}
+#' @param ... arguments passed along to \code{\link{get_gene_exon_snp}}
 #'
-#' @return list of ggplots (see \code{\link{get_gene_exon}})
+#' @return list of ggplots (see \code{\link{get_gene_exon_snp}})
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords hplot

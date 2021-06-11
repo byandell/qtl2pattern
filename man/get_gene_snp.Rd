@@ -11,9 +11,9 @@ get_gene_snp(
 )
 }
 \arguments{
-\item{snp_tbl}{tbl of SNPs from \code{assoc.map}}
+\item{snp_tbl}{tbl of SNPs from \code{query_variants}; see package \code{\link[qtl2]{create_variant_query_func}}}
 
-\item{feature_tbl}{tbl of feature information from \code{query_variants}; see package \code{\link[qtl2]{create_variant_query_func}}}
+\item{feature_tbl}{tbl of feature information from \code{query_genes}; see package \code{\link[qtl2]{create_gene_query_func}}}
 
 \item{feature_snp}{tbl of feature information from \code{\link{get_feature_snp}}}
 }
@@ -21,11 +21,7 @@ get_gene_snp(
 tbl of genes covering SNPs
 }
 \description{
-Find features that overlap with SNPs
-}
-\examples{
-\donttest{get_gene_snp(snp_tbl, feature_tbl)}
-
+Internal routine to find features that overlap with SNPs
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
