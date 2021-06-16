@@ -134,18 +134,19 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
          best = { ## Top SNPs across all phenotypes.
            out <- 
              dplyr::arrange(
-               dplyr::select(object, -.data$index, -.data$sdp),
+               dplyr::select(object, -.data$index),
                dplyr::desc(.data$lod))
            if(!is.null(out$consequence)) {
              out <- 
                dplyr::mutate(out,
                  consequence = abbreviate(.data$consequence, 15))
            }
-           dplyr::select(out, .data$snp_id, .data$type, .data$chr, .data$pos, .data$lod, .data$pheno,
+           dplyr::select(out, .data$snp_id, .data$chr, .data$pos, .data$sdp, .data$lod, .data$pheno,
                          dplyr::everything())
          },
          range = {
            ## Most frequent SNP patterns within 1.5 of max LOD.
+         dplyr::arrange(
            dplyr::select(
              dplyr::arrange(
                dplyr::mutate(
@@ -155,13 +156,18 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                      pct = dplyr::n(),
                      min_lod = min(.data$lod),
                      max_lod = max(.data$lod),
-                     max_pos = .data$pos[which.max(.data$lod)][1],
-                     max_snp = .data$snp_id[which.max(.data$lod)][1])),
+                     min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
+                     max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
+                     max_snp = ifelse(pct == 1,
+                                      .data$snp_id[which.max(.data$lod)][1],
+                                      paste(pct, "SNPs")))),
                  pct = round(100 * .data$pct / nrow(object), 2),
                  pattern = sdp_to_pattern(.data$sdp, haplos)),
                dplyr::desc(.data$max_lod)),
-             .data$pattern, .data$max_lod, .data$max_pos, .data$pheno, .data$pct, .data$min_lod,
-             dplyr::everything())
+             .data$pattern, .data$max_lod, .data$min_pos, .data$max_pos, .data$pheno,
+             .data$pct, .data$min_lod,
+             dplyr::everything()),
+           dplyr::desc(max_lod))
          },
          peak = {
            dplyr::select(

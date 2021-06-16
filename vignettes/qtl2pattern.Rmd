@@ -13,12 +13,30 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
-This continues an example developed in library `qtl2ggplot` using data
+This vignette continues an example developed in library `qtl2ggplot` using data
 from [qtl2data](https://github.com/rqtl/qtl2data) and tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
+Package `qtl2pattern` has `summary` methods for `scan1` and `scan1coef`.
+Not sure these are really needed. The `R/qtl2` routine `find_peaks` takes care of some but not all of this functionality.
+Sections below are
 
 ```{r}
 library(qtl2pattern)
 ```
+
+- Download of Diversity Outbred Example Data
+- Genome Scan Using 36 Allele Pairs
+- Genome Scan Using 8 Alleles
+- SNP Association Mapping near Peak
+- Strain Distribution Pattern (SDP) Scan
+
+## Download of Diversity Outbred Example Data
+
+This vignette uses the example Diversity Outbred (DO) data.
+See [Recla et al. (2014)](https://www.ncbi.nlm.nih.gov/pubmed/24700285).
+These mice were derived from 8 founder strains, yielding up to 36 allele pairs at any marker.
+The data can be found in <https://github.com/rqtl/qtl2data> as `DOex`.
+While these data span three chromosomes (`2, 3, X`), we focus here on
+chromosome `2`.
 
 ```{r}
 DOex <-
@@ -29,28 +47,26 @@ DOex <-
       "DOex.zip"))
 ```
 
-Create artificial second phenotype as arcsic sqrt of first one.
-
-```{r}
-DOex$pheno <- cbind(DOex$pheno, asin = asin(sqrt(DOex$pheno[,1]/100)))
-DOex$pheno[,"asin"] <- DOex$pheno[,"asin"] *
-  sd(DOex$pheno[,"OF_immobile_pct"], na.rm = TRUE) /
-  sd(DOex$pheno[,"asin"], na.rm = TRUE)
-```
-
 Subset to chr 2.
 
 ```{r}
 DOex <- subset(DOex, chr = "2")
 ```
 
-Calculate genotype probabilities.
+## Genome Scan Using 36 Allele Pairs
+
+Calculate 36 genotype probabilities for allele pairs by individual and marker.
 
 ```{r}
 pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
 ```
 
+```{r}
+str(pr)
+```
+
 If you want all chromosomes, consider download from [qtl2data](https://github.com/rqtl/qtl2data).
+Notice the `subset` to chr `2` to be consistent with example here.
 
 ```{r eval=FALSE}
 tmpfile <- tempfile()
@@ -63,39 +79,55 @@ unlink(tmpfile)
 pr <- subset(pr, chr = "2")
 ```
 
-Calculate allele probabilities from genotype probabilities.
+```{r}
+scan_pr <- qtl2::scan1(pr, DOex$pheno)
+```
+
+```{r}
+qtl2::find_peaks(scan_pr, DOex$pmap)
+```
+
+
+```{r}
+summary(scan_pr, DOex$pmap)
+```
+
+```{r}
+plot(scan_pr, DOex$pmap)
+title("Genome scan of OF_immobile_pct")
+```
+
+The peak is not clear using the 36 allele pairs as the model is over-specified. The next section collapses these 36 allele pairs into the 8 alleles.
+
+## Genome Scan Using 8 Alleles
+
+Calculate 8 allele probabilities from genotype probabilities.
 
 ```{r}
 apr <- qtl2::genoprob_to_alleleprob(pr)
 ```
 
-Download snp info from web and read as RDS.
-
 ```{r}
-filename <- file.path("https://raw.githubusercontent.com/rqtl",
-                      "qtl2data/master/DOex", 
-                      "c2_snpinfo.rds")
-tmpfile <- tempfile()
-download.file(filename, tmpfile, quiet=TRUE)
-snpinfo <- readRDS(tmpfile)
-unlink(tmpfile)
+str(apr)
 ```
 
 ```{r}
-snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+scan_apr <- qtl2::scan1(apr, DOex$pheno)
 ```
-
-Convert to snp probabilities
 
 ```{r}
-snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
-snppr <- qtl2::genoprob_to_snpprob(apr, snpinfo)
+qtl2::find_peaks(scan_apr, DOex$pmap)
 ```
 
-## Genome Scan
 
-Package `qtl2pattern` has `summary` methods for `scan1` and `scan1coef`.
-Not sure these are really needed. The `R/qtl2` routine `find_peaks` takes care of some but not all of this functionality.
+```{r}
+summary(scan_apr, DOex$pmap)
+```
+
+```{r}
+plot(scan_apr, DOex$pmap, lodcolumn = "OF_immobile_pct")
+title("Genome allele scan of OF_immobile_pct")
+```
 
 ```{r}
 scan_apr <- qtl2::scan1(apr, DOex$pheno)
@@ -110,16 +142,69 @@ summary(scan_apr, DOex$pmap)
 ```
 
 ```{r}
-coefs <- qtl2::scan1coef(apr, DOex$pheno)
+coefs <- qtl2::scan1coef(apr, DOex$pheno[,"OF_immobile_pct"], zerosum = FALSE)
 ```
 
 ```{r}
 summary(coefs, scan_apr, DOex$pmap)
 ```
 
-## SNP Association Mapping
+```{r}
+plot(coefs, DOex$pmap, LETTERS[1:8],
+     col = qtl2::CCcolors)
+title("Allele Coefficients for OF_immobile_pct")
+legend(0, 80, legend = names(qtl2::CCcolors), 
+       col = qtl2::CCcolors, lty = 1, lwd = 2)
+```
 
-Perform SNP association analysis (here, ignoring residual kinship)
+This gives a clearer picture, but it loses information in the allele pairs tied to SNP patterns. 
+
+
+## SNP Association Mapping near Peak
+
+This section examines SNP association mapping,
+which involves collapsing the 36 allele pair genotype probabilities to
+3 allele probabilities in the region of a QTL peak.
+
+Download snp info from web and read as RDS.
+
+```{r}
+filename <- file.path("https://raw.githubusercontent.com/rqtl",
+                      "qtl2data/master/DOex", 
+                      "c2_snpinfo.rds")
+tmpfile <- tempfile()
+download.file(filename, tmpfile, quiet=TRUE)
+snpinfo <- readRDS(tmpfile)
+unlink(tmpfile)
+```
+
+Rename the SNP position as `pos`,
+and add SNP index information.
+
+```{r}
+snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
+```
+
+Convert to SNP probabilities. Notice that starting with the allele probabilities only ends up with 2 SNP alleles per marker (`"A", "B"`), but we want all three (`"AA" "AB" "BB"`). Recall that the SNP alleles are in context of the strain distribution pattern (`sdp`) for that SNP.
+The `sdp` for markers (`rsnnn`) are imputed in 'qtl2' from the adjacent SNPs.
+
+```{r}
+snpapr <- qtl2::genoprob_to_snpprob(apr, snpinfo)
+str(snpapr)
+```
+
+```{r}
+snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
+str(snppr)
+```
+
+```{r}
+rm(snpapr)
+```
+
+Perform SNP association analysis (here, ignoring residual kinship).
+The summary includes a range (`min` and `max`) for both `lod` and `pos`, as there could be multiple SNPs at the same position with different `sdp`s.
 
 ```{r}
 scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
@@ -129,23 +214,54 @@ scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 summary(scan_snppr, DOex$pmap, snpinfo)
 ```
 
-## Scan Patterns
+Here is a plot with the SNPs used in the map only, highlighting those
+within 1.5 LOD of the maximum, which are in the table above.
 
-One relatively new and somewhat confusing addition is **scan patterns**, in which the contrast pattern for top SNPs is propagated over the interval to "fill in", leading to LOD and contrast scans. That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we could impute SNPs of the same pattern.
+
+```{r}
+plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
+     drop_hilit = 1.5, show_all_snps = FALSE, cex = 1)
+title("Peak Region SNP Scan of OF_immobile_pct")
+```
+
+Showing all the SNPs in the SNP information database is also possible,
+which highlights more potential significant hits.
+
+```{r}
+plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
+     drop_hilit = 1.5, show_all_snps = TRUE, cex = 1)
+title("Peak Region SNP Scan of OF_immobile_pct")
+```
+
+## Strain Distribution Pattern (SDP) Scan
+
+SNP assocation mapping would be more useful with plots that emphasized the strain distribution pattern (SDP) scan.
+These separate out SNPs based on their SDP and plot the top patterns.
+For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each (15 pairs: `AC, AE, ..., HF`).
+There are 255 possible `sdp`s, but only a few (4 in our example) that need be examined carefully. One can think of these as a subset of markers for
+genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
+That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
+The `top_snps_all` routine is an extension of `qtl2::top_snps`.
 
 ```{r}
 top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
 ```
 
-```{r}
-(patterns <- dplyr::arrange(
-  summary(top_snps_tbl),
-  dplyr::desc(max_lod)))
-```
+This first summary finds the range of SNP positions with the maximum LOD for the top SDPs.
 
 ```{r}
-(pheno_name <- dimnames(DOex$pheno)[[2]][1])
+(patterns <- summary(top_snps_tbl))
 ```
+
+If there is a range for the peak position, and multiple SNPs identified for an SDP,
+it is worth looking at all SNPS to find what other ones might be best.
+The earlier SNP association plot  suggested two locations about 0.01cM apart.
+This summary shows the 3 SNPS with that SDP:
+
+```{r}
+head(summary(top_snps_tbl, "best"))
+```
+A new routine `scan_pattern` scans the peak region for each of the 4 patterns provided.
 
 ```{r}
 scan_pat <- scan_pattern(pr, DOex$pheno,
@@ -153,18 +269,41 @@ scan_pat <- scan_pattern(pr, DOex$pheno,
                          patterns = patterns)
 ```
 
-**This table should not have missing values.**
-
 ```{r}
 summary(scan_pat, DOex$pmap)
 ```
 
+Here is a scan only in the region where we have SNPs.
+
+```{r}
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 2, col = "red", xlim = c(90,110), type = "b")
+abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 1, add = TRUE, col = "blue", type = "b")
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 3, add = TRUE, col = "purple", type = "b")
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 4, add = TRUE, col = "green", type = "b")
+title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
+```
+
+Here is a scan over the whole chromosome, imputing SDP.
+
+```{r}
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 2, col = "red")
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 1, add = TRUE, col = "blue")
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 3, add = TRUE, col = "purple")
+plot(scan_pat$scan, DOex$pmap, lodcolumn = 4, add = TRUE, col = "green")
+title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
+```
+
+```{r}
+knitr::knit_exit()
+```
+
 Modify plot_scan_pattern to facet on multiple phenotypes.
 
-** There seems to be some problem with scan_pattern with multiple traits.
+** There seems to be some problem with scan_pattern for plotting.
 
 ```{r eval=FALSE}
-plot(scan_pat, DOex$pmap)
+plot(scan_pat, DOex$pmap, patterns = patterns)
 abline(v = c(96.5,98.5))
 ```
 
