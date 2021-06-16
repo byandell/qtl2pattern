@@ -157,6 +157,14 @@ legend(0, 80, legend = names(qtl2::CCcolors),
        col = qtl2::CCcolors, lty = 1, lwd = 2)
 ```
 
+```{r}
+plot(coefs, DOex$pmap, LETTERS[1:8], xlim = c(90,110), type = "b",
+     col = qtl2::CCcolors)
+title("Allele Coefficients for OF_immobile_pct")
+legend(105, 80, legend = names(qtl2::CCcolors), 
+       col = qtl2::CCcolors, lty = 1, lwd = 2)
+```
+
 This gives a clearer picture, but it loses information in the allele pairs tied to SNP patterns. 
 
 
@@ -233,11 +241,22 @@ plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
 title("Peak Region SNP Scan of OF_immobile_pct")
 ```
 
+SNP assocation mapping would be more useful with plots that emphasized the strain distribution pattern (SDP). This is already in 'qtl2ggplot'.
+
+```{r}
+ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
+```
+
+```{r}
+ggplot2::autoplot(scan_snppr, snpinfo, patterns="all",drop.hilit=1.5,cex=2)
+```
+
 ## Strain Distribution Pattern (SDP) Scan
 
-SNP assocation mapping would be more useful with plots that emphasized the strain distribution pattern (SDP) scan.
-These separate out SNPs based on their SDP and plot the top patterns.
-For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each (15 pairs: `AC, AE, ..., HF`).
+**These summaries have too many digits.**
+
+SStrain distribution patterns (SDPs) separate out SNPs based on their SDP and plot the top patterns.
+For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the reference (`ref`) set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from the alternate (`alt`) set `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each for the heterogeneous (`het`) set (15 pairs: `AC, AE, ..., HF`).
 There are 255 possible `sdp`s, but only a few (4 in our example) that need be examined carefully. One can think of these as a subset of markers for
 genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
 That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
@@ -261,6 +280,9 @@ This summary shows the 3 SNPS with that SDP:
 ```{r}
 head(summary(top_snps_tbl, "best"))
 ```
+
+### SDP Pattern Scan
+
 A new routine `scan_pattern` scans the peak region for each of the 4 patterns provided.
 
 ```{r}
@@ -273,7 +295,11 @@ scan_pat <- scan_pattern(pr, DOex$pheno,
 summary(scan_pat, DOex$pmap)
 ```
 
-Here is a scan only in the region where we have SNPs.
+Here is a scan around the region where we have SNP information. The SDPs 52 and 53 are both higher than the other two patterns, and sustain the SDP peak several cM to the right of the allele peak region. This difference in pattern, if real, might suggest some form of allele interaction is important.
+
+```{r}
+pat_names <- paste(c(52,43,16,20), colnames(scan_pat$scan), sep = "_")
+```
 
 ```{r}
 plot(scan_pat$scan, DOex$pmap, lodcolumn = 2, col = "red", xlim = c(90,110), type = "b")
@@ -284,15 +310,175 @@ plot(scan_pat$scan, DOex$pmap, lodcolumn = 4, add = TRUE, col = "green", type = 
 title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
 ```
 
-Here is a scan over the whole chromosome, imputing SDP.
+Here is a scan over the whole chromosome, imputing SDP. These correspond to reducing the 8 alleles to 2 corresponding to the `ref` (`ABDGH` for sdp 52) and `alt` (`CEF` for sdp 52) composite alleles for the blue curve.
 
 ```{r}
 plot(scan_pat$scan, DOex$pmap, lodcolumn = 2, col = "red")
+abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
 plot(scan_pat$scan, DOex$pmap, lodcolumn = 1, add = TRUE, col = "blue")
 plot(scan_pat$scan, DOex$pmap, lodcolumn = 3, add = TRUE, col = "purple")
 plot(scan_pat$scan, DOex$pmap, lodcolumn = 4, add = TRUE, col = "green")
 title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
 ```
+
+### SDP Effects Scan
+
+In a similar fashion to a two-allele cross, we can examine the effects. The top row is for the patterns with the higher LOD score.
+
+```{r}
+par(mfrow = c(2,2))
+cols <- c("blue","purple","red")
+for(i in 1:4) {
+  plot(scan_pat$coef[[i]], DOex$pmap, columns = 1:3, col = cols, xlim = c(90,110), type = "b")
+  title(paste("Coefficients for", pat_names[i]))
+  if(i == 3) {
+    abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
+    legend(104, -3, legend = c("ref","het","alt"), 
+       col = cols, lty = 1, lwd = 2)
+  }
+}
+```
+
+From these, the coefficients for pattern `ABDGH:CEF` (sdp 52) appear to be problematic, whereas pattern `ABCDGH:EF` show a clear pattern of dominance of the reference allele, consistent with the earlier plot of allele coefficients where `E = NZO` and `F = CAST`. The pattern `ABCFGH:CE` shows a similar dominance, but the allele `C = 129` does not stand out in the allele plot. This could be that `129` is important in combination with `NZO`. This is even more apparent when looking at coefficients over the entire chromosome.
+
+```{r}
+par(mfrow = c(2,2))
+cols <- c("blue","purple","red")
+for(i in 1:4) {
+  plot(scan_pat$coef[[i]], DOex$pmap, columns = 1:3, col = cols)
+  title(paste("Coefficients for", pat_names[i]))
+  if(i == 3) {
+    abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
+    legend(125, -3, legend = c("ref","het","alt"), 
+       col = cols, lty = 1, lwd = 2)
+  }
+}
+```
+
+### 36 Allele Pair Scan
+
+We are now going to look at the 36 coefficients. These are unwieldy, so we collapse the allele pairs for SDP 52, pattern `ABCDGH:EF` into `"ref", "het", "alt"` for summaries, looking individually only at pairs `"EE", "EF", "FF"`.
+
+```{r}
+coefs2 <- qtl2::scan1coef(pr, DOex$pheno[,"OF_immobile_pct"], zerosum = FALSE)
+```
+
+```{r}
+sumc <- summary(coefs2, scan_pr, DOex$pmap)
+```
+
+```{r}
+x <- LETTERS[1:8]
+ref <- outer(x,x,paste0)
+ref <- ref[upper.tri(ref, diag=TRUE)]
+ss <- 2 - sapply(stringr::str_split(ref, ""), function(x) x[1] == x[2])
+alt <- ref[!stringr::str_detect(ref, c("A|B|C|D|G|H"))]
+het <- ref[stringr::str_detect(ref, c("A|B|C|D|G|H")) & stringr::str_detect(ref, c("E|F"))]
+altw <- ss[match(alt, ref, nomatch = 0)]
+hetw <- ss[match(het, ref, nomatch = 0)]
+refw <- ss[!stringr::str_detect(ref, c("E|F"))]
+ref <- ref[!stringr::str_detect(ref, c("E|F"))]
+```
+
+```{r}
+coefsum <- coefs2
+coefsum[,"AA"] <- apply(coefsum[,ref], 1, weighted.mean, w = refw)
+coefsum[,"AB"] <- apply(coefsum[,het], 1, weighted.mean, w = hetw)
+coefsum[,"BB"] <- apply(coefsum[,alt], 1, weighted.mean, w = altw)
+colnames(coefsum)[1:3] <- c("ref","het","alt")
+sumc[,"AA"] <- weighted.mean(sumc[,ref], w = refw)
+sumc[,"AB"] <- weighted.mean(sumc[,alt], w = altw)
+sumc[,"BB"] <- weighted.mean(sumc[,het], w = hetw)
+colnames(sumc)[6:8] <- c("ref","het","alt")
+sumc[,c("chr", "pos","lod","ref", "het", "alt", alt)]
+```
+
+```{r}
+plot(coefsum, DOex$pmap, c("ref", "het", "alt", alt), xlim = c(90,110), ylim = c(-500, 500),
+     col = c(1,8,7,2:4), type = "b")
+abline(h = mean(DOex$pheno[,"OF_immobile_pct"]), lwd = 2, col = "darkgrey", lty = 2)
+abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
+title("Allele Coefficients for OF_immobile_pct")
+legend(105, 80, legend = c("ref", "het", "alt", alt), 
+       col = c(1,8,7,2:4), lty = 1, lwd = 2)
+```
+
+Estimates for allele pairs are imprecise, so let's drop the extreme `"EE"`. The `"ref"`, `"het"` and `"alt"` are weighted mean of 15, 6, 15 allele pairs, respectively, assuming Hardy-Weinberg equilibrium.
+We see that the allele pairs `"EF", "FF"` lie near `"het"` and below `"ref"` in the peak region
+in the graph below.
+
+```{r}
+plot(coefsum, DOex$pmap, c("ref", "het", alt[-1]), xlim = c(90,110), ylim = c(55,90),
+     col = c(1,8,3:4), type = "b")
+abline(h = mean(DOex$pheno[,"OF_immobile_pct"]), lwd = 2, col = "darkgrey", lty = 2)
+abline(v = c(96.5, 98.5), col = "darkgray", lwd = 2, lty = 2)
+title("Allele Pair Coefficients for OF_immobile_pct")
+legend(107, 75, legend = c("ref", "het", alt[-1]), 
+       col = c(1,8,3:4), lty = 1, lwd = 2)
+```
+
+### Effect estimates
+
+**These look off somehow.**
+
+```{r}
+alleles <- allele1(probD = pr,
+                   scanH = scan_apr, coefH = coefs, coefD = coefs2, 
+                   scan_pat = scan_pat, map = DOex$pmap, alt = "E")
+```
+
+```{r}
+ggplot2::autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
+```
+
+
+## Gene scan
+
+**Still to do.**
+
+Download Gene info for DOex from web via RDS.
+
+```{r}
+tmpfile <- tempfile()
+download.file(file.path("https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex",
+                        "c2_genes.rds"), tmpfile, quiet=TRUE)
+gene_tbl <- readRDS(tmpfile)
+unlink(tmpfile)
+```
+
+```{r}
+out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+summary(out, "pattern")
+```
+
+```{r}
+ggplot2::autoplot(out, "OF_immobile_pct")
+```
+
+```{r}
+# Get Gene exon information.
+out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
+summary(out, gene = out$gene[1])
+```
+```{r}
+ggplot2::autoplot(out, top_snps_tbl)
+```
+
+```{r}
+qtl2ggplot::ggplot_genes(gene_tbl)
+```
+
+
+```{r}
+ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
+```
+
+## Database Query
+
+Large systems genetics studies have databases that need not be uploaded to R, but are better accessed
+via query searchers. Package 'qtl2' has two functions to create query functions for SNP and other variants (`create_variante_query_func`) and genes (`create_gene_query_func`). Package 'qtl2pattern' adds a function for genotype probabilities (`create_probs_query_func`).
+
+**Currently 'qtl2pattern' has a function for MRNA, but want to fold that into probs as it is too specific.**
 
 ```{r}
 knitr::knit_exit()
