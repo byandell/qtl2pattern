@@ -14,20 +14,29 @@ knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
 This vignette continues an example developed in library `qtl2ggplot` using data
-from [qtl2data](https://github.com/rqtl/qtl2data) and tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
+from [qtl2data](https://github.com/rqtl/qtl2data) with tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
+Calculations are repeated from that example, but only plots that help tell the story.
+Focus is entirely on chromosome `2`.
+
+Package 'qtl2pattern' does not depend on 'qtl2ggplot', and can be used independently.
+However this vignette shows some new 'ggplot2' based routines that extend 'qtl2ggplot'
+to the functionality of this package.
+This vignette illustrates these 'ggplot2'-derived routines, which is why 'qtl2ggplot' is
+suggested.
+
 Package `qtl2pattern` has `summary` methods for `scan1` and `scan1coef`.
 Not sure these are really needed. The `R/qtl2` routine `find_peaks` takes care of some but not all of this functionality.
 Sections below are
-
-```{r}
-library(qtl2pattern)
-```
 
 - Download of Diversity Outbred Example Data
 - Genome Scan Using 36 Allele Pairs
 - Genome Scan Using 8 Alleles
 - SNP Association Mapping near Peak
 - Strain Distribution Pattern (SDP) Scan
+
+```{r}
+library(qtl2pattern)
+```
 
 ## Download of Diversity Outbred Example Data
 
@@ -153,9 +162,11 @@ summary(coefs, scan_apr, DOex$pmap)
 plot(coefs, DOex$pmap, LETTERS[1:8],
      col = qtl2::CCcolors)
 title("Allele Coefficients for OF_immobile_pct")
-legend(0, 80, legend = names(qtl2::CCcolors), 
+legend(150, 75, legend = names(qtl2::CCcolors), 
        col = qtl2::CCcolors, lty = 1, lwd = 2)
 ```
+
+It is useful to focus in on the region near the allele peak.
 
 ```{r}
 plot(coefs, DOex$pmap, LETTERS[1:8], xlim = c(90,110), type = "b",
@@ -232,14 +243,13 @@ plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
 title("Peak Region SNP Scan of OF_immobile_pct")
 ```
 
-Showing all the SNPs in the SNP information database is also possible,
-which highlights more potential significant hits.
+## Strain Distribution Pattern (SDP) Scan
 
-```{r}
-plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
-     drop_hilit = 1.5, show_all_snps = TRUE, cex = 1)
-title("Peak Region SNP Scan of OF_immobile_pct")
-```
+Strain distribution patterns (SDPs) separate out SNPs based on their SDP and plot the top patterns.
+For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the reference (`ref`) set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from the alternate (`alt`) set `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each for the heterogeneous (`het`) set (15 pairs: `AC, AE, ..., HF`).
+There are 255 possible SDPs, but only a few (4 in our example) that need be examined carefully. One can think of these as a subset of markers for
+genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
+That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
 
 SNP assocation mapping would be more useful with plots that emphasized the strain distribution pattern (SDP). This is already in 'qtl2ggplot'.
 
@@ -247,29 +257,23 @@ SNP assocation mapping would be more useful with plots that emphasized the strai
 ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
 ```
 
-```{r}
-ggplot2::autoplot(scan_snppr, snpinfo, patterns="all",drop.hilit=1.5,cex=2)
-```
-
-## Strain Distribution Pattern (SDP) Scan
-
-**These summaries have too many digits.**
-
-SStrain distribution patterns (SDPs) separate out SNPs based on their SDP and plot the top patterns.
-For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the reference (`ref`) set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from the alternate (`alt`) set `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each for the heterogeneous (`het`) set (15 pairs: `AC, AE, ..., HF`).
-There are 255 possible `sdp`s, but only a few (4 in our example) that need be examined carefully. One can think of these as a subset of markers for
-genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
-That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
-The `top_snps_all` routine is an extension of `qtl2::top_snps`.
+The `top_snps_all` routine is an extension of `qtl2::top_snps`, which provides more detail on SDPs.
 
 ```{r}
 top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
 ```
 
-This first summary finds the range of SNP positions with the maximum LOD for the top SDPs.
+This first summary finds the peak of SNP positions with the maximum LOD for the top SDPs.
 
 ```{r}
 (patterns <- summary(top_snps_tbl))
+```
+
+The `"peak"` summary is very similar for one trait, but provides useful summaries at peaks 
+for multiple phenotypes.
+
+```{r}
+summary(top_snps_tbl, "peak")
 ```
 
 If there is a range for the peak position, and multiple SNPs identified for an SDP,
@@ -439,9 +443,11 @@ ggplot2::autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
 Download Gene info for DOex from web via RDS.
 
 ```{r}
+filename <- file.path("https://raw.githubusercontent.com/rqtl",
+                      "qtl2data/master/DOex", 
+                      "c2_genes.rds")
 tmpfile <- tempfile()
-download.file(file.path("https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex",
-                        "c2_genes.rds"), tmpfile, quiet=TRUE)
+download.file(filename, tmpfile, quiet=TRUE)
 gene_tbl <- readRDS(tmpfile)
 unlink(tmpfile)
 ```
