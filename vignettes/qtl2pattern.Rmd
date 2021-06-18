@@ -466,17 +466,27 @@ ggplot2::autoplot(out, "OF_immobile_pct")
 out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
 summary(out, gene = out$gene[1])
 ```
+
+Plot Genes within some distance of high SNPs.
+
 ```{r}
 ggplot2::autoplot(out, top_snps_tbl)
 ```
 
 ```{r}
-qtl2ggplot::ggplot_genes(gene_tbl)
+qtl2ggplot::ggplot_genes(gene_tbl, top_snps_tbl = top_snps_tbl)
+```
+
+Plot of genes with SNPs above a threshold.
+
+```{r}
+class(gene_tbl) <- c("feature_tbl", class(gene_tbl))
+autoplot(gene_tbl, top_snps_tbl = top_snps_tbl)
 ```
 
 
 ```{r}
-ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
+ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2, show_all_snps = FALSE)
 ```
 
 ## Database Query

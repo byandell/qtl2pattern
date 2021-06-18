@@ -30,7 +30,8 @@ Imports:
     stats,
     graphics
 Suggests:
-    knitr, rmarkdown
+    knitr, rmarkdown,
+    gtl2ggplot
 VignetteBuilder: knitr
 License: GPL-3
 URL: https://github.com/byandell/qtl2pattern
