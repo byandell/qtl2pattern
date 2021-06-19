@@ -13,10 +13,10 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
-This vignette continues an example developed in library `qtl2ggplot` using data
+This vignette continues an example developed in library [qtl2ggplot](https://CRAN.R-project.org/package=qtl2ggplot) using data
 from [qtl2data](https://github.com/rqtl/qtl2data) with tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
 Calculations are repeated from that example, but only plots that help tell the story.
-Focus is entirely on chromosome `2`.
+Focus is entirely on chromosome `2` of the [DOex](https://github.com/rqtl/qtl2data/tree/master/DOex) from 'qtl2data'. See vignette in 'qtl2ggplot' for complementary analysis.
 
 Package 'qtl2pattern' does not depend on 'qtl2ggplot', and can be used independently.
 However this vignette shows some new 'ggplot2' based routines that extend 'qtl2ggplot'
@@ -62,126 +62,15 @@ Subset to chr 2.
 DOex <- subset(DOex, chr = "2")
 ```
 
-## Genome Scan Using 36 Allele Pairs
-
 Calculate 36 genotype probabilities for allele pairs by individual and marker.
 
 ```{r}
 pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
 ```
 
-```{r}
-str(pr)
-```
-
-If you want all chromosomes, consider download from [qtl2data](https://github.com/rqtl/qtl2data).
-Notice the `subset` to chr `2` to be consistent with example here.
-
-```{r eval=FALSE}
-tmpfile <- tempfile()
-file <- paste0("https://raw.githubusercontent.com/rqtl/",
-               "qtl2data/master/DOex/DOex_genoprobs.rds")
-download.file(file, tmpfile)
-pr <- readRDS(tmpfile)
-unlink(tmpfile)
-# Subset to chr 2.
-pr <- subset(pr, chr = "2")
-```
-
-```{r}
-scan_pr <- qtl2::scan1(pr, DOex$pheno)
-```
-
-```{r}
-qtl2::find_peaks(scan_pr, DOex$pmap)
-```
-
-
-```{r}
-summary(scan_pr, DOex$pmap)
-```
-
-```{r}
-plot(scan_pr, DOex$pmap)
-title("Genome scan of OF_immobile_pct")
-```
-
-The peak is not clear using the 36 allele pairs as the model is over-specified. The next section collapses these 36 allele pairs into the 8 alleles.
-
-## Genome Scan Using 8 Alleles
-
-Calculate 8 allele probabilities from genotype probabilities.
-
-```{r}
-apr <- qtl2::genoprob_to_alleleprob(pr)
-```
-
-```{r}
-str(apr)
-```
-
-```{r}
-scan_apr <- qtl2::scan1(apr, DOex$pheno)
-```
-
-```{r}
-qtl2::find_peaks(scan_apr, DOex$pmap)
-```
-
-
-```{r}
-summary(scan_apr, DOex$pmap)
-```
-
-```{r}
-plot(scan_apr, DOex$pmap, lodcolumn = "OF_immobile_pct")
-title("Genome allele scan of OF_immobile_pct")
-```
-
-```{r}
-scan_apr <- qtl2::scan1(apr, DOex$pheno)
-```
-
-```{r}
-qtl2::find_peaks(scan_apr, DOex$pmap)
-```
-
-```{r}
-summary(scan_apr, DOex$pmap)
-```
-
-```{r}
-coefs <- qtl2::scan1coef(apr, DOex$pheno[,"OF_immobile_pct"], zerosum = FALSE)
-```
-
-```{r}
-summary(coefs, scan_apr, DOex$pmap)
-```
-
-```{r}
-plot(coefs, DOex$pmap, LETTERS[1:8],
-     col = qtl2::CCcolors)
-title("Allele Coefficients for OF_immobile_pct")
-legend(150, 75, legend = names(qtl2::CCcolors), 
-       col = qtl2::CCcolors, lty = 1, lwd = 2)
-```
-
-It is useful to focus in on the region near the allele peak.
-
-```{r}
-plot(coefs, DOex$pmap, LETTERS[1:8], xlim = c(90,110), type = "b",
-     col = qtl2::CCcolors)
-title("Allele Coefficients for OF_immobile_pct")
-legend(105, 80, legend = names(qtl2::CCcolors), 
-       col = qtl2::CCcolors, lty = 1, lwd = 2)
-```
-
-This gives a clearer picture, but it loses information in the allele pairs tied to SNP patterns. 
-
-
 ## SNP Association Mapping near Peak
 
-This section examines SNP association mapping,
+This section briefly examines SNP association mapping,
 which involves collapsing the 36 allele pair genotype probabilities to
 3 allele probabilities in the region of a QTL peak.
 
@@ -205,17 +94,23 @@ snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
 snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
 ```
 
-Convert to SNP probabilities. Notice that starting with the allele probabilities only ends up with 2 SNP alleles per marker (`"A", "B"`), but we want all three (`"AA" "AB" "BB"`). Recall that the SNP alleles are in context of the strain distribution pattern (`sdp`) for that SNP.
+Convert genotype probabilities to SNP probabilities. Notice that starting with the allele probabilities only ends up with 2 SNP alleles per marker (`"A", "B"`), but we want all three (`"AA" "AB" "BB"`). Recall that the SNP alleles are in context of the strain distribution pattern (`sdp`) for that SNP.
 The `sdp` for markers (`rsnnn`) are imputed in 'qtl2' from the adjacent SNPs.
+That is, using allele probabilities,
 
 ```{r}
+apr <- qtl2::genoprob_to_alleleprob(pr)
 snpapr <- qtl2::genoprob_to_snpprob(apr, snpinfo)
-str(snpapr)
+dim(snpapr[["2"]])
+dimnames(snpapr[["2"]])[[2]]
 ```
+
+while using genotype probabilities,
 
 ```{r}
 snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
-str(snppr)
+dim(snppr[["2"]])
+dimnames(snppr[["2"]])[[2]]
 ```
 
 ```{r}
@@ -229,21 +124,19 @@ The summary includes a range (`min` and `max`) for both `lod` and `pos`, as ther
 scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 ```
 
-```{r}
-summary(scan_snppr, DOex$pmap, snpinfo)
-```
-
-Here is a plot with the SNPs used in the map only, highlighting those
-within 1.5 LOD of the maximum, which are in the table above.
-
+Package 'qtl2' provides a summary of the peak using `qtl2::find_peaks`.
 
 ```{r}
-plot(scan_snppr, snpinfo, lodcolumn = "OF_immobile_pct",
-     drop_hilit = 1.5, show_all_snps = FALSE, cex = 1)
-title("Peak Region SNP Scan of OF_immobile_pct")
+qtl2::find_peaks(scan_snppr, snpinfo)
 ```
 
 ## Strain Distribution Pattern (SDP) Scan
+
+Package 'qtl2pattern' adds a `summary` method that provides more detail by SDP.
+
+```{r}
+summary(scan_snppr, DOex$pmap, snpinfo)
+```
 
 Strain distribution patterns (SDPs) separate out SNPs based on their SDP and plot the top patterns.
 For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the reference (`ref`) set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from the alternate (`alt`) set `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each for the heterogeneous (`het`) set (15 pairs: `AC, AE, ..., HF`).
@@ -251,7 +144,7 @@ There are 255 possible SDPs, but only a few (4 in our example) that need be exam
 genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
 That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
 
-SNP assocation mapping would be more useful with plots that emphasized the strain distribution pattern (SDP). This is already in 'qtl2ggplot'.
+The vignette for package 'qtl2ggplot' shows plots that emphasize the strain distribution pattern (SDP).
 
 ```{r}
 ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
@@ -263,31 +156,24 @@ The `top_snps_all` routine is an extension of `qtl2::top_snps`, which provides m
 top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
 ```
 
-This first summary finds the peak of SNP positions with the maximum LOD for the top SDPs.
+This default `summary` is nearly identical to the `summary` of the SNP scan object above:
 
 ```{r}
 (patterns <- summary(top_snps_tbl))
 ```
 
-The `"peak"` summary is very similar for one trait, but provides useful summaries at peaks 
-for multiple phenotypes.
-
-```{r}
-summary(top_snps_tbl, "peak")
-```
-
-If there is a range for the peak position, and multiple SNPs identified for an SDP,
-it is worth looking at all SNPS to find what other ones might be best.
-The earlier SNP association plot  suggested two locations about 0.01cM apart.
-This summary shows the 3 SNPS with that SDP:
+There may be multiple SNPs identified for an SDP with the same LOD, covering a range of positions.
+If there is a range of `lod` values, there are additional SNPs beyond those reported in the summary with `lod` values below the maximum (see `ABDFGH:CE` and `ABCDFGH:E` patterns in plot above).
+The following summary shows details for the first 10 SNPS with top `lod` per SDP:
 
 ```{r}
 head(summary(top_snps_tbl, "best"))
 ```
 
-### SDP Pattern Scan
+## SDP Pattern Scan
 
 A new routine `scan_pattern` scans the peak region for each of the 4 patterns provided.
+That is, the SDP scan only considers SNPs that have a particular strain distribution pattern and uses the SNP probabilities. However, for each markers (or any genome position), one can impute a SNP with any particular SDP and compute its SDP probabilities. That is, we could consider the SDP probabilities at every marker position for the SDP 48 (pattern `ABCDGH:EF`) and do an SDP scan with these SDP probabilities. That is what the routine `scan_pattern` does.
 
 ```{r}
 scan_pat <- scan_pattern(pr, DOex$pheno,
@@ -327,7 +213,7 @@ title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
 
 ### SDP Effects Scan
 
-In a similar fashion to a two-allele cross, we can examine the effects. The top row is for the patterns with the higher LOD score.
+In a similar fashion to a two-allele cross, we can examine the SDP effects. The top row of the plot below is for the patterns with the higher LOD score.
 
 ```{r}
 par(mfrow = c(2,2))
@@ -361,13 +247,14 @@ for(i in 1:4) {
 
 ### 36 Allele Pair Scan
 
-We are now going to look at the 36 coefficients. These are unwieldy, so we collapse the allele pairs for SDP 52, pattern `ABCDGH:EF` into `"ref", "het", "alt"` for summaries, looking individually only at pairs `"EE", "EF", "FF"`.
+We are now going to look at some of the 36 coefficients. These are unwieldy, so we collapse the allele pairs for SDP 52, pattern `ABCDGH:EF` into `"ref", "het", "alt"` for summaries, looking individually only at pairs `"EE", "EF", "FF"`.
 
 ```{r}
 coefs2 <- qtl2::scan1coef(pr, DOex$pheno[,"OF_immobile_pct"], zerosum = FALSE)
 ```
 
 ```{r}
+scan_pr <- qtl2::scan1(pr, DOex$pheno)
 sumc <- summary(coefs2, scan_pr, DOex$pmap)
 ```
 
@@ -423,7 +310,13 @@ legend(107, 75, legend = c("ref", "het", alt[-1]),
 
 ### Effect estimates
 
-**These look off somehow.**
+**These look off somehow. Probably don't have best choice of position.**
+
+```{r}
+scan_apr <- qtl2::scan1(apr, DOex$pheno)
+coefs <- qtl2::scan1coef(apr, DOex$pheno)
+coefs2 <- qtl2::scan1coef(pr, DOex$pheno)
+```
 
 ```{r}
 alleles <- allele1(probD = pr,
@@ -435,12 +328,10 @@ alleles <- allele1(probD = pr,
 ggplot2::autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
 ```
 
+## SNP features and Gene action
 
-## Gene scan
-
-**Still to do.**
-
-Download Gene info for DOex from web via RDS.
+Download Gene info for DOex from web via RDS. For the example below,
+genes are presented without exons. 
 
 ```{r}
 filename <- file.path("https://raw.githubusercontent.com/rqtl",
@@ -450,7 +341,10 @@ tmpfile <- tempfile()
 download.file(filename, tmpfile, quiet=TRUE)
 gene_tbl <- readRDS(tmpfile)
 unlink(tmpfile)
+class(gene_tbl) <- c("feature_tbl", class(gene_tbl))
 ```
+
+Variants are usually SNPs, but may be of other types, such as deletions (`DEL`), insertions (`INS`), or insertions and deletions (`InDel`). The routine cannot yet handle major chromosomal rearrangements and translocations. In addition variants may be intronic, exonic, or intergenic, depending on the "consequence" as reported in the variant database.
 
 ```{r}
 out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
@@ -461,32 +355,36 @@ summary(out, "pattern")
 ggplot2::autoplot(out, "OF_immobile_pct")
 ```
 
+It is also possible to consider different types of gene action for SDPs. With no restrictions, there are 2 degrees of freedom (`add+dom`). Various one df options include `additive`, `dominant`, `recessive` and `non-add`itive. It is also possible if sex is encoded to separate analysis by sex.
+
+## Gene and exon scan
+
+Plot Genes within some distance of high SNPs.
+
+```{r}
+qtl2ggplot::ggplot_genes(gene_tbl, top_snps_tbl = top_snps_tbl)
+```
+
+```{r}
+ggplot2::autoplot(gene_tbl)
+```
+
+Adding the result of `top_snps_all` overlays significant SNPS on the plot of genes.
+
+```{r}
+ggplot2::autoplot(gene_tbl, top_snps_tbl = top_snps_tbl)
+```
+The routine `get_gene_exon_snp` examines individual genes and their exons.
+This example does not have exons, so there is just the figure of the gene. Exons would appear on different rows. Again, the vertical dashed lines correspond to SNPs with high LODs.
+
 ```{r}
 # Get Gene exon information.
 out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
 summary(out, gene = out$gene[1])
 ```
 
-Plot Genes within some distance of high SNPs.
-
 ```{r}
 ggplot2::autoplot(out, top_snps_tbl)
-```
-
-```{r}
-qtl2ggplot::ggplot_genes(gene_tbl, top_snps_tbl = top_snps_tbl)
-```
-
-Plot of genes with SNPs above a threshold.
-
-```{r}
-class(gene_tbl) <- c("feature_tbl", class(gene_tbl))
-autoplot(gene_tbl, top_snps_tbl = top_snps_tbl)
-```
-
-
-```{r}
-ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2, show_all_snps = FALSE)
 ```
 
 ## Database Query

@@ -113,7 +113,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #' Summary of top SNP object across phenotypes
 #'
 #' @param object object of class \code{top_snps_tbl}
-#' @param sum_type type of summary (one of "range","peak","best")
+#' @param sum_type type of summary (one of "range","best")
 #' @param ... other arguments not used
 #'
 #' @return table summary
@@ -126,7 +126,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #' @export
 #' @importFrom dplyr arrange desc everything filter group_by mutate select summarize ungroup
 #'
-summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
+summary.top_snps_all <- function(object, sum_type=c("range","best","peak"), # peak is now old, not used
                                  ...) {
   haplos <- attr(object, "haplos")
   sum_type <- match.arg(sum_type)
@@ -141,41 +141,42 @@ summary.top_snps_all <- function(object, sum_type=c("range","peak","best"),
                dplyr::mutate(out,
                  consequence = abbreviate(.data$consequence, 15))
            }
-           dplyr::select(out,
-                         .data$pheno,
-                         .data$chr, .data$pos,
-                         .data$lod,
-                         .data$snp_id, .data$sdp,
-                         dplyr::everything())
+           dplyr::select(
+             dplyr::group_by(
+               dplyr::filter(
+                 dplyr::group_by(out, .data$pheno, .data$sdp),
+                 .data$lod == max(.data$lod))),
+               .data$pheno,
+               .data$chr, .data$pos,
+               .data$lod,
+               .data$snp_id, .data$sdp,
+               dplyr::everything())
          },
+         peak =,
          range = {
-           ## Most frequent SNP patterns within 1.5 of max LOD.
-         dplyr::arrange(
+           ## SNP patterns within drop_hilit of max LOD.
            dplyr::select(
              dplyr::arrange(
                dplyr::mutate(
                  dplyr::ungroup(
                    dplyr::summarize(
                      dplyr::group_by(object, .data$sdp, .data$pheno),
-                     pct = dplyr::n(),
-                     min_lod = min(.data$lod),
-                     max_lod = max(.data$lod),
+                     max_n = sum(.data$lod == max(.data$lod)),
                      min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
                      max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
-                     max_snp = ifelse(pct == 1,
-                                      .data$snp_id[which.max(.data$lod)][1],
-                                      paste(pct, "SNPs")))),
-                 pct = round(100 * .data$pct / nrow(object), 2),
+                     max_snp = ifelse(max_n == 1,
+                                  .data$snp_id[which(.data$lod == max(.data$lod))][1],
+                                  paste(max_n, "SNPs")),
+                     max_lod = max(.data$lod),
+                     min_lod = min(.data$lod))),
                  pattern = sdp_to_pattern(.data$sdp, haplos)),
                dplyr::desc(.data$max_lod)),
              .data$pheno, 
              .data$min_pos, .data$max_pos,
              .data$max_lod, .data$min_lod,
-             .data$sdp, .data$pattern, .data$pct,
-             dplyr::everything()),
-           dplyr::desc(max_lod))
+             .data$sdp, .data$pattern, .data$max_snp)
          },
-         peak = {
+         old = {
            dplyr::select(
              dplyr::arrange(
                dplyr::mutate(

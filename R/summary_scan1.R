@@ -113,9 +113,9 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
           dplyr::group_by(
             tidyr::pivot_longer(lod, -(chr:mnames), names_to = "pheno", values_to = "lod"),
             .data$pheno, .data$chr),
-          marker = .data$mnames[which.max(.data$lod)],
           pos = .data$pos[which.max(.data$lod)],
-          lod = max(.data$lod))),
+          lod = max(.data$lod),
+          marker = .data$mnames[which.max(.data$lod)])),
       .data$chr)
   } else {
     # snpinfo summary
@@ -136,19 +136,25 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                              pattern = sdp_to_pattern(.data$sdp, haplos)),
                dplyr::desc(.data$lod))},
            common = { ## Find most common patterns by pheno.
+           dplyr::select(
              dplyr::arrange(
                dplyr::mutate(
                  dplyr::ungroup(
                    dplyr::summarize(
                      dplyr::group_by(object, .data$pheno, .data$sdp),
-                     count = dplyr::n(),
-                    pct = round(100 * dplyr::n() / nrow(object), 2),
-                    min_lod = min(.data$lod),
-                    max_lod = max(.data$lod),
-                    max_snp = .data$snp_id[which.max(.data$lod)],
-                    max_pos = .data$pos[which.max(.data$lod)])),
+                     max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
+                     min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
+                     max_snp = sum(.data$lod == max(.data$lod)),
+                     max_snp = ifelse(max_snp > 1,
+                                  paste(max_snp, "SNPs"),
+                                  .data$snp_id[which.max(.data$lod)][1]),
+                     lod = max(.data$lod))),
                  pattern = sdp_to_pattern(.data$sdp, haplos)),
-               dplyr::desc(.data$max_lod))
+               dplyr::desc(.data$lod)),
+             .data$pheno,
+             .data$max_pos, .data$min_pos,
+             .data$lod,
+             .data$sdp, .data$pattern, .data$max_snp)
            })
   }
 }
