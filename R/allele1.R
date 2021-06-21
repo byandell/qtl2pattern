@@ -56,7 +56,7 @@ allele1_internal <- function(
       stop("need either patterns or scan_pat")
     patterns <- dplyr::filter(patterns,
                               .data$pheno == pheno_name)
-    scan_pat <- scan_pattern(probD, phe_df, K_chr, cov_mx,
+    scan_pat <- scan1pattern(probD, phe_df, K_chr, cov_mx,
                              map, patterns, blups = blups)
   }
   if(!nrow(patterns))

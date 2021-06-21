@@ -51,9 +51,9 @@
 #' patterns <- dplyr::arrange(summary(top_snps_tbl), dplyr::desc(max_lod))
 #' 
 #' # Scan using patterns.
-#' scan_pat <- scan_pattern(pr, DOex$pheno, map = DOex$pmap, patterns = patterns)
+#' scan_pat <- scan1pattern(pr, DOex$pheno, map = DOex$pmap, patterns = patterns)
 #' 
-#' # Summary of scan pattern.
+#' # Summary of scan1pattern.
 #' summary(scan_pat, DOex$pmap)
 #'
 #' @export
@@ -61,7 +61,7 @@
 #' @importFrom stringr str_split
 #' @importFrom rlang .data
 #'
-scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
+scan1pattern <- function(probs1, phe, K = NULL, covar = NULL,
                          map, patterns,
                          condense_patterns = TRUE,
                          blups = FALSE,
@@ -168,15 +168,15 @@ scan_pattern <- function(probs1, phe, K = NULL, covar = NULL,
   ## Adjust max position from genome scan to SNP scan.
   ## Used for vertical line at max.
   attr(out, "blups") <- blups
-  class(out) <- c("scan_pattern", class(out))
+  class(out) <- c("scan1pattern", class(out))
   out
 }
-#' @param object object of class \code{\link{scan_pattern}}
+#' @param object object of class \code{\link{scan1pattern}}
 #' @param ... additional parameters passed on to other methods
 #' @export
-#' @method summary scan_pattern
-#' @rdname scan_pattern
-summary.scan_pattern <- function(object, map, ...) {
+#' @method summary scan1pattern
+#' @rdname scan1pattern
+summary.scan1pattern <- function(object, map, ...) {
   # Set up unique names as pheno_pattern_contrast
   pheno <- paste(object$patterns$pheno, object$patterns$founders, sep = "_")
   names(object$coef) <- pheno

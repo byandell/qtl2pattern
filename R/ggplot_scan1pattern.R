@@ -1,6 +1,6 @@
 #' Plot scan pattern usign ggplot2
 #' 
-#' @param x object of class \code{\link{scan_pattern}}
+#' @param x object of class \code{\link{scan1pattern}}
 #' 
 #' @param map A list of vectors of marker positions, as produced by
 #' \code{\link[qtl2]{insert_pseudomarkers}}.
@@ -22,7 +22,7 @@
 #' @importFrom ggplot2 aes geom_path geom_vline ggplot ggtitle
 #' @importFrom rlang .data
 #' 
-ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod"),
+ggplot_scan1pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod"),
                               patterns = x$patterns$founders,
                               columns = 1:3,
                               min_lod = 3,
@@ -30,11 +30,11 @@ ggplot_scan_pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod
                               facet = "pheno", ...) {
   plot_type <- match.arg(plot_type)
   
-  ggplot_scan_pattern_internal(x, map, plot_type, 
+  ggplot_scan1pattern_internal(x, map, plot_type, 
                                patterns, columns, min_lod,
                                lodcolumn, facet, ...)
 }
-ggplot_scan_pattern_internal <- function(x, map, plot_type, 
+ggplot_scan1pattern_internal <- function(x, map, plot_type, 
                                          patterns, columns, min_lod,
                                          lodcolumn, facet,
                                          colors = NULL, ...) {
@@ -70,12 +70,12 @@ ggplot_scan_pattern_internal <- function(x, map, plot_type,
                                  facet_lod = facet, colors = colors, ...))
 }
 
-#' @method autoplot scan_pattern
+#' @method autoplot scan1pattern
 #' @export
-#' @export autoplot.scan_pattern
-#' @rdname ggplot_scan_pattern
+#' @export autoplot.scan1pattern
+#' @rdname ggplot_scan1pattern
 #' 
 #' @importFrom ggplot2 autoplot
 #' 
-autoplot.scan_pattern <- function(x, ...)
-  ggplot_scan_pattern(x, ...)
+autoplot.scan1pattern <- function(x, ...)
+  ggplot_scan1pattern(x, ...)
