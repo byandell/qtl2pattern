@@ -135,6 +135,12 @@ allele1_internal <- function(
   alleles
 }
 #' @export
+#' @importFrom dplyr filter
+#' 
+subset.allele1 <- function(x, sources = levels(x$source), ...) {
+  dplyr::filter(x, source %in% sources)
+}
+#' @export
 #' @importFrom dplyr group_by summarize ungroup
 #' 
 summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) {
