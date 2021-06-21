@@ -36,7 +36,7 @@ sdp <- snpinfo$sdp
 nallele <- ceiling(log2(max(sdp)))
 out <- sdp_to_pattern(sdp, LETTERS[seq_len(nallele)])
 # Show most frequent patterns. 
-head(rev(sort(table(out))))
+head(rev(sort(c(table(out)))))
 
 }
 \author{

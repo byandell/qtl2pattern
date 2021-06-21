@@ -104,9 +104,9 @@ summary.merge_feature <- function(object,
   sum_type <- match.arg(sum_type)
   switch(sum_type,
          "SNP type" = {
-           t(table(object$snp_type))
+           t(c(table(object$snp_type)))
          },
          "pattern" = {
-           t(table(sdp_to_pattern(object$sdp, haplos)))
+           t(c(table(sdp_to_pattern(object$sdp, haplos))))
          })
 }

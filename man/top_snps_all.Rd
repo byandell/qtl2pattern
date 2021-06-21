@@ -8,7 +8,7 @@
 \usage{
 top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE, haplos)
 
-\method{summary}{top_snps_all}(object, sum_type = c("range", "peak", "best"), ...)
+\method{summary}{top_snps_all}(object, sum_type = c("range", "best", "peak"), ...)
 
 \method{subset}{top_snps_all}(x, start_val = 0, stop_val = max(x$pos), pheno = NULL, ...)
 }
@@ -43,7 +43,7 @@ top_snps_all(scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE, haplos)
 
 \item{object}{object of class \code{top_snps_tbl}}
 
-\item{sum_type}{type of summary (one of "range","peak","best")}
+\item{sum_type}{type of summary (one of "range","best")}
 
 \item{...}{additional parameters ignored}
 

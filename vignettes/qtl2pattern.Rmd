@@ -13,6 +13,9 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 5)
 ```
 
+**Look for bold stuff to remove or adjust code.**
+**Note that changes to summary broke part of qtl2shiny in SNP/Gene Action**
+
 This vignette continues an example developed in library [qtl2ggplot](https://CRAN.R-project.org/package=qtl2ggplot) using data
 from [qtl2data](https://github.com/rqtl/qtl2data) with tools found in [qtl2pattern](https://github.com/byandell/qtl2pattern).
 Calculations are repeated from that example, but only plots that help tell the story.
@@ -143,12 +146,6 @@ For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP gen
 There are 255 possible SDPs, but only a few (4 in our example) that need be examined carefully. One can think of these as a subset of markers for
 genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
 That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
-
-The vignette for package 'qtl2ggplot' shows plots that emphasize the strain distribution pattern (SDP).
-
-```{r}
-ggplot2::autoplot(scan_snppr, snpinfo, patterns="hilit",drop.hilit=1.5,cex=2)
-```
 
 The `top_snps_all` routine is an extension of `qtl2::top_snps`, which provides more detail on SDPs.
 
@@ -311,6 +308,8 @@ legend(107, 75, legend = c("ref", "het", alt[-1]),
 ### Effect estimates
 
 **These look off somehow. Probably don't have best choice of position.**
+**Also, allele1 is fragile if you don't provide stuff.**
+**Also, want to add plot of data.**
 
 ```{r}
 scan_apr <- qtl2::scan1(apr, DOex$pheno)
@@ -327,6 +326,34 @@ alleles <- allele1(probD = pr,
 ```{r}
 ggplot2::autoplot(alleles, scan_apr, DOex$pmap, frame = FALSE)
 ```
+
+Look at subset with haplotype and the 3 well-behaved SDPs.
+
+```{r}
+aa <- subset(alleles, sources = levels(alleles$source)[c(1,4:6)])
+ggplot2::autoplot(aa, scan_apr, DOex$pmap, frame = FALSE)
+```
+
+The following plot of data uses the closest marker to the SDP 48 max. Hopefully this marker has SDP 48. We could likely improve things with more work by using the SDP probabilities. Check sign on calculations.
+
+```{r}
+pos = patterns$max_pos[patterns$sdp == 48]
+wh <- which.min(abs(pos - DOex$pmap[[1]]))
+geno <- apply(snppr[[1]][,,wh], 1, function(x) which.max(x))
+geno <- factor(c("ref","het","alt")[geno], c("ref","het","alt"))
+dat <- data.frame(DOex$pheno, geno = geno)
+dat$x <- jitter(rep(1, nrow(dat)))
+```
+
+```{r}
+ggplot2::ggplot(dat) +
+  ggplot2::aes(x = x, y = OF_immobile_pct, col = geno, label = geno) +
+  ggplot2::geom_boxplot() +
+  ggplot2::geom_point() +
+  ggplot2::facet_wrap(~ geno)
+```
+
+These plots anticipate some of the possibilities with mediation.
 
 ## SNP features and Gene action
 
@@ -351,18 +378,45 @@ out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
 summary(out, "pattern")
 ```
 
+Add bogus consequence for show.
+
+```{r}
+out$snp_type <- sample(c(rep("intron", 40), rep("exon", nrow(out) - 40)))
+```
+
 ```{r}
 ggplot2::autoplot(out, "OF_immobile_pct")
 ```
 
+```{r}
+ggplot2::autoplot(out, "OF_immobile_pct", "consequence")
+```
+
 It is also possible to consider different types of gene action for SDPs. With no restrictions, there are 2 degrees of freedom (`add+dom`). Various one df options include `additive`, `dominant`, `recessive` and `non-add`itive. It is also possible if sex is encoded to separate analysis by sex.
 
+**This currently ignores snp_type**
+
 ## Gene and exon scan
+
+**Add fake exons.**
+
+```{r eval = FALSE}
+# Not quite right.
+gene <- "Lrrc4c"
+geneinfo <- dplyr::filter(gene_tbl, Name == gene)
+parts <- geneinfo$start + diff(unlist(geneinfo[,c("start","stop")])) * (0:5) / 5
+geneinfo <- geneinfo[rep(1,3),]
+geneinfo$type <- "exon"
+geneinfo$start <- parts[c(1,3,5)]
+geneinfo$stop <- parts[c(2,4,6)]
+gene_tbl <- rbind(gene_tbl[1,], geneinfo, gene_tbl[-1,])
+```
+
 
 Plot Genes within some distance of high SNPs.
 
 ```{r}
-qtl2ggplot::ggplot_genes(gene_tbl, top_snps_tbl = top_snps_tbl)
+qtl2::plot_genes(gene_tbl, xlim = c(96,99))
 ```
 
 ```{r}
@@ -387,58 +441,91 @@ summary(out, gene = out$gene[1])
 ggplot2::autoplot(out, top_snps_tbl)
 ```
 
-## Database Query
+## Database Query and Large Crosses
+
+The package [R/qtl2](https://kbroman.org/qtl2/) is designed for large crosses, in which phenotype, genotype and variant information may require substantial space and efficient access and calculations. Here is some additional information that is useful when working with large crosses. See the following information at :
+
+- [R/qtl2 User Guide](https://kbroman.org/qtl2/assets/vignettes/user_guide.html)
+  + [R/qtl2 Connecting to SNP and gene databases](https://kbroman.org/qtl2/assets/vignettes/user_guide.html#Connecting_to_SNP_and_gene_databases)
+- [qtl2fst user guide](https://kbroman.org/qtl2/assets/vignettes/qtl2fst.html)
 
 Large systems genetics studies have databases that need not be uploaded to R, but are better accessed
 via query searchers. Package 'qtl2' has two functions to create query functions for SNP and other variants (`create_variante_query_func`) and genes (`create_gene_query_func`). Package 'qtl2pattern' adds a function for genotype probabilities (`create_probs_query_func`).
 
-**Currently 'qtl2pattern' has a function for MRNA, but want to fold that into probs as it is too specific.**
+Here are query function creations using the 'qtl2' routines, assuming that variants and genes are stored in an `SQLite` file database in folder `qtl2shinyData/CCmouse`:
 
 ```{r}
-knitr::knit_exit()
+query_variants <- 
+  qtl2::create_variant_query_func(
+    file.path("qtl2shinyData", "CCmouse", "cc_variants.sqlite"))
 ```
 
-Modify plot_scan_pattern to facet on multiple phenotypes.
-
-** There seems to be some problem with scan_pattern for plotting.
-
-```{r eval=FALSE}
-plot(scan_pat, DOex$pmap, patterns = patterns)
-abline(v = c(96.5,98.5))
+```{r}
+query_genes <- 
+  qtl2::create_gene_query_func(
+    file.path("qtl2shinyData", "CCmouse", "mouse_genes.sqlite"))
 ```
+
+Here are the objects in the local `query_variants()` environment:
+
+```{r}
+objects(envir = environment(query_variants))
+```
+
+Here is the value of `dbfile` in the local `query_variants()` environment:
+
+```{r}
+get("dbfile", envir = environment(query_variants))
+```
+
+While these can be used interactively, their real value comes in saving them for
+use separately, such as with 'qtl2shiny'. This can be done using `saveRDS`, with later access using `readRDS`.
 
 ```{r eval = FALSE}
-plot(scan_pat, DOex$pmap, "coef", ylim=c(-100,100))
-abline(v = c(96.5,98.5))
+saveRDS(query_variants, "query_variants.rds")
+#
+# other code
+#
+query_variants <- readRDS("query_variants.rds")
 ```
 
-```{r}
-ggplot2::autoplot(scan_pat, DOex$pmap, "coef", ylim=c(-100,100)) +
-  ggplot2::geom_vline(xintercept = c(96.5,98.5))
+The new routine in 'qtl2pattern' is for genotype probabilities, which can now be quite large when considering SNP probabilities. These are also specific to a cross, whereas the variants and genes are specific to a taxa. The strategy is to place genotype probabilities in a folder (default names is `genoprob`) either in RDS or FST format.
+
+```{r eval = FALSE}
+query_probs <- 
+  create_probs_query_func(
+    file.path("qtl2shinyData", "CCmouse", "Recla"))
 ```
 
-```{r}
-ggplot2::autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim=c(-100,100))
+The current preferred storage for large probability files uses package [fst](https://www.fstpackage.org/) via the package [qtl2fst](https://kbroman.org/qtl2/assets/vignettes/qtl2fst.html).
+Here is some of the size information from the full Recla genotype data.
+
+```
+> dirpath <- "inst/qtl2shinyApp/qtl2shinyData/CCmouse/Recla/genoprob/"
+> fpr <- readRDS(file.path(dirpath, "fst_probs.rds"))
+> print(object.size(fpr), units = "Mb")
+1.5 Mb
+> dim(fpr)
+      1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19   X
+ind 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261 261
+gen  36  36  36  36  36  36  36  36  36  36  36  36  36  36  36  36  36  36  36  44
+mar 536 542 469 452 438 444 423 373 386 430 393 355 362 369 303 299 270 260 196 439
+>
+> file.info(file.path(dirpath, "fst_probs.rds"))$size
+[1] 70827
+> file.info(file.path(dirpath, "probs_1.fst"))$size
+[1] 40314202
 ```
 
-Here we show the traditional QTL effects and LOD scan next to the newer scan pattern effects and LOD scans for comparison. The traditional LOD has 7 model degrees of freedom (df), while the scan pattern contrast LODs each have 2 model df. The LOD curves drop off somewhat more steeply for the scan pattern contrasts, and the peak is almost as high (`r round(max(scan_pat$scan, DOex$pmap)[,3], 1)` vs. `r round(max(scan_apr, DOex$pmap)[,3], 1)`).
+Thus the master FST file `"fst_probs.rds"` external to 'R' is 71Kb, while the FST database for Chr 1 external to 'R' is 40Mb. There is a separate file for each chromosome. All combined, the external storage for the master FST and chromosome-specific data is over 800Mb; adding the allele probabilities, which are much smaller, brings the total to ~1Gb.
+The storage for Recla genotype probabilities is roughly proportional to the number of individuals (261), number of markers (7739), and number of allele pairs (36), that is about 14b per individual, marker and allele pair.  
 
-The traditional QTL effects compare 8 founder additive allele effects,
-while each scan pattern contrast compares the 3 SNP alleles,
-reference (`ref` = `dark green`),
-heterozygote (`het` = `dark orange`) and
-alternate (`alt` = `dark blue`).
-The scan pattern contrasts appear at first to be confusing and contradictory, with the `ABCDGH:EF` contrast showing that the `ref` allele is dominant (with `het` at the same level), while the `ABCDFGH:E` suggests `ref` is recessive. However, a closer look shows the following story with regard to the `alt` allele:
+Internal to 'R', the FST genotype probability object `fpr` is 1.5Mb, and contains all the information about where to find the genotype probability information for individual chromosomes. One uses this object as one uses the genotype probability object `pr`, created by `qtl2::calc_genoprob`, using functions in 'qtl2'. However, it is much smaller. Typically, 'qtl2' functions will only need a small part of the genotype probabilities at any time. See documentation for [qtl2fst](https://kbroman.org/qtl2/assets/vignettes/qtl2fst.html) for more information.
 
-* the `ABCDFGH:E` contrast finds 1 or 2 `E=NZO` alleles have lower response
-* the `ABCDGH:EF` contrast finds having only `E=NZO` and/or `F=CAST` alleles leads to lower response
+**Currently 'qtl2pattern' has a function for MRNA, but want to fold that into probs as it is too specific.**
 
-These findings are thus complementary, and they agree with the traditional QTL effects plot showing `NZO` = `powder blue` and `CAST` = `green` alleles being much lower than the other 6 alleles.
-
-```{r}
-ggplot2::autoplot(coefs, DOex$pmap, scan1_output = scan_apr)
-```
-
-```{r}
-ggplot2::autoplot(scan_pat, DOex$pmap, "coef_and_lod", ylim = c(-100,100))
+```{r eval = FALSE}
+query_mrna <- 
+  create_mrna_query_func(
+    file.path("qtl2shinyData", "CCmouse", "Recla"))
 ```
