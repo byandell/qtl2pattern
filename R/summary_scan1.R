@@ -120,7 +120,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
   } else {
     # snpinfo summary
     ## top_snps() Adapted to multiple phenotypes.
-    object <- top_snps_all(object, snpinfo, drop, show_all_snps)
+    object <- top_snps_pattern(object, snpinfo, drop, show_all_snps)
 
     if(!nrow(object))
       return(NULL)

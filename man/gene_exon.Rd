@@ -43,7 +43,7 @@ Match up exon start,stop,strand with genes. Use \code{query_genes} to find featu
 Returns table of gene and its exons.
 }
 \examples{
-example(top_snps_all)
+example(top_snps_pattern)
 
 # Download Gene info for DOex from web via RDS
 tmpfile <- tempfile()

@@ -1,6 +1,6 @@
 #' Extract pattern of diplotypes
 #'
-#' @param sdp vector of straind distribution patterns from \code{\link{top_snps_all}}
+#' @param sdp vector of straind distribution patterns from \code{\link{top_snps_pattern}}
 #' @param haplos vector of haplotype names
 #' @param diplos vector of diplotype names
 #' @param cont vector of types of contrasts (\code{NULL} or from \code{c("add","dom","b6r","b6d")})
@@ -45,7 +45,7 @@ pattern_diplos <- function(sdp, haplos, diplos, cont=NULL) {
 }
 #' Extract pattern of haplotypes
 #'
-#' @param sdp vector of sdp from \code{\link{top_snps_all}}
+#' @param sdp vector of sdp from \code{\link{top_snps_pattern}}
 #' @param haplos vector of haplotype names
 #'
 #' @return matrix of haplotype patterns

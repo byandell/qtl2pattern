@@ -17,7 +17,7 @@ merge_feature(
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"), ...)
 }
 \arguments{
-\item{top_snps_tbl}{tbl from \code{\link{top_snps_all}} or \code{\link[qtl2]{top_snps}}}
+\item{top_snps_tbl}{tbl from \code{\link{top_snps_pattern}} or \code{\link[qtl2]{top_snps}}}
 
 \item{snpinfo}{SNP information table}
 
@@ -44,7 +44,7 @@ table summary
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
 }
 \examples{
-example(top_snps_all)
+example(top_snps_pattern)
 
 # Download Gene info for DOex from web via RDS
 tmpfile <- tempfile()

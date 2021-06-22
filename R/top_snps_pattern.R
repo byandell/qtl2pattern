@@ -1,4 +1,4 @@
-#' Top SNPs for all phenotypes scanned
+#' Top SNPs organized by allele pattern
 #'
 #' Separate fine mapping scans by allele pattern.
 #'
@@ -55,7 +55,7 @@
 #' scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 #' 
 #' # Collect top SNPs
-#' top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+#' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' summary(top_snps_tbl)
 #'
 #' @export
@@ -63,7 +63,7 @@
 #' @importFrom tidyr pivot_longer
 #' @importFrom rlang .data
 #'
-top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
+top_snps_pattern <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRUE,
                           haplos)
 {
     if (missing(snpinfo) || is.null(snpinfo))
@@ -106,7 +106,7 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
                                    by = "snp_id")
     }
     attr(snpinfo, "haplos") <- haplos
-    class(snpinfo) <- c("top_snps_all", class(snpinfo))
+    class(snpinfo) <- c("top_snps_pattern", class(snpinfo))
     snpinfo
 }
 
@@ -121,12 +121,12 @@ top_snps_all <- function (scan1_output, snpinfo, drop = 1.5, show_all_snps = TRU
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @method summary top_snps_all
-#' @rdname top_snps_all
+#' @method summary top_snps_pattern
+#' @rdname top_snps_pattern
 #' @export
 #' @importFrom dplyr arrange desc everything filter group_by mutate select summarize ungroup
 #'
-summary.top_snps_all <- function(object, sum_type=c("range","best","peak"), # peak is now old, not used
+summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), # peak is now old, not used
                                  ...) {
   haplos <- attr(object, "haplos")
   sum_type <- match.arg(sum_type)
@@ -211,11 +211,11 @@ summary.top_snps_all <- function(object, sum_type=c("range","best","peak"), # pe
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
 #' @keywords utilities
 #'
-#' @method subset top_snps_all
-#' @rdname top_snps_all
+#' @method subset top_snps_pattern
+#' @rdname top_snps_pattern
 #' @export
 #' @importFrom dplyr filter
-subset.top_snps_all <- function(x, start_val=0, stop_val=max(x$pos),
+subset.top_snps_pattern <- function(x, start_val=0, stop_val=max(x$pos),
                                 pheno = NULL, ...) {
   haplos <- attr(x, "haplos")
   x <- dplyr::filter(x,

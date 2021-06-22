@@ -2,7 +2,7 @@
 #'
 #' Merge all SNPs in small region with LOD peaks across multiple phenotype.
 #'
-#' @param top_snps_tbl tbl from \code{\link{top_snps_all}} or \code{\link[qtl2]{top_snps}}
+#' @param top_snps_tbl tbl from \code{\link{top_snps_pattern}} or \code{\link[qtl2]{top_snps}}
 #' @param snpinfo SNP information table
 #' @param out_lmm_snps tbl from \code{\link[qtl2]{scan1}} on SNPs
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
@@ -15,7 +15,7 @@
 #' @keywords hplot
 #'
 #' @examples
-#' example(top_snps_all)
+#' example(top_snps_pattern)
 #' 
 #' # Download Gene info for DOex from web via RDS
 #' tmpfile <- tempfile()

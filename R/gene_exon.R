@@ -11,7 +11,7 @@
 #' @keywords utilities
 #'
 #' @examples
-#' example(top_snps_all)
+#' example(top_snps_pattern)
 #' 
 #' # Download Gene info for DOex from web via RDS
 #' tmpfile <- tempfile()

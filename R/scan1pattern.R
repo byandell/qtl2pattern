@@ -45,7 +45,7 @@
 #' 
 #' # Scan SNPs
 #' scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
-#' top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+#' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' 
 #' # Summarize to find top patterns
 #' patterns <- dplyr::arrange(summary(top_snps_tbl), dplyr::desc(max_lod))
