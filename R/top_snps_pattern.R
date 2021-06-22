@@ -162,12 +162,14 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
                  dplyr::ungroup(
                    dplyr::summarize(
                      dplyr::group_by(object, .data$sdp, .data$pheno),
-                     max_n = sum(.data$lod == max(.data$lod)),
+                     max_n = ifelse(sum_type == "range",
+                                    dplyr::n(),
+                                    sum(.data$lod == max(.data$lod))),
                      min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
                      max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
-                     max_snp = ifelse(max_n == 1,
+                     variant = ifelse(max_n == 1,
                                   .data$snp_id[which(.data$lod == max(.data$lod))][1],
-                                  paste(max_n, "SNPs")),
+                                  paste(max_n, "variants")),
                      max_lod = max(.data$lod),
                      min_lod = min(.data$lod))),
                  pattern = sdp_to_pattern(.data$sdp, haplos)),
@@ -175,29 +177,7 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
              .data$pheno, 
              .data$min_pos, .data$max_pos,
              .data$max_lod, .data$min_lod,
-             .data$sdp, .data$pattern, .data$max_snp)
-         },
-         old = {
-           dplyr::select(
-             dplyr::arrange(
-               dplyr::mutate(
-                 dplyr::ungroup(
-                   dplyr::summarize(
-                     dplyr::group_by(
-                       dplyr::filter(
-                         dplyr::group_by(object, .data$chr, .data$sdp),
-                         .data$lod == max(.data$lod)),
-                       .data$chr, .data$sdp, .data$index, .data$lod),
-                     min_pos = min(.data$pos),
-                     max_pos = max(.data$pos),
-                     phenos = paste(unique(.data$pheno), collapse=","))),
-                 pattern = sdp_to_pattern(.data$sdp, haplos)),
-               dplyr::desc(.data$lod)),
-             .data$phenos, 
-             .data$chr, .data$min_pos, .data$max_pos,
-             .data$lod,
-             .data$sdp, .data$pattern, .data$index,
-             dplyr::everything())
+             .data$sdp, .data$pattern, .data$variant)
          })
 }
 #' Subset of features
