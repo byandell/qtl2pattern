@@ -86,7 +86,7 @@ scan1pattern <- function(probs1, phe, K = NULL, covar = NULL,
       dplyr::group_by(
         dplyr::filter(patterns,
                       .data$pheno %in% pheno_names),
-        .data$sdp, .data$max_snp, .data$max_pos, .data$pheno),
+        .data$sdp, .data$variant, .data$max_pos, .data$pheno),
       founders = sdp_to_pattern(.data$sdp, haplos),
       contrast = paste(.data$contrast, collapse=","),
       max_lod = max(.data$max_lod)))
