@@ -147,10 +147,10 @@ There are 255 possible SDPs, but only a few (4 in our example) that need be exam
 genome scan, where interest is only in those SNPS following a particular `sdp`; as with genome scans, we can fill in for missing data.
 That is, only a few SNPs may show a particular pattern, but key differences might be seen nearby if we impute SNPs of the same pattern.
 
-The `top_snps_all` routine is an extension of `qtl2::top_snps`, which provides more detail on SDPs.
+The `top_snps_pattern` routine is an extension of `qtl2::top_snps`, which provides more detail on SDPs.
 
 ```{r}
-top_snps_tbl <- top_snps_all(scan_snppr, snpinfo)
+top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 ```
 
 This default `summary` is nearly identical to the `summary` of the SNP scan object above:
@@ -169,11 +169,11 @@ head(summary(top_snps_tbl, "best"))
 
 ## SDP Pattern Scan
 
-A new routine `scan_pattern` scans the peak region for each of the 4 patterns provided.
-That is, the SDP scan only considers SNPs that have a particular strain distribution pattern and uses the SNP probabilities. However, for each markers (or any genome position), one can impute a SNP with any particular SDP and compute its SDP probabilities. That is, we could consider the SDP probabilities at every marker position for the SDP 48 (pattern `ABCDGH:EF`) and do an SDP scan with these SDP probabilities. That is what the routine `scan_pattern` does.
+A new routine `scan1pattern` scans the peak region for each of the 4 patterns provided.
+That is, the SDP scan only considers SNPs that have a particular strain distribution pattern and uses the SNP probabilities. However, for each markers (or any genome position), one can impute a SNP with any particular SDP and compute its SDP probabilities. That is, we could consider the SDP probabilities at every marker position for the SDP 48 (pattern `ABCDGH:EF`) and do an SDP scan with these SDP probabilities. That is what the routine `scan1pattern` does.
 
 ```{r}
-scan_pat <- scan_pattern(pr, DOex$pheno,
+scan_pat <- scan1pattern(pr, DOex$pheno,
                          map = DOex$pmap,
                          patterns = patterns)
 ```
@@ -423,7 +423,7 @@ qtl2::plot_genes(gene_tbl, xlim = c(96,99))
 ggplot2::autoplot(gene_tbl)
 ```
 
-Adding the result of `top_snps_all` overlays significant SNPS on the plot of genes.
+Adding the result of `top_snps_pattern` overlays significant SNPS on the plot of genes.
 
 ```{r}
 ggplot2::autoplot(gene_tbl, top_snps_tbl = top_snps_tbl)

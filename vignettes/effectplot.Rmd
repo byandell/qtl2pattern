@@ -122,7 +122,7 @@ out_snppr <- scan1(snppr, DOex$pheno)
 ```
 
 ```{r}
-topsnps <- top_snps_all(out_snppr, snpinfo)
+topsnps <- top_snps_pattern(out_snppr, snpinfo)
 ```
 
 ```{r}
@@ -134,7 +134,7 @@ topsnps <- top_snps_all(out_snppr, snpinfo)
 Propagate best SNP patterns across chromosome.
 
 ```{r}
-scan_pat <- scan_pattern(pr, DOex$pheno, 
+scan_pat <- scan1pattern(pr, DOex$pheno, 
                                       map = DOex$pmap,
                                       patterns = patterns)
 ```
