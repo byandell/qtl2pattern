@@ -136,26 +136,27 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                              pattern = sdp_to_pattern(.data$sdp, haplos)),
                dplyr::desc(.data$lod))},
            common = { ## Find most common patterns by pheno.
-           dplyr::select(
-             dplyr::arrange(
-               dplyr::mutate(
-                 dplyr::ungroup(
-                   dplyr::summarize(
-                     dplyr::group_by(object, .data$pheno, .data$sdp),
-                     max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
-                     min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
-                     max_snp = sum(.data$lod == max(.data$lod)),
-                     max_snp = ifelse(max_snp > 1,
-                                  paste(max_snp, "SNPs"),
-                                  .data$snp_id[which.max(.data$lod)][1]),
-                     lod = max(.data$lod))),
-                 pattern = sdp_to_pattern(.data$sdp, haplos)),
-               dplyr::desc(.data$lod)),
-             .data$pheno,
-             .data$max_pos, .data$min_pos,
-             .data$lod,
-             .data$sdp, .data$pattern, .data$max_snp)
-           })
+             max_snp <- NULL # to fool R check.
+             dplyr::select(
+               dplyr::arrange(
+                 dplyr::mutate(
+                   dplyr::ungroup(
+                     dplyr::summarize(
+                       dplyr::group_by(object, .data$pheno, .data$sdp),
+                       max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
+                       min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
+                       max_snp = sum(.data$lod == max(.data$lod)),
+                       max_snp = ifelse(max_snp > 1,
+                                   paste(max_snp, "SNPs"),
+                                   .data$snp_id[which.max(.data$lod)][1]),
+                       lod = max(.data$lod))),
+                   pattern = sdp_to_pattern(.data$sdp, haplos)),
+                 dplyr::desc(.data$lod)),
+               .data$pheno,
+               .data$max_pos, .data$min_pos,
+               .data$lod,
+               .data$sdp, .data$pattern, .data$max_snp)
+             })
   }
 }
 
