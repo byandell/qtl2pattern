@@ -72,6 +72,6 @@ create_qg <- function(dirpath) {
 }
 query_genes <- create_qg(dirpath)
 
-# Examples for probs and mrna require either FST or RDS storage of data.
+# Examples for probs require either FST or RDS storage of data.
 
 }

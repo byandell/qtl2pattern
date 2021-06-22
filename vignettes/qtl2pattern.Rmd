@@ -44,7 +44,7 @@ library(qtl2pattern)
 ## Download of Diversity Outbred Example Data
 
 This vignette uses the example Diversity Outbred (DO) data.
-See [Recla et al. (2014)](https://www.ncbi.nlm.nih.gov/pubmed/24700285).
+See [Recla et al. (2014)](https://www.ncbi.nlm.nih.gov/pubmed/24700285/).
 These mice were derived from 8 founder strains, yielding up to 36 allele pairs at any marker.
 The data can be found in <https://github.com/rqtl/qtl2data> as `DOex`.
 While these data span three chromosomes (`2, 3, X`), we focus here on
@@ -521,11 +521,3 @@ Thus the master FST file `"fst_probs.rds"` external to 'R' is 71Kb, while the FS
 The storage for Recla genotype probabilities is roughly proportional to the number of individuals (261), number of markers (7739), and number of allele pairs (36), that is about 14b per individual, marker and allele pair.  
 
 Internal to 'R', the FST genotype probability object `fpr` is 1.5Mb, and contains all the information about where to find the genotype probability information for individual chromosomes. One uses this object as one uses the genotype probability object `pr`, created by `qtl2::calc_genoprob`, using functions in 'qtl2'. However, it is much smaller. Typically, 'qtl2' functions will only need a small part of the genotype probabilities at any time. See documentation for [qtl2fst](https://kbroman.org/qtl2/assets/vignettes/qtl2fst.html) for more information.
-
-**Currently 'qtl2pattern' has a function for MRNA, but want to fold that into probs as it is too specific.**
-
-```{r eval = FALSE}
-query_mrna <- 
-  create_mrna_query_func(
-    file.path("qtl2shinyData", "CCmouse", "Recla"))
-```
