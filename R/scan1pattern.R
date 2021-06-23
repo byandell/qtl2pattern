@@ -23,6 +23,9 @@
 #' @keywords utilities
 #'
 #' @examples
+#' \donttest{
+#' # Long elapsed time due to calc_genoprob.
+#' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -55,6 +58,7 @@
 #' 
 #' # Summary of scan1pattern.
 #' summary(scan_pat, DOex$pmap)
+#' }
 #'
 #' @export
 #' @importFrom dplyr group_by summarize ungroup

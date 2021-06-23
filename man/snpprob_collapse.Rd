@@ -21,6 +21,9 @@ object of class \code{\link[qtl2]{calc_genoprob}}
 Collapse genoprob according to pattern
 }
 \examples{
+\donttest{
+# Long elapsed time due to calc_genoprob.
+
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -44,6 +47,7 @@ snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
 
 dim(snppr[[1]])
 dim(snpprob_collapse(snppr, "additive")[[1]])
+}
 
 }
 \author{

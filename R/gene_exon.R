@@ -11,7 +11,34 @@
 #' @keywords utilities
 #'
 #' @examples
-#' example(top_snps_pattern)
+#' \donttest{
+#' # Long elapsed time due to calc_genoprob.
+#' 
+#' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+#' 
+#' # Read DOex example cross from 'qtl2data'
+#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
+#' DOex <- subset(DOex, chr = "2")
+#' 
+#' # Calculate genotype probabilities
+#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' 
+#' # Download SNP info for DOex from web and read as RDS.
+#' tmpfile <- tempfile()
+#' download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
+#' snpinfo <- readRDS(tmpfile)
+#' unlink(tmpfile)
+#' snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+#' 
+#' # Convert to SNP probabilities
+#' snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
+#' snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
+#' 
+#' # Scan SNPs.
+#' scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
+#' 
+#' # Collect top SNPs
+#' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' 
 #' # Download Gene info for DOex from web via RDS
 #' tmpfile <- tempfile()
@@ -20,15 +47,16 @@
 #' unlink(tmpfile)
 #' 
 #' # Get Gene exon information.
-#' out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
+#' out <- gene_exon(top_snps_tbl, gene_tbl)
 #' summary(out, gene = out$gene[1])
-#'
+#' }
+#' 
 #' @export
 #' @rdname gene_exon
 #' @importFrom dplyr arrange bind_rows desc distinct everything filter mutate select
 #' @importFrom rlang .data
 #' 
-get_gene_exon_snp <- function(top_snps_tbl,
+gene_exon <- function(top_snps_tbl,
                               feature_tbl = query_genes(chr_id, range_Mbp[1], range_Mbp[2])) {
 
   ## Only need distinct snp_id.
@@ -94,7 +122,7 @@ get_gene_exon_snp <- function(top_snps_tbl,
 #'
 #' Returns table of gene and its exons.
 #'
-#' @param object Object of class \code{gene_exon} with feature information from \code{\link{get_gene_exon_snp}}
+#' @param object Object of class \code{gene_exon}
 #' @param ... additional parameters passed on to methods
 #' @param gene_name name of gene as character string
 #' @param top_snps_tbl table of top SNPs in region from \code{\link[qtl2]{top_snps}}

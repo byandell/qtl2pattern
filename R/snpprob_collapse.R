@@ -9,6 +9,9 @@
 #' @keywords utilities
 #'
 #' @examples
+#' \donttest{
+#' # Long elapsed time due to calc_genoprob.
+#' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -32,6 +35,7 @@
 #' 
 #' dim(snppr[[1]])
 #' dim(snpprob_collapse(snppr, "additive")[[1]])
+#' }
 #' 
 #' @export
 snpprob_collapse <- function(snpprobs,

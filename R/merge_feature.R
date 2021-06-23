@@ -7,7 +7,7 @@
 #' @param out_lmm_snps tbl from \code{\link[qtl2]{scan1}} on SNPs
 #' @param drop include LOD scores within \code{drop} of max for each phenotype
 #' @param dropchar number of characters to drop on phenames
-#' @param gene_exon tbl from \code{\link{get_gene_exon_snp}}
+#' @param exons table from \code{\link{gene_exon}}
 #'
 #' @return tbl with added information on genes and exons
 #'
@@ -23,7 +23,7 @@
 #' gene_tbl <- readRDS(tmpfile)
 #' unlink(tmpfile)
 #' 
-#' out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+#' out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, exons = gene_tbl)
 #' summary(out, "pattern")
 #'
 #' @export
@@ -33,10 +33,10 @@
 #'
 merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
                           dropchar=0,
-                          gene_exon = get_gene_exon_snp(top_snps_tbl)) {
+                          exons = gene_exon(top_snps_tbl)) {
   phename <- dimnames(out_lmm_snps)[[2]]
   
-  if(is.null(gene_exon))
+  if(is.null(exons))
     return(NULL)
   
   ## Add lod by phename to top_snps_tbl
@@ -48,8 +48,8 @@ merge_feature <- function(top_snps_tbl, snpinfo, out_lmm_snps, drop=1.5,
   
   ## Add columns for exons.
   tmp <- top_snps_tbl$pos
-  ins <- outer(gene_exon$start, tmp, "<=") &
-    outer(gene_exon$stop, tmp, ">=")
+  ins <- outer(exons$start, tmp, "<=") &
+    outer(exons$stop, tmp, ">=")
   ## SNP position should be in 1 (or more if splice variant) exon(s).
   top_snps_tbl$exon_ct <- apply(ins,2,sum)
   top_snps_tbl$exon_id <- apply(ins, 2, function(x) paste(which(x), collapse=";"))

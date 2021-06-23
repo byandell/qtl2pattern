@@ -15,6 +15,9 @@
 #' @keywords utilities
 #'
 #' @examples
+#' \donttest{
+#' # Long elapsed time due to calc_genoprob.
+#' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -34,6 +37,7 @@
 #' summary(out, scan_pr, DOex$pmap)
 #' 
 #' plot(out[[1]], DOex$pmap, columns = LETTERS[1:8])
+#' }
 #' 
 #' @export
 #' @importFrom qtl2 scan1coef scan1blup

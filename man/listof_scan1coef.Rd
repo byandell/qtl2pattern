@@ -82,6 +82,9 @@ Summary of object of class \code{\link{listof_scan1coef}}, which is a list of ob
 Subset of object of class \code{\link{listof_scan1coef}}, which is a list of objects of class \code{scan1coef}.
 }
 \examples{
+\donttest{
+# Long elapsed time due to calc_genoprob.
+
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -101,6 +104,7 @@ scan_pr <- qtl2::scan1(pr, DOex$pheno)
 summary(out, scan_pr, DOex$pmap)
 
 plot(out[[1]], DOex$pmap, columns = LETTERS[1:8])
+}
 
 }
 \author{

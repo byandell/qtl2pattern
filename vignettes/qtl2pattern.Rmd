@@ -44,7 +44,7 @@ library(qtl2pattern)
 ## Download of Diversity Outbred Example Data
 
 This vignette uses the example Diversity Outbred (DO) data.
-See [Recla et al. (2014)](https://www.ncbi.nlm.nih.gov/pubmed/24700285/).
+See [Recla et al. (2014)](https://pubmed.ncbi.nlm.nih.gov/pubmed/24700285/).
 These mice were derived from 8 founder strains, yielding up to 36 allele pairs at any marker.
 The data can be found in <https://github.com/rqtl/qtl2data> as `DOex`.
 While these data span three chromosomes (`2, 3, X`), we focus here on
@@ -374,7 +374,7 @@ class(gene_tbl) <- c("feature_tbl", class(gene_tbl))
 Variants are usually SNPs, but may be of other types, such as deletions (`DEL`), insertions (`INS`), or insertions and deletions (`InDel`). The routine cannot yet handle major chromosomal rearrangements and translocations. In addition variants may be intronic, exonic, or intergenic, depending on the "consequence" as reported in the variant database.
 
 ```{r}
-out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, exons = gene_tbl)
 summary(out, "pattern")
 ```
 
@@ -428,12 +428,12 @@ Adding the result of `top_snps_pattern` overlays significant SNPS on the plot of
 ```{r}
 ggplot2::autoplot(gene_tbl, top_snps_tbl = top_snps_tbl)
 ```
-The routine `get_gene_exon_snp` examines individual genes and their exons.
+The routine `gene_exon` examines individual genes and their exons.
 This example does not have exons, so there is just the figure of the gene. Exons would appear on different rows. Again, the vertical dashed lines correspond to SNPs with high LODs.
 
 ```{r}
 # Get Gene exon information.
-out <- get_gene_exon_snp(top_snps_tbl, gene_tbl)
+out <- gene_exon(top_snps_tbl, gene_tbl)
 summary(out, gene = out$gene[1])
 ```
 

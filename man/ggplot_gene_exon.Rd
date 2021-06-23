@@ -6,33 +6,33 @@
 \title{Plot of exons for a gene with SNPs}
 \usage{
 ggplot_gene_exon(
-  gene_exon,
+  object,
   top_snps_tbl = NULL,
   plot_now = TRUE,
-  genes = unique(gene_exon$gene),
+  genes = unique(object$gene),
   ...
 )
 
 \method{autoplot}{gene_exon}(x, ...)
 }
 \arguments{
-\item{gene_exon}{table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
+\item{object}{table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 
 \item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
 \item{plot_now}{plot now if TRUE}
 
-\item{genes}{Names of genes in object \code{get_gene_exon}.}
+\item{genes}{Names of genes in \code{object}}
 
-\item{...}{arguments passed along to \code{\link{get_gene_exon_snp}}}
+\item{...}{arguments passed along to \code{\link{gene_exon}}}
 
 \item{x}{Object of class \code{gene_exon}.}
 }
 \value{
-list of ggplots (see \code{\link{get_gene_exon_snp}})
+list of ggplots (see \code{\link{gene_exon}})
 }
 \description{
-Uses \code{\link{get_gene_exon_snp}} to plot genes, exons, mRNA with SNPs.
+Uses \code{\link{gene_exon}} to plot genes, exons, mRNA with SNPs.
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}

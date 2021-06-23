@@ -11,7 +11,7 @@ merge_feature(
   out_lmm_snps,
   drop = 1.5,
   dropchar = 0,
-  gene_exon = get_gene_exon_snp(top_snps_tbl)
+  exons = gene_exon(top_snps_tbl)
 )
 
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"), ...)
@@ -27,7 +27,7 @@ merge_feature(
 
 \item{dropchar}{number of characters to drop on phenames}
 
-\item{gene_exon}{tbl from \code{\link{get_gene_exon_snp}}}
+\item{exons}{table from \code{\link{gene_exon}}}
 
 \item{object}{of class \code{merge_feature}}
 
@@ -52,7 +52,7 @@ download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
 gene_tbl <- readRDS(tmpfile)
 unlink(tmpfile)
 
-out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, gene_exon = gene_tbl)
+out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, exons = gene_tbl)
 summary(out, "pattern")
 
 }

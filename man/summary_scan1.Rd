@@ -64,25 +64,22 @@ tbl summary
 Summary of scan1 object
 }
 \examples{
-# load qtl2 package for data and genoprob calculation
-library(qtl2)
-
 # read data
-iron <- read_cross2(system.file("extdata", "iron.zip", package="qtl2"))
+iron <- qtl2::read_cross2(system.file("extdata", "iron.zip", package="qtl2"))
 # insert pseudomarkers into map
-map <- insert_pseudomarkers(iron$gmap, step=1)
+map <- qtl2::insert_pseudomarkers(iron$gmap, step=1)
 
 # calculate genotype probabilities
-probs <- calc_genoprob(iron, map, error_prob=0.002)
+probs <- qtl2::calc_genoprob(iron, map, error_prob=0.002)
 
 # grab phenotypes and covariates; ensure that covariates have names attribute
 pheno <- iron$pheno
 covar <- match(iron$covar$sex, c("f", "m")) # make numeric
 names(covar) <- rownames(iron$covar)
-Xcovar <- get_x_covar(iron)
+Xcovar <- qtl2::get_x_covar(iron)
 
 # perform genome scan
-out <- scan1(probs, pheno, addcovar=covar, Xcovar=Xcovar)
+out <- qtl2::scan1(probs, pheno, addcovar=covar, Xcovar=Xcovar)
 
 # summary
 summary(out, map)
