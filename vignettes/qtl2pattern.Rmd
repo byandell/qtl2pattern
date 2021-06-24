@@ -51,23 +51,28 @@ While these data span three chromosomes (`2, 3, X`), we focus here on
 chromosome `2`.
 
 ```{r}
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+```
+
+```{r}
 DOex <-
-  qtl2::read_cross2(
-    file.path(
-      "https://raw.githubusercontent.com/rqtl",
-      "qtl2data/master/DOex",
-      "DOex.zip"))
+  subset(
+    qtl2::read_cross2(file.path(dirpath, "DOex.zip")),
+    chr = "2")
 ```
 
-Subset to chr 2.
+Download 36 genotype probabilities for allele pairs by individual and marker.
 
 ```{r}
-DOex <- subset(DOex, chr = "2")
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "DOex_genoprobs.rds"), tmpfile, quiet=TRUE)
+pr <- subset(readRDS(tmpfile), chr = "2")
+unlink(tmpfile)
 ```
 
-Calculate 36 genotype probabilities for allele pairs by individual and marker.
+Or alternatively calculate those genotype probabilities
 
-```{r}
+```{r eval = FALSE}
 pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
 ```
 
@@ -80,11 +85,8 @@ which involves collapsing the 36 allele pair genotype probabilities to
 Download snp info from web and read as RDS.
 
 ```{r}
-filename <- file.path("https://raw.githubusercontent.com/rqtl",
-                      "qtl2data/master/DOex", 
-                      "c2_snpinfo.rds")
 tmpfile <- tempfile()
-download.file(filename, tmpfile, quiet=TRUE)
+download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
 snpinfo <- readRDS(tmpfile)
 unlink(tmpfile)
 ```
@@ -361,11 +363,8 @@ Download Gene info for DOex from web via RDS. For the example below,
 genes are presented without exons. 
 
 ```{r}
-filename <- file.path("https://raw.githubusercontent.com/rqtl",
-                      "qtl2data/master/DOex", 
-                      "c2_genes.rds")
 tmpfile <- tempfile()
-download.file(filename, tmpfile, quiet=TRUE)
+download.file(file.path(dirpath, "c2_genes.rds"), tmpfile, quiet=TRUE)
 gene_tbl <- readRDS(tmpfile)
 unlink(tmpfile)
 class(gene_tbl) <- c("feature_tbl", class(gene_tbl))
