@@ -133,7 +133,7 @@ summary_scan1 <- function(object, map, snpinfo=NULL,
                              pattern = sdp_to_pattern(.data$sdp, haplos)),
                dplyr::desc(.data$lod))},
            common = { ## Find most common patterns by pheno.
-             snp_id <- NULL # to fool R check.
+             num <- NULL # to fool R check.
              dplyr::select(
                dplyr::arrange(
                  dplyr::mutate(
