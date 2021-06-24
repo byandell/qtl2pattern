@@ -44,7 +44,37 @@ table summary
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
 }
 \examples{
-example(top_snps_pattern)
+#\donttest{
+# Long elapsed time due to calc_genoprob.
+
+dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
+
+# Read DOex example cross from 'qtl2data'
+DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
+
+# Download genotype probabilities
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "DOex_genoprobs.rds"), tmpfile, quiet=TRUE)
+pr <- subset(readRDS(tmpfile), chr = "2")
+unlink(tmpfile)
+
+# Download SNP info for DOex from web and read as RDS.
+tmpfile <- tempfile()
+download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
+snpinfo <- readRDS(tmpfile)
+unlink(tmpfile)
+snpinfo <- dplyr::rename(snpinfo, pos = pos_Mbp)
+
+# Convert to SNP probabilities
+snpinfo <- qtl2::index_snps(DOex$pmap, snpinfo)
+snppr <- qtl2::genoprob_to_snpprob(pr, snpinfo)
+
+# Scan SNPs.
+scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
+
+# Collect top SNPs
+top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
+summary(top_snps_tbl)
 
 # Download Gene info for DOex from web via RDS
 tmpfile <- tempfile()
@@ -54,6 +84,7 @@ unlink(tmpfile)
 
 out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, exons = gene_tbl)
 summary(out, "pattern")
+#}
 
 }
 \author{

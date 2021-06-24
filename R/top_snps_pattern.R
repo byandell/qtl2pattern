@@ -31,17 +31,19 @@
 #' @return table of top_snps at maximum lod for \code{pattern}
 #'
 #' @examples
-#' \donttest{
+#' #\donttest{
 #' # Long elapsed time due to calc_genoprob.
 #' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
-#' DOex <- qtl2::read_cross2(file.path(dirpath, "DOex.zip"))
-#' DOex <- subset(DOex, chr = "2")
+#' DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 #' 
-#' # Calculate genotype probabilities
-#' pr <- qtl2::calc_genoprob(DOex, error_prob=0.002)
+#' # Download genotype probabilities
+#' tmpfile <- tempfile()
+#' download.file(file.path(dirpath, "DOex_genoprobs.rds"), tmpfile, quiet=TRUE)
+#' pr <- subset(readRDS(tmpfile), chr = "2")
+#' unlink(tmpfile)
 #' 
 #' # Download SNP info for DOex from web and read as RDS.
 #' tmpfile <- tempfile()
@@ -60,7 +62,7 @@
 #' # Collect top SNPs
 #' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' summary(top_snps_tbl)
-#' }
+#' #}
 #' 
 #' @export
 #' @importFrom dplyr everything filter group_by inner_join select ungroup
