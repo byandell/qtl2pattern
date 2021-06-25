@@ -27,8 +27,8 @@ DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 
 # Download genotype probabilities
 tmpfile <- tempfile()
-download.file(file.path(dirpath, "DOex_genoprobs.rds"), tmpfile, quiet=TRUE)
-pr <- subset(readRDS(tmpfile), chr = "2")
+download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
+pr <- readRDS(tmpfile)
 unlink(tmpfile)
 
 # Convert genotype probabilities to pattern probabilities for pattern 1.

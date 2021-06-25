@@ -33,8 +33,8 @@
 #' 
 #' # Download genotype probabilities
 #' tmpfile <- tempfile()
-#' download.file(file.path(dirpath, "DOex_genoprobs.rds"), tmpfile, quiet=TRUE)
-#' pr <- subset(readRDS(tmpfile), chr = "2")
+#' download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
+#' pr <- readRDS(tmpfile)
 #' unlink(tmpfile)
 #' 
 #' # Download SNP info for DOex from web and read as RDS.
