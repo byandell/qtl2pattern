@@ -31,9 +31,6 @@
 #' @return table of top_snps at maximum lod for \code{pattern}
 #'
 #' @examples
-#' #\donttest{
-#' # Long elapsed time due to calc_genoprob.
-#' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -62,7 +59,6 @@
 #' # Collect top SNPs
 #' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' summary(top_snps_tbl)
-#' #}
 #' 
 #' @export
 #' @importFrom dplyr everything filter group_by inner_join select ungroup

@@ -70,9 +70,6 @@ subset of \code{x}
 Separate fine mapping scans by allele pattern.
 }
 \examples{
-#\donttest{
-# Long elapsed time due to calc_genoprob.
-
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -101,7 +98,6 @@ scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 # Collect top SNPs
 top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 summary(top_snps_tbl)
-#}
 
 }
 \author{

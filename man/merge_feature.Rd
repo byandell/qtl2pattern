@@ -44,9 +44,6 @@ table summary
 Merge all SNPs in small region with LOD peaks across multiple phenotype.
 }
 \examples{
-#\donttest{
-# Long elapsed time due to calc_genoprob.
-
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -84,7 +81,6 @@ unlink(tmpfile)
 
 out <- merge_feature(top_snps_tbl, snpinfo, scan_snppr, exons = gene_tbl)
 summary(out, "pattern")
-#}
 
 }
 \author{

@@ -56,9 +56,6 @@ List containing:
 Genome scan by pattern set
 }
 \examples{
-#\donttest{
-# Long elapsed time due to calc_genoprob.
-
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -93,7 +90,6 @@ scan_pat <- scan1pattern(pr, DOex$pheno, map = DOex$pmap, patterns = patterns)
 
 # Summary of scan1pattern.
 summary(scan_pat, DOex$pmap)
-#}
 
 }
 \author{

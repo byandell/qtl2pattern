@@ -43,9 +43,6 @@ Match up exon start,stop,strand with genes. Use \code{query_genes} to find featu
 Returns table of gene and its exons.
 }
 \examples{
-#\donttest{
-# Long elapsed time due to calc_genoprob.
-
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -83,7 +80,6 @@ unlink(tmpfile)
 # Get Gene exon information.
 out <- gene_exon(top_snps_tbl, gene_tbl)
 summary(out, gene = out$gene[1])
-#}
 
 }
 \author{

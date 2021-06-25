@@ -11,9 +11,6 @@
 #' @keywords utilities
 #'
 #' @examples
-#' #\donttest{
-#' # Long elapsed time due to calc_genoprob.
-#' 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -51,7 +48,6 @@
 #' # Get Gene exon information.
 #' out <- gene_exon(top_snps_tbl, gene_tbl)
 #' summary(out, gene = out$gene[1])
-#' #}
 #' 
 #' @export
 #' @rdname gene_exon
