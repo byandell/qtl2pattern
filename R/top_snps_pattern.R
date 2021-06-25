@@ -160,7 +160,6 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
          },
          peak =,
          range = {
-           max_n <- NULL # to fool R check.
            ## SNP patterns within drop_hilit of max LOD.
            dplyr::select(
              dplyr::arrange(
@@ -173,9 +172,9 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
                                     sum(.data$lod == max(.data$lod))),
                      min_pos = min(.data$pos[which(.data$lod == max(.data$lod))]),
                      max_pos = max(.data$pos[which(.data$lod == max(.data$lod))]),
-                     snp_id = ifelse(max_n == 1,
+                     snp_id = ifelse(.data$max_n == 1,
                                   .data$snp_id[which(.data$lod == max(.data$lod))][1],
-                                  paste(max_n, "SNPs")),
+                                  paste(.data$max_n, "SNPs")),
                      max_lod = max(.data$lod),
                      min_lod = min(.data$lod))),
                  pattern = sdp_to_pattern(.data$sdp, haplos)),

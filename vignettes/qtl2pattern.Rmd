@@ -123,7 +123,6 @@ rm(snpapr)
 ```
 
 Perform SNP association analysis (here, ignoring residual kinship).
-The summary includes a range (`min` and `max`) for both `lod` and `pos`, as there could be multiple SNPs at the same position with different `sdp`s.
 
 ```{r}
 scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
@@ -136,12 +135,6 @@ qtl2::find_peaks(scan_snppr, snpinfo)
 ```
 
 ## Strain Distribution Pattern (SDP) Scan
-
-Package 'qtl2pattern' adds a `summary` method that provides more detail by SDP.
-
-```{r}
-summary(scan_snppr, DOex$pmap, snpinfo)
-```
 
 Strain distribution patterns (SDPs) separate out SNPs based on their SDP and plot the top patterns.
 For instance `sdp = 52` corresponds to pattern `ABDGH:CEF`. That is, the SNP genotype `"AA"` resulting from `qtl2::genoprob_to_snpprob` applied to `pr` corresponds to any of the 36 allele pairs with the two alleles drawn from the reference (`ref`) set of `ABDGH` (15 pairs: `AA, AB, AD, AG, AH, BB, BD, BG, BH, DD, DG, DH, GG, GH, HH`), `"BB"` has two alleles from the alternate (`alt`) set `CEF` (6 pairs: `CC, CE, CF, EE, EF, FF`), and `"AB"` has one from each for the heterogeneous (`het`) set (15 pairs: `AC, AE, ..., HF`).
@@ -252,10 +245,7 @@ We are now going to look at some of the 36 coefficients. These are unwieldy, so 
 coefs2 <- qtl2::scan1coef(pr, DOex$pheno[,"OF_immobile_pct"], zerosum = FALSE)
 ```
 
-```{r}
-scan_pr <- qtl2::scan1(pr, DOex$pheno)
-sumc <- summary(coefs2, scan_pr, DOex$pmap)
-```
+The following is messy code to just pull out weighted averages corresponding to reference, het, and alternative genotypes at the `pr` peak.
 
 ```{r}
 x <- LETTERS[1:8]
@@ -276,11 +266,6 @@ coefsum[,"AA"] <- apply(coefsum[,ref], 1, weighted.mean, w = refw)
 coefsum[,"AB"] <- apply(coefsum[,het], 1, weighted.mean, w = hetw)
 coefsum[,"BB"] <- apply(coefsum[,alt], 1, weighted.mean, w = altw)
 colnames(coefsum)[1:3] <- c("ref","het","alt")
-sumc[,"AA"] <- weighted.mean(sumc[,ref], w = refw)
-sumc[,"AB"] <- weighted.mean(sumc[,alt], w = altw)
-sumc[,"BB"] <- weighted.mean(sumc[,het], w = hetw)
-colnames(sumc)[6:8] <- c("ref","het","alt")
-sumc[,c("chr", "pos","lod","ref", "het", "alt", alt)]
 ```
 
 ```{r}

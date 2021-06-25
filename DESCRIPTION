@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern Support for 'qtl2' Package
-Version: 1.0.9
-Date: 2021-06-24
+Version: 1.0.10
+Date: 2021-06-25
 Authors@R: c(person("Brian S Yandell",
                 role = c("aut", "cre"),
                 email = "brian.yandell@wisc.edu"))
@@ -20,7 +20,6 @@ Imports:
     purrr,
     stringr,
     ggplot2,
-    qtl2ggplot,
     assertthat,
     RColorBrewer,
     qtl2,
@@ -30,7 +29,8 @@ Imports:
     stats,
     graphics
 Suggests:
-    knitr, rmarkdown
+    knitr, rmarkdown,
+    qtl2ggplot
 VignetteBuilder: knitr
 License: GPL-3
 URL: https://github.com/byandell/qtl2pattern

@@ -49,7 +49,7 @@ List containing:
 \item{dip_set} Diplotype sets for contrasts
 \item{group} Group for each founder pattern
 \item{scan} Object of class \code{\link[qtl2]{scan1}}.
-\item{coef} Object of class \code{\link{listof_scan1coef}}.
+\item{coef} Object of class \code{listof_scan1coef}. See package 'qtl2ggplot'.
 }
 }
 \description{

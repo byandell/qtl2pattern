@@ -16,7 +16,7 @@
 #' \item{dip_set} Diplotype sets for contrasts
 #' \item{group} Group for each founder pattern
 #' \item{scan} Object of class \code{\link[qtl2]{scan1}}.
-#' \item{coef} Object of class \code{\link{listof_scan1coef}}.
+#' \item{coef} Object of class \code{listof_scan1coef}. See package 'qtl2ggplot'.
 #' }
 #'
 #' @author Brian S Yandell, \email{brian.yandell@@wisc.edu}
@@ -183,9 +183,14 @@ scan1pattern <- function(probs1, phe, K = NULL, covar = NULL,
 #' @method summary scan1pattern
 #' @rdname scan1pattern
 summary.scan1pattern <- function(object, map, ...) {
-  # Set up unique names as pheno_pattern_contrast
-  pheno <- paste(object$patterns$pheno, object$patterns$founders, sep = "_")
-  names(object$coef) <- pheno
-  colnames(object$scan) <- pheno
-  summary(object$coef, scan1_object = object$scan, map, ...)
+  if(exists("summary_listof_scan1coef")) {
+    # Only available if qtl2ggplot package is attached
+    # Set up unique names as pheno_pattern_contrast
+    pheno <- paste(object$patterns$pheno, object$patterns$founders, sep = "_")
+    names(object$coef) <- pheno
+    colnames(object$scan) <- pheno
+    summary(object$coef, scan1_object = object$scan, map, ...)
+  } else {
+    object$patterns
+  }
 }

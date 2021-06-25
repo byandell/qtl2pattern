@@ -18,6 +18,7 @@
 #' @importFrom dplyr filter group_by mutate ungroup
 #' @importFrom stats median quantile
 #' @importFrom rlang .data
+#' @importFrom qtl2 find_peaks
 #' 
 ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
                          legend.position = "none", ...) {
@@ -26,7 +27,7 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
     if(is.null(scan1_object))
       pos_center <- stats::median(x$pos)
     else
-      pos_center <- summary(scan1_object, map)$pos[1]
+      pos_center <- qtl2::find_peaks(scan1_object, map)$pos[1]
   } else {
     pos_center <- pos
     if(pos_center < min(x$pos) | pos_center > max(x$pos))

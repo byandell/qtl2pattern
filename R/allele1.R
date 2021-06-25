@@ -142,13 +142,14 @@ subset.allele1 <- function(x, sources = levels(x$source), ...) {
 }
 #' @export
 #' @importFrom dplyr group_by summarize ungroup
+#' @importFrom qtl2 find_peaks
 #' 
 summary.allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, ...) {
   if(is.null(pos)) {
     if(is.null(scan1_object))
       pos_center <- median(object$pos)
     else
-      pos_center <- summary(scan1_object, map)$pos[1]
+      pos_center <- qtl2::find_peaks(scan1_object, map)$pos[1]
   } else {
     pos_center <- pos
     if(pos_center < min(object$pos) | pos_center > max(object$pos))
