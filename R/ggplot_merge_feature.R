@@ -14,6 +14,8 @@
 #' @importFrom dplyr filter mutate
 #' @importFrom ggplot2 aes facet_wrap geom_jitter ggplot ggtitle xlab ylab
 #' @importFrom rlang .data
+#' 
+#' @rdname merge_feature
 #'
 ggplot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), ...) {
   haplos <- attr(x, "haplos")
@@ -46,7 +48,7 @@ ggplot_merge_feature <- function(x, pheno, plot_by=c("pattern","consequence"), .
 #' @method autoplot merge_feature
 #' @export
 #' @export autoplot.merge_feature
-#' @rdname ggplot_merge_feature
+#' @rdname merge_feature
 #' 
 #' @importFrom ggplot2 autoplot
 #' 

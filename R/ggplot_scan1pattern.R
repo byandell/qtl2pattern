@@ -22,6 +22,8 @@
 #' @importFrom ggplot2 aes geom_path geom_vline ggplot ggtitle
 #' @importFrom rlang .data
 #' 
+#' @rdname scan1pattern
+#' 
 ggplot_scan1pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod"),
                               patterns = x$patterns$founders,
                               columns = 1:3,
@@ -73,7 +75,7 @@ ggplot_scan1pattern_internal <- function(x, map, plot_type,
 #' @method autoplot scan1pattern
 #' @export
 #' @export autoplot.scan1pattern
-#' @rdname ggplot_scan1pattern
+#' @rdname scan1pattern
 #' 
 #' @importFrom ggplot2 autoplot
 #' 

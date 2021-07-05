@@ -31,6 +31,8 @@
 #' @importFrom dplyr arrange filter
 #' @importFrom rlang .data
 #' 
+#' @rdname feature_tbl
+#' 
 ggplot_feature_tbl <- function(x,
                              rect_col = "grey70",
                              strand_col = c("-"="#1b9e77", "+"="#d95f02"),
@@ -168,7 +170,7 @@ ggplot_feature_tbl <- function(x,
 #' @export
 #' @export autoplot.feature_tbl
 #' @importFrom ggplot2 autoplot
-#' @rdname ggplot_feature_tbl
+#' @rdname feature_tbl
 #' 
 autoplot.feature_tbl <- function(x, ...)
   ggplot_feature_tbl(x, ...)

@@ -19,6 +19,8 @@
 #' @importFrom ggplot2 ggtitle
 #' @importFrom rlang .data
 #' 
+#' @rdname gene_exon
+#' 
 ggplot_gene_exon <- function(object, top_snps_tbl=NULL, plot_now=TRUE,
                            genes = unique(object$gene), ...) {
   p <- list()
@@ -51,7 +53,7 @@ ggplot_gene_exon <- function(object, top_snps_tbl=NULL, plot_now=TRUE,
 #' @method autoplot gene_exon
 #' @export
 #' @export autoplot.gene_exon
-#' @rdname ggplot_gene_exon
+#' @rdname gene_exon
 #' 
 #' @importFrom ggplot2 autoplot
 #' 

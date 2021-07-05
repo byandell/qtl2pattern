@@ -20,6 +20,8 @@
 #' @importFrom rlang .data
 #' @importFrom qtl2 find_peaks
 #' 
+#' @rdname allele1
+#' 
 ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
                          legend.position = "none", ...) {
   
@@ -66,7 +68,7 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
     ggplot2::scale_x_continuous(expand=c(0,0.01))
 } 
 #' @export
-#' @rdname ggplot_allele1
+#' @rdname allele1
 autoplot.allele1 <- function(x, ...)
   ggplot_allele1(x, ...)
 
