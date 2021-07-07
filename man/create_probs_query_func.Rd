@@ -15,7 +15,7 @@ create_probs_query_func(dbfile, method_val = "fst", probdir_val = "genoprob")
 }
 \value{
 Function with six arguments, `chr`, `start`,
-    `stop`, `allele`, `method` and `probdir`. It returns a list with `probs` and `map` objects
+    `end`, `allele`, `method` and `probdir`. It returns a list with `probs` and `map` objects
     spanning the region specified by the first three arguments.
     The `probs` element should be either a `calc_genoprob` or `fst_genoprob` object
     (see \code{\link[qtl2fst]{fst_genoprob}}).
@@ -67,7 +67,7 @@ create_qg <- function(dirpath) {
     if(start < 96.5) start <- 96.5
     if(end > 98.5) end <- 98.5
     if(start >= end) return(NULL)
-    dplyr::filter(gene_tbl, .data$stop >= start, .data$start <= end)
+    dplyr::filter(gene_tbl, .data$end >= start, .data$start <= end)
   }
 }
 query_genes <- create_qg(dirpath)

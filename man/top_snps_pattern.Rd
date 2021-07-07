@@ -16,7 +16,7 @@ top_snps_pattern(
 
 \method{summary}{top_snps_pattern}(object, sum_type = c("range", "best", "peak"), ...)
 
-\method{subset}{top_snps_pattern}(x, start_val = 0, stop_val = max(x$pos), pheno = NULL, ...)
+\method{subset}{top_snps_pattern}(x, start_val = 0, end_val = max(x$pos), pheno = NULL, ...)
 }
 \arguments{
 \item{scan1_output}{output of linear mixed model for \code{phename} (see \code{\link[qtl2]{scan1}})}
@@ -55,7 +55,7 @@ top_snps_pattern(
 
 \item{x}{tbl of feature information from \code{\link{get_feature_snp}}}
 
-\item{start_val, stop_val}{start and stop positions for subset}
+\item{start_val, end_val}{start and end positions for subset}
 
 \item{pheno}{phenotype name(s) for subset}
 }
