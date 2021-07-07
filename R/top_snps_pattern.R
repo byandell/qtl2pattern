@@ -184,7 +184,7 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
 #' Subset of features
 #'
 #' @param x tbl of feature information from \code{\link{get_feature_snp}}
-#' @param start_val,stop_val start and stop positions for subset
+#' @param start_val,end_val start and end positions for subset
 #' @param pheno phenotype name(s) for subset
 #' @param ... additional parameters ignored
 #'
@@ -197,12 +197,12 @@ summary.top_snps_pattern <- function(object, sum_type=c("range","best","peak"), 
 #' @rdname top_snps_pattern
 #' @export
 #' @importFrom dplyr filter
-subset.top_snps_pattern <- function(x, start_val=0, stop_val=max(x$pos),
+subset.top_snps_pattern <- function(x, start_val=0, end_val=max(x$pos),
                                 pheno = NULL, ...) {
   haplos <- attr(x, "haplos")
   x <- dplyr::filter(x,
                      .data$pos >= start_val,
-                     .data$pos <= stop_val)
+                     .data$pos <= end_val)
   pheno_val <- pheno # need to be different from column name in x
   if(!is.null(pheno_val))
     x <-dplyr::filter(x, .data$pheno %in% pheno_val)
