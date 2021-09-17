@@ -28,8 +28,8 @@
 #' # Show most frequent patterns. 
 #' head(rev(sort(c(table(out)))))
 #'
-#' @export
 #' @importFrom assertthat assert_that
+#' @export
 #' 
 sdp_to_pattern <- function(sdp, haplos) {
   assertthat::assert_that(!missing(haplos))
@@ -40,8 +40,8 @@ sdp_to_pattern <- function(sdp, haplos) {
           sep = ":")
   }, haplos)
 }
-#' @export
 #' @rdname sdp_to_pattern
+#' @export
 sdp_to_logical <- function(sdp, haplos) {
   assertthat::assert_that(!missing(haplos))
   sapply(sdp, function(x, haplos) {

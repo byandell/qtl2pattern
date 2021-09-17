@@ -38,12 +38,12 @@
 #' @export
 snpprob_collapse <- function(snpprobs,
                              action = c("additive","add+dom","non-add",
-                                        "recessive","dominant")) {
+                                        "recessive","dominant","basic")) {
   if(dim(snpprobs[[1]])[2] == 2)
     return(snpprobs)
   if(is.null(action))
     return(snpprobs)
-  if(action == "add+dom")
+  if(action %in% c("add+dom","basic")) # basic is null action
     return(snpprobs)
   if(action == "additive") {
     patprobs <- snpprobs[[1]][,c(1,3),,drop=FALSE]

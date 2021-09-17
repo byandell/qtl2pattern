@@ -6,7 +6,7 @@
 \usage{
 snpprob_collapse(
   snpprobs,
-  action = c("additive", "add+dom", "non-add", "recessive", "dominant")
+  action = c("additive", "add+dom", "non-add", "recessive", "dominant", "basic")
 )
 }
 \arguments{
