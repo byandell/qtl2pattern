@@ -68,6 +68,7 @@ dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 # Read DOex example cross from 'qtl2data'
 DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 
+\donttest{
 # Download genotype probabilities
 tmpfile <- tempfile()
 download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -100,6 +101,7 @@ unlink(tmpfile)
 # Get Gene exon information.
 out <- gene_exon(top_snps_tbl, gene_tbl)
 summary(out, gene = out$gene[1])
+}
 
 }
 \author{

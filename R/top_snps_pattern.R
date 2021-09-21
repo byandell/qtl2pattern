@@ -36,6 +36,7 @@
 #' # Read DOex example cross from 'qtl2data'
 #' DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 #' 
+#' \donttest{
 #' # Download genotype probabilities
 #' tmpfile <- tempfile()
 #' download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -59,6 +60,7 @@
 #' # Collect top SNPs
 #' top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 #' summary(top_snps_tbl)
+#' }
 #' 
 #' @export
 #' @importFrom dplyr everything filter group_by inner_join select ungroup

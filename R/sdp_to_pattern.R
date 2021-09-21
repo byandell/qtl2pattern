@@ -13,6 +13,7 @@
 #' @examples
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
+#' \donttest{
 #' # Download SNP info for DOex from web and read as RDS.
 #' tmpfile <- tempfile()
 #' download.file(file.path(dirpath, "c2_snpinfo.rds"), tmpfile, quiet=TRUE)
@@ -27,6 +28,7 @@
 #' out <- sdp_to_pattern(sdp, LETTERS[seq_len(nallele)])
 #' # Show most frequent patterns. 
 #' head(rev(sort(c(table(out)))))
+#' }
 #'
 #' @importFrom assertthat assert_that
 #' @export

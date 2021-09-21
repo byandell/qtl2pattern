@@ -15,6 +15,7 @@
 #' # Read DOex example cross from 'qtl2data'
 #' DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 #' 
+#' \donttest{
 #' # Download genotype probabilities
 #' tmpfile <- tempfile()
 #' download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -26,6 +27,7 @@
 #' 
 #' str(pr)
 #' str(pattern_pr)
+#' }
 #' 
 #' @export
 genoprob_to_patternprob <- function(probs1, sdp, alleles = FALSE) {

@@ -27,7 +27,8 @@
 #' 
 #' # Read DOex example cross from 'qtl2data'
 #' DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
-#' 
+#'
+#' \donttest{
 #' # Download genotype probabilities
 #' tmpfile <- tempfile()
 #' download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -57,6 +58,7 @@
 #' 
 #' # Summary of scan1pattern.
 #' summary(scan_pat, DOex$pmap)
+#' }
 #'
 #' @export
 #' @importFrom dplyr group_by summarize ungroup

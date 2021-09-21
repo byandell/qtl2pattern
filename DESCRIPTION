@@ -1,8 +1,8 @@
 Package: qtl2pattern
 Type: Package
 Title: Pattern Support for 'qtl2' Package
-Version: 1.0.15
-Date: 2021-09-20
+Version: 1.0.17
+Date: 2021-09-21
 Authors@R: c(person("Brian S Yandell",
                 role = c("aut", "cre"),
                 email = "brian.yandell@wisc.edu"))
@@ -12,6 +12,7 @@ Description: Routines in 'qtl2' to study allele patterns in quantitative trait l
     genetically different strands at the same locus, have different response levels.
     Plots show profiles over a chromosome.
     Can handle multiple traits together.
+    See <https://github.com/byandell/qtl2pattern>.
 Depends:
     R (>= 3.1.0)
 Imports:

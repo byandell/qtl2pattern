@@ -39,7 +39,9 @@
 #'     dplyr::filter(snpinfo, .data$pos >= start, .data$pos <= end)
 #'   }
 #' }
+#' \donttest{
 #' query_variants <- create_qv(dirpath)
+#' }
 #' 
 #' create_qg <- function(dirpath) {
 #'   # Download Gene info for DOex from web via RDS
@@ -58,7 +60,9 @@
 #'     dplyr::filter(gene_tbl, .data$end >= start, .data$start <= end)
 #'   }
 #' }
+#' \donttest{
 #' query_genes <- create_qg(dirpath)
+#' }
 #' 
 #' # Examples for probs require either FST or RDS storage of data.
 #' 

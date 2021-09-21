@@ -208,7 +208,7 @@ title("Scans for SDP 52 (blue), 43 (red), 16 (purple), 20 (green)")
 In a similar fashion to a two-allele cross, we can examine the SDP effects. The top row of the plot below is for the patterns with the higher LOD score.
 
 ```{r}
-par(mfrow = c(2,2))
+oldpar <- par(mfrow = c(2,2))
 cols <- c("blue","purple","red")
 for(i in 1:4) {
   plot(scan_pat$coef[[i]], DOex$pmap, columns = 1:3, col = cols, xlim = c(90,110), type = "b")
@@ -219,6 +219,7 @@ for(i in 1:4) {
        col = cols, lty = 1, lwd = 2)
   }
 }
+par(oldpar)
 ```
 
 From these, the coefficients for pattern `ABDGH:CEF` (sdp 52) appear to be problematic, whereas pattern `ABCDGH:EF` show a clear pattern of dominance of the reference allele, consistent with the earlier plot of allele coefficients where `E = NZO` and `F = CAST`. The pattern `ABCFGH:CE` shows a similar dominance, but the allele `C = 129` does not stand out in the allele plot. This could be that `129` is important in combination with `NZO`. This is even more apparent when looking at coefficients over the entire chromosome.

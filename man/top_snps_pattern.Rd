@@ -75,6 +75,7 @@ dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 # Read DOex example cross from 'qtl2data'
 DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 
+\donttest{
 # Download genotype probabilities
 tmpfile <- tempfile()
 download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -98,6 +99,7 @@ scan_snppr <- qtl2::scan1(snppr, DOex$pheno)
 # Collect top SNPs
 top_snps_tbl <- top_snps_pattern(scan_snppr, snpinfo)
 summary(top_snps_tbl)
+}
 
 }
 \author{

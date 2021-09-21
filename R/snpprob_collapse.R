@@ -14,6 +14,7 @@
 #' # Read DOex example cross from 'qtl2data'
 #' DOex <- subset(qtl2::read_cross2(file.path(dirpath, "DOex.zip")), chr = "2")
 #' 
+#' \donttest{
 #' # Download genotype probabilities
 #' tmpfile <- tempfile()
 #' download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
@@ -34,6 +35,7 @@
 #' 
 #' dim(snppr[[1]])
 #' dim(snpprob_collapse(snppr, "additive")[[1]])
+#' }
 #' 
 #' @export
 snpprob_collapse <- function(snpprobs,
