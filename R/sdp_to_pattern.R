@@ -4,6 +4,7 @@
 #'
 #' @param sdp vector of sdp values
 #' @param haplos letter codes for haplotypes (required)
+#' @param symmetric make patterns symmetric if \code{TRUE}
 #'
 #' @return vector of letter patterns
 #'
@@ -33,8 +34,12 @@
 #' @importFrom assertthat assert_that
 #' @export
 #' 
-sdp_to_pattern <- function(sdp, haplos) {
+sdp_to_pattern <- function(sdp, haplos, symmetric = TRUE) {
   assertthat::assert_that(!missing(haplos))
+  if(symmetric) {
+    numsdp <- 2 ^ length(haplos)
+    sdp <- ifelse(sdp < numsdp / 2, sdp, numsdp - sdp - 1)
+  }
   sapply(sdp, function(x, haplos) {
     ref <- as.logical(intToBits(x)[seq_along(haplos)])
     paste(paste(haplos[!ref], collapse = ""),
@@ -44,8 +49,12 @@ sdp_to_pattern <- function(sdp, haplos) {
 }
 #' @rdname sdp_to_pattern
 #' @export
-sdp_to_logical <- function(sdp, haplos) {
+sdp_to_logical <- function(sdp, haplos, symmetric = TRUE) {
   assertthat::assert_that(!missing(haplos))
+  if(symmetric) {
+    numsdp <- 2 ^ length(haplos)
+    sdp <- ifelse(sdp < numsdp / 2, sdp, numsdp - sdp - 1)
+  }
   sapply(sdp, function(x, haplos) {
     as.logical(intToBits(x)[seq_along(haplos)])
   }, haplos)
