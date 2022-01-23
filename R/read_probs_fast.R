@@ -6,7 +6,7 @@ read_probs_fast <- function(chr, datapath, allele = TRUE,
   if(!dir.exists(genoprob_dir))
     return(NULL)
   
-  allele_rds <- paste0("fst", ifelse(allele, "_aprobs.rds", "_probs.rds"))
+  allele_rds <- paste0(ifelse(allele, "aprobs", "probs"), "_fstindex.rds")
   if(!file.exists(probfile <- file.path(genoprob_dir, allele_rds)))
     return(NULL)
 
