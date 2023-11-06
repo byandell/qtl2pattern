@@ -30,7 +30,5 @@ Extract pattern of haplotypes
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
-
-Brian S Yandell, \email{brian.yandell@wisc.edu}
 }
 \keyword{utilities}

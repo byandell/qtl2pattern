@@ -4,10 +4,10 @@
 #' Stagger genes for easy reading.
 #' Written original by Dan Gatti 2013-02-13
 #'
-#' @param x tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
+#' @param object tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}
 #' @param rect_col fill color of rectangle (default "grey70")
-#' @param strand_col edge color of rectangle by strand from \code{x} (default -="blue", +="red"; none if NULL)
-#' @param type_col color of type from \code{x} (default "black" for gene, "blue" for pseudogene; none if NULL)
+#' @param strand_col edge color of rectangle by strand from \code{object} (default -="blue", +="red"; none if NULL)
+#' @param type_col color of type from \code{object} (default "black" for gene, "blue" for pseudogene; none if NULL)
 #' @param text_size size of text (default 3)
 #' @param xlim horizontal axis limits (default is range of features)
 #' @param snp_pos position of SNPs in bp if used (default NULL)
@@ -33,7 +33,7 @@
 #' 
 #' @rdname feature_tbl
 #' 
-ggplot_feature_tbl <- function(x,
+ggplot_feature_tbl <- function(object,
                              rect_col = "grey70",
                              strand_col = c("-"="#1b9e77", "+"="#d95f02"),
                              type_col = c(gene="black", pseudogene="#1b9e77", other="#d95f02"),
@@ -46,21 +46,21 @@ ggplot_feature_tbl <- function(x,
                              extend = 0.005,
                              ...) {
   # If we have no genes, just plot an empty frame and return.
-  if(is.null(x) || length(x) == 0) {
+  if(is.null(object) || length(object) == 0) {
     plot(0, 0, col = 0, xlab = "", xaxs = "i", ylab = "", yaxt = "n", ...)
     return()
-  } # if(is.null(x) || nrow(x) == 0)
+  } # if(is.null(object) || nrow(object) == 0)
   
-  x <- dplyr::arrange(x, desc(.data$type), .data$strand, .data$start)
+  object <- dplyr::arrange(object, desc(.data$type), .data$strand, .data$start)
   
   # Expand rect_col and text_col; add Name.
   if(is.null(rect_col))
     rect_col <- "grey70"
-  rect_col <- rep_len(rect_col, nrow(x))
+  rect_col <- rep_len(rect_col, nrow(object))
   if(is.null(strand_col)) {
     rect_edge <- "grey30"
   } else {
-    rect_edge <- strand_col[match(x$strand,
+    rect_edge <- strand_col[match(object$strand,
                                   names(strand_col))]
     ## Fill in missing values with fill color.
     miss_edge <- is.na(rect_edge)
@@ -70,28 +70,28 @@ ggplot_feature_tbl <- function(x,
   if(is.null(type_col)) {
     text_size <- 0
   } else {
-    text_col <- type_col[match(x$type,
+    text_col <- type_col[match(object$type,
                                names(type_col),
                                nomatch=3)]
   }
   
   # Subset data to plot limits.
   if(is.null(xlim))
-    xlim <- c(min(x$start), max(x$stop))
+    xlim <- c(min(object$start), max(object$stop))
   else {
-    x <- dplyr::filter(x, .data$stop >= xlim[1] & .data$start <= xlim[2])
+    object <- dplyr::filter(object, .data$stop >= xlim[1] & .data$start <= xlim[2])
     # If we have no genes to plot, just return.
-    if(nrow(x) == 0) {
+    if(nrow(object) == 0) {
       warning("no genes in interval")
       return()
     }
   }
-  retval <- get.gene.locations(x, xlim, text_size, ...)
+  retval <- get.gene.locations(object, xlim, text_size, ...)
   
-  x$Name[is.na(x$Name)] <- ""
+  object$Name[is.na(object$Name)] <- ""
   
   # Plot the genes.
-  x$bottom <- -retval$bottom
+  object$bottom <- -retval$bottom
   nudge <- retval$nudge
   ## Offset between rectangles.
   rowheight <- 1
@@ -105,7 +105,7 @@ ggplot_feature_tbl <- function(x,
     snp_lod <- snp_lod[o]
   }
   
-  p <- ggplot2::ggplot(x) +
+  p <- ggplot2::ggplot(object) +
     #    scale_y_continuous(expand = c(0,0)) +
     ggplot2::theme(axis.text.y = ggplot2::element_blank(),
                    axis.ticks.y = ggplot2::element_blank(),
@@ -132,7 +132,7 @@ ggplot_feature_tbl <- function(x,
     }
     p
   }
-  if(!is.null(snp_pos) & nrow(x) > 1) {
+  if(!is.null(snp_pos) & nrow(object) > 1) {
     p <- snp_vline(p, snp_pos, snp_lod, xlim, extend)
   }
   p <- p +
@@ -143,16 +143,16 @@ ggplot_feature_tbl <- function(x,
                              ymax = .data$bottom - 1 + offset),
       fill = rect_col,
       color = rect_edge) +
-    ggplot2::xlab(paste("Chr", x$chr[1], "(Mb)")) +
+    ggplot2::xlab(paste("Chr", object$chr[1], "(Mb)")) +
     ggplot2::ylab("")
-  if(!is.null(snp_pos) & nrow(x) == 1) {
+  if(!is.null(snp_pos) & nrow(object) == 1) {
     ## If only one Gene, then put SNP dashes in front of rectangles to show overlap.
     p <- snp_vline(p, snp_pos, snp_lod, xlim, extend)
   }
   if(!is.null(type_col)) {
     ## Want to remove entries with no Name.
     ## Do as new data here?
-    if(!all(x$Name=="")) {
+    if(!all(object$Name=="")) {
       p <- p +
         ggplot2::geom_text(
           mapping = ggplot2::aes(x = (.data$stop + nudge),
@@ -172,8 +172,8 @@ ggplot_feature_tbl <- function(x,
 #' @importFrom ggplot2 autoplot
 #' @rdname feature_tbl
 #' 
-autoplot.feature_tbl <- function(x, ...)
-  ggplot_feature_tbl(x, ...)
+autoplot.feature_tbl <- function(object, ...)
+  ggplot_feature_tbl(object, ...)
 
 #' Helper function to set gene locations on plot.
 #'
@@ -225,7 +225,7 @@ get.gene.locations = function(locs, xlim, text_size=3,
   while(nrows < row & iter < 20) {
     nrows = n_rows
     row = 1
-    x = min(locs$start)
+    minloc = min(locs$start)
     n_locs <- nrow(locs)
     
     ## Try to fill in the genes without collisions.
@@ -237,8 +237,8 @@ get.gene.locations = function(locs, xlim, text_size=3,
     
     i = 1    # Gene counter.
     while(i <= n_locs & any(keep)) {
-      # Find gene with minimum start past x.
-      wh = which(locs$start[keep] >= x)
+      # Find gene with minimum start past minloc.
+      wh = which(locs$start[keep] >= minloc)
       
       # If we found one, give it a bottom row and remove from keep.
       if(length(wh)) {
@@ -249,19 +249,19 @@ get.gene.locations = function(locs, xlim, text_size=3,
         keep[idx] <- FALSE
         
         if(any(keep)) {
-          # Update x. If past plot, advance row and reset x.
-          x <- locs$stop[idx] + str_name[idx] + str_iW
-          if(x > xlim[2]) {
+          # Update minloc. If past plot, advance row and reset minloc.
+          minloc <- locs$stop[idx] + str_name[idx] + str_iW
+          if(minloc > xlim[2]) {
             row <- row + 1
-            x <- min(locs$start[keep])
+            minloc <- min(locs$start[keep])
           }
         }
         i <- i + 1
       } else {
-        ## If no gene past current X position, advance to next row
-        ## and reset X position to left edge of plot.
+        ## If no gene past current minloc position, advance to next row
+        ## and reset minloc position to left edge of plot.
         row <- row + 1
-        x <- min(locs$start[keep])
+        minloc <- min(locs$start[keep])
       }
     }
     iter <- iter + 1

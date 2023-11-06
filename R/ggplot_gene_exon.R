@@ -49,7 +49,7 @@ ggplot_gene_exon <- function(object, top_snps_tbl=NULL, plot_now=TRUE,
   }
   invisible(p)
 }
-#' @param x Object of class \code{gene_exon}.
+#' @param object Object of class \code{gene_exon}.
 #' @method autoplot gene_exon
 #' @export
 #' @export autoplot.gene_exon
@@ -57,5 +57,5 @@ ggplot_gene_exon <- function(object, top_snps_tbl=NULL, plot_now=TRUE,
 #' 
 #' @importFrom ggplot2 autoplot
 #' 
-autoplot.gene_exon <- function(x, ...)
-  ggplot_gene_exon(x, ...)
+autoplot.gene_exon <- function(object, ...)
+  ggplot_gene_exon(object, ...)

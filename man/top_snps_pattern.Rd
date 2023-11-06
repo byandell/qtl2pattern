@@ -104,7 +104,5 @@ summary(top_snps_tbl)
 }
 \author{
 Brian S Yandell, \email{brian.yandell@wisc.edu}
-
-Brian S Yandell, \email{brian.yandell@wisc.edu}
 }
 \keyword{utilities}

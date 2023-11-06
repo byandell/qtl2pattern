@@ -8,10 +8,10 @@
 \title{Plot scan pattern usign ggplot2}
 \usage{
 ggplot_scan1pattern(
-  x,
+  object,
   map,
   plot_type = c("lod", "coef", "coef_and_lod"),
-  patterns = x$patterns$founders,
+  patterns = object$patterns$founders,
   columns = 1:3,
   min_lod = 3,
   lodcolumn = seq_along(patterns),
@@ -19,7 +19,7 @@ ggplot_scan1pattern(
   ...
 )
 
-\method{autoplot}{scan1pattern}(x, ...)
+\method{autoplot}{scan1pattern}(object, ...)
 
 scan1pattern(
   probs1,
@@ -36,7 +36,7 @@ scan1pattern(
 \method{summary}{scan1pattern}(object, map, ...)
 }
 \arguments{
-\item{x}{object of class \code{\link{scan1pattern}}}
+\item{object}{object of class \code{\link{scan1pattern}}}
 
 \item{map}{genome map}
 
@@ -67,8 +67,6 @@ scan1pattern(
 \item{blups}{Create BLUPs if \code{TRUE}}
 
 \item{do_scans}{Do scans if \code{TRUE}.}
-
-\item{object}{object of class \code{\link{scan1pattern}}}
 }
 \value{
 object of class \code{\link[ggplot2]{ggplot}}

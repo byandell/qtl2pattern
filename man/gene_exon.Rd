@@ -25,14 +25,14 @@ ggplot_gene_exon(
   ...
 )
 
-\method{autoplot}{gene_exon}(x, ...)
+\method{autoplot}{gene_exon}(object, ...)
 }
 \arguments{
 \item{top_snps_tbl}{table from \code{\link[qtl2]{top_snps}}}
 
 \item{feature_tbl}{table of features from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
 
-\item{object}{table of feature information from \code{query_genes}; see \code{\link[qtl2]{create_gene_query_func}}}
+\item{object}{Object of class \code{gene_exon}.}
 
 \item{gene_name}{name of gene as character string}
 
@@ -105,8 +105,6 @@ summary(out, gene = out$gene[1])
 
 }
 \author{
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }
 \keyword{hplot}

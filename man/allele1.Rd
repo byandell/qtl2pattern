@@ -19,7 +19,7 @@ allele1(
 )
 
 ggplot_allele1(
-  x,
+  object,
   scan1_object = NULL,
   map = NULL,
   pos = NULL,
@@ -28,7 +28,7 @@ ggplot_allele1(
   ...
 )
 
-\method{autoplot}{allele1}(x, ...)
+\method{autoplot}{allele1}(object, ...)
 }
 \arguments{
 \item{probD}{object of class \code{\link[qtl2]{calc_genoprob}}}
@@ -49,7 +49,7 @@ ggplot_allele1(
 
 \item{...}{Other parameters ignored.}
 
-\item{x}{Object of class \code{\link{allele1}}.}
+\item{object}{Object of class \code{\link{allele1}}.}
 
 \item{scan1_object}{Optional object of class \code{\link[qtl2]{scan1}} to find peak.}
 

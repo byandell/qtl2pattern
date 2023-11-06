@@ -7,9 +7,9 @@
 \alias{summary.merge_feature}
 \title{Plot of merge_feature object}
 \usage{
-ggplot_merge_feature(x, pheno, plot_by = c("pattern", "consequence"), ...)
+ggplot_merge_feature(object, pheno, plot_by = c("pattern", "consequence"), ...)
 
-\method{autoplot}{merge_feature}(x, ...)
+\method{autoplot}{merge_feature}(object, ...)
 
 merge_feature(
   top_snps_tbl,
@@ -23,7 +23,7 @@ merge_feature(
 \method{summary}{merge_feature}(object, sum_type = c("SNP type", "pattern"), ...)
 }
 \arguments{
-\item{x}{of class \code{merge_feature}}
+\item{object}{of class \code{merge_feature}}
 
 \item{pheno}{name of phenotype to be plotted}
 
@@ -42,8 +42,6 @@ merge_feature(
 \item{dropchar}{number of characters to drop on phenames}
 
 \item{exons}{table from \code{\link{gene_exon}}}
-
-\item{object}{of class \code{merge_feature}}
 
 \item{sum_type}{one of \code{c("SNP type","pattern")}}
 }
@@ -100,10 +98,6 @@ summary(out, "pattern")
 
 }
 \author{
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 }
 \keyword{hplot}

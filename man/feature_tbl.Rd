@@ -12,7 +12,7 @@
 \method{subset}{feature_tbl}(x, start_val = 0, stop_val = max(x$stop), ...)
 
 ggplot_feature_tbl(
-  x,
+  object,
   rect_col = "grey70",
   strand_col = c(`-` = "#1b9e77", `+` = "#d95f02"),
   type_col = c(gene = "black", pseudogene = "#1b9e77", other = "#d95f02"),
@@ -26,24 +26,24 @@ ggplot_feature_tbl(
   ...
 )
 
-\method{autoplot}{feature_tbl}(x, ...)
+\method{autoplot}{feature_tbl}(object, ...)
 }
 \arguments{
-\item{object}{tbl of feature information from \code{\link[qtl2]{create_gene_query_func}}}
+\item{object}{tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
 
 \item{major}{if \code{TRUE} (default), only summarize genes and exons}
 
 \item{...}{additional arguments (not used)}
 
-\item{x}{tbl of gene information from \code{query_variants}; see \code{\link[qtl2]{create_variant_query_func}}}
+\item{x}{tbl of feature information from \code{\link{get_feature_snp}}}
 
 \item{start_val, stop_val}{start and stop positions for subset}
 
 \item{rect_col}{fill color of rectangle (default "grey70")}
 
-\item{strand_col}{edge color of rectangle by strand from \code{x} (default -="blue", +="red"; none if NULL)}
+\item{strand_col}{edge color of rectangle by strand from \code{object} (default -="blue", +="red"; none if NULL)}
 
-\item{type_col}{color of type from \code{x} (default "black" for gene, "blue" for pseudogene; none if NULL)}
+\item{type_col}{color of type from \code{object} (default "black" for gene, "blue" for pseudogene; none if NULL)}
 
 \item{text_size}{size of text (default 3)}
 
@@ -77,8 +77,6 @@ Written original by Dan Gatti 2013-02-13
 \url{https://github.com/dmgatti/DOQTL/blob/master/R/gene.plot.R}
 }
 \author{
-Brian S Yandell, \email{brian.yandell@wisc.edu}
-
 Brian S Yandell, \email{brian.yandell@wisc.edu}
 
 Brian S Yandell, \email{brian.yandell@wisc.edu}

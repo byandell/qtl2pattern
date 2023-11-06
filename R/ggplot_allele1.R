@@ -2,7 +2,7 @@
 #' 
 #' Plot alleles for haplotype, diplotype and top patterns and genome position.
 #' 
-#' @param x Object of class \code{\link{allele1}}.
+#' @param object Object of class \code{\link{allele1}}.
 #' @param scan1_object Optional object of class \code{\link[qtl2]{scan1}} to find peak.
 #' @param map Genome map (required if \code{scan1_object} present).
 #' @param pos Genome position in Mbp (supercedes \code{scan1_object}).
@@ -22,17 +22,17 @@
 #' 
 #' @rdname allele1
 #' 
-ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
+ggplot_allele1 <- function(object, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE, 
                          legend.position = "none", ...) {
   
   if(is.null(pos)) {
     if(is.null(scan1_object))
-      pos_center <- stats::median(x$pos)
+      pos_center <- stats::median(object$pos)
     else
       pos_center <- qtl2::find_peaks(scan1_object, map)$pos[1]
   } else {
     pos_center <- pos
-    if(pos_center < min(x$pos) | pos_center > max(x$pos))
+    if(pos_center < min(object$pos) | pos_center > max(object$pos))
       stop("position must be within range of scans")
   }
   
@@ -40,19 +40,19 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
     a <- abs(pos - pos_center)
     a == min(a)
   }
-  x <- dplyr::ungroup(
+  object <- dplyr::ungroup(
     dplyr::filter(
-      dplyr::group_by(x, source),
+      dplyr::group_by(object, source),
       tmpfn(pos, pos_center)))
 
-  if(trim & is.null(attr(x, "blups")))
-    x <- trim_quant(x)
+  if(trim & is.null(attr(object, "blups")))
+    object <- trim_quant(object)
   else
-    x <- dplyr::mutate(x, trim = .data$effect)
+    object <- dplyr::mutate(object, trim = .data$effect)
   
-  x$x <- jitter(rep(1, nrow(x)))
+  object$x <- jitter(rep(1, nrow(object)))
   
-  p <- ggplot2::ggplot(x,
+  p <- ggplot2::ggplot(object,
          ggplot2::aes(x = .data$x, y = .data$trim, value = .data$effect, col = .data$probe, 
                       label = .data$allele)) + 
     ggplot2::geom_text(size = 4)
@@ -69,8 +69,8 @@ ggplot_allele1 <- function(x, scan1_object=NULL, map=NULL, pos=NULL, trim = TRUE
 } 
 #' @export
 #' @rdname allele1
-autoplot.allele1 <- function(x, ...)
-  ggplot_allele1(x, ...)
+autoplot.allele1 <- function(object, ...)
+  ggplot_allele1(object, ...)
 
 trim_quant <- function(object, beyond = 3) {
   quant <- stats::quantile(object$effect, c(.25,.75))

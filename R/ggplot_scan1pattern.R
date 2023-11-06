@@ -1,6 +1,6 @@
 #' Plot scan pattern usign ggplot2
 #' 
-#' @param x object of class \code{\link{scan1pattern}}
+#' @param object object of class \code{\link{scan1pattern}}
 #' 
 #' @param map A list of vectors of marker positions, as produced by
 #' \code{\link[qtl2]{insert_pseudomarkers}}.
@@ -24,49 +24,49 @@
 #' 
 #' @rdname scan1pattern
 #' 
-ggplot_scan1pattern <- function(x, map, plot_type = c("lod","coef","coef_and_lod"),
-                              patterns = x$patterns$founders,
+ggplot_scan1pattern <- function(object, map, plot_type = c("lod","coef","coef_and_lod"),
+                              patterns = object$patterns$founders,
                               columns = 1:3,
                               min_lod = 3,
                               lodcolumn = seq_along(patterns),
                               facet = "pheno", ...) {
   plot_type <- match.arg(plot_type)
   
-  ggplot_scan1pattern_internal(x, map, plot_type, 
+  ggplot_scan1pattern_internal(object, map, plot_type, 
                                patterns, columns, min_lod,
                                lodcolumn, facet, ...)
 }
-ggplot_scan1pattern_internal <- function(x, map, plot_type, 
+ggplot_scan1pattern_internal <- function(object, map, plot_type, 
                                          patterns, columns, min_lod,
                                          lodcolumn, facet,
                                          colors = NULL, ...) {
   
-  x$patterns <- dplyr::filter(x$patterns,
+  object$patterns <- dplyr::filter(object$patterns,
                               .data$max_lod >= min_lod)
   
-  m <- x$patterns$founders %in% patterns
-  patterns <- x$patterns$founders[m]
-  pheno <- x$patterns$pheno[m]
-  tmp <- x$scan
+  m <- object$patterns$founders %in% patterns
+  patterns <- object$patterns$founders[m]
+  pheno <- object$patterns$pheno[m]
+  tmp <- object$scan
   colnames(tmp) <- pheno
-  x$scan <- modify_object(x$scan, tmp[, m, drop = FALSE])
+  object$scan <- modify_object(object$scan, tmp[, m, drop = FALSE])
   
-  pattern <- matrix(patterns, nrow(x$scan), ncol(x$scan), byrow = TRUE)
+  pattern <- matrix(patterns, nrow(object$scan), ncol(object$scan), byrow = TRUE)
   
-  tmp <- class(x$coef)
-  x$coef <- x$coef[m]
-  if(length(x$coef) > 1 & length(unique(pheno)) > 1) {
-    names(x$coef) <- paste0(pheno, "_", names(x$coef))
+  tmp <- class(object$coef)
+  object$coef <- object$coef[m]
+  if(length(object$coef) > 1 & length(unique(pheno)) > 1) {
+    names(object$coef) <- paste0(pheno, "_", names(object$coef))
   }
-  class(x$coef) = tmp
+  class(object$coef) = tmp
   
   switch(plot_type,
-         lod = autoplot(x$scan, map, lodcolumn = lodcolumn,
+         lod = autoplot(object$scan, map, lodcolumn = lodcolumn,
                         pattern = pattern, 
                         facet = facet, ...),
-         coef = autoplot(x$coef, map, columns, colors = colors, ...),
-         coef_and_lod = autoplot(x$coef, map, columns, 
-                                 scan1_output = x$scan,
+         coef = autoplot(object$coef, map, columns, colors = colors, ...),
+         coef_and_lod = autoplot(object$coef, map, columns, 
+                                 scan1_output = object$scan,
                                  lodcolumn = lodcolumn,
                                  pattern_lod = pattern, 
                                  facet_lod = facet, colors = colors, ...))
@@ -79,5 +79,5 @@ ggplot_scan1pattern_internal <- function(x, map, plot_type,
 #' 
 #' @importFrom ggplot2 autoplot
 #' 
-autoplot.scan1pattern <- function(x, ...)
-  ggplot_scan1pattern(x, ...)
+autoplot.scan1pattern <- function(object, ...)
+  ggplot_scan1pattern(object, ...)

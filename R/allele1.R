@@ -118,7 +118,7 @@ allele1_internal <- function(
   map <- data.frame(pos=map, mar=mar, stringsAsFactors = FALSE)
   alleles <- dplyr::inner_join(alleles, map, by = "mar")
   alleles$source <- factor(alleles$source, c("haplotype","diplotype",
-                                             names(scan_pat$coef)))
+                                             unique(names(scan_pat$coef))))
   
   # Set up probe for color in plot as number of copies of alternative allele.
   # ref = 0, het = 1, alt = 2; covariates = 5.
